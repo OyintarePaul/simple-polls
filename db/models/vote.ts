@@ -1,13 +1,16 @@
 import { Schema, Model, models, model, Types } from "mongoose"
 
 interface IVote {
-    userID: string,
     poll: Types.ObjectId,
     option: Types.ObjectId
 }
 
+export interface LeanVote extends IVote {
+    _id: Types.ObjectId,
+    __v: number
+}
+
 const VoteSchema = new Schema<IVote>({
-    userID: { type: String },
     poll: { type: Schema.Types.ObjectId, ref: "poll" },
     option: { type: Schema.Types.ObjectId }
 })

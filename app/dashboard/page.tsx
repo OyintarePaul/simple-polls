@@ -1,17 +1,39 @@
+import { createPoll } from "@/actions/poll";
+import PollCard from "@/components/PollCard";
 import { Button } from "@/components/ui/button";
-import dbConnect from "@/db/connect"
-import PollModel from "@/db/models/poll";
+import { Card } from "@/components/ui/card";
+
+import { getUserPolls } from "@/queries/poll";
 import { auth } from "@clerk/nextjs/server";
+import { Plus } from "lucide-react";
 
 export default async function DashboardPage() {
-    const { userId } = await auth();
-    await dbConnect();
-    const polls = await PollModel.find({ userID: userId })
-    return <form action={async () => {
-        "use server"
-        console.log("Creating a new empty poll")
-    }}>
-        <Button>Create a new poll</Button>
-    </form>
+  const { userId } = await auth();
+  if (!userId) throw new Error("You are not authenticated");
+  const polls = await getUserPolls(userId);
 
+  return (
+    <div>
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 lg:gap-6">
+        {polls.map((poll) => (
+          <PollCard poll={poll} key={poll._id} />
+        ))}
+
+        <Card>
+          <form
+            action={createPoll}
+            className="flex items-center justify-center w-full h-full"
+          >
+            <Button
+              variant="ghost"
+              className="flex flex-col gap-2 hover:bg-transparent"
+            >
+              <Plus className="size-6" />
+              <span>Create a new poll</span>
+            </Button>
+          </form>
+        </Card>
+      </div>
+    </div>
+  );
 }

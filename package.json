@@ -10,7 +10,11 @@
   },
   "dependencies": {
     "@clerk/nextjs": "^6.12.4",
+    "@radix-ui/react-label": "^2.1.2",
+    "@radix-ui/react-progress": "^1.1.2",
+    "@radix-ui/react-radio-group": "^1.2.3",
     "@radix-ui/react-slot": "^1.1.2",
+    "array-move": "^4.0.0",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
     "lucide-react": "^0.479.0",
@@ -19,6 +23,9 @@
     "next-themes": "^0.4.4",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
+    "react-sortable-hoc": "^2.0.0",
+    "react-use-clipboard": "^1.0.9",
+    "recharts": "^2.15.2",
     "tailwind-merge": "^3.0.2",
     "tailwindcss-animate": "^1.0.7"
   },
