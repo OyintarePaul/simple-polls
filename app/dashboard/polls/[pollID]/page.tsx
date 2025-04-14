@@ -1,11 +1,10 @@
 import { deletePollAndVotes } from "@/actions/poll"
 import CopyVoteLink from "@/components/CopyVoteLink"
-import { Button, buttonVariants } from "@/components/ui/button"
+import { Button } from "@/components/ui/button"
 import { Progress } from "@/components/ui/progress"
 import VotesChart from "@/components/VotesChart"
 import dbConnect from "@/db/connect"
 import { LeanVote } from "@/db/models/vote"
-import { cn } from "@/lib/utils"
 import { getPollById } from "@/queries/poll"
 import { getPollVotes } from "@/queries/vote"
 import { Pencil, Trash2 } from "lucide-react"
@@ -24,7 +23,7 @@ export default async function PollDetailsPage({ params }: { params: Promise<{ po
     // this function is here because it is only declared and run 
     // once on the server
     function countVotes(votes: LeanVote[]) {
-        let votesCount: Record<string, number> = {}
+        const votesCount: Record<string, number> = {}
         votes.forEach((vote) => {
             let currentCount = votesCount[vote.option.toString()] || 0;
             currentCount++

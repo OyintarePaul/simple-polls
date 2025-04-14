@@ -1,5 +1,5 @@
 import { SignedIn, SignedOut, UserButton } from "@clerk/nextjs";
-import { Button, buttonVariants } from "./ui/button";
+import { buttonVariants } from "./ui/button";
 import Link from "next/link";
 import { cn } from "@/lib/utils";
 
