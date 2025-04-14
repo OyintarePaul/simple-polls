@@ -4,6 +4,7 @@ import { Schema, models, model, Model, Types } from "mongoose";
 export interface IPoll {
   questionText: string;
   userID: string;
+  mediaUrl: string;
   options: Option[];
 }
 
@@ -43,6 +44,9 @@ const PollSchema = new Schema<IPoll>({
     type: String,
   },
   options: [OptionSchema],
+  mediaUrl: {
+    type: String
+  }
 });
 
 const PollModel: Model<IPoll> =

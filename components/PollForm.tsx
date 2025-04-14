@@ -2,19 +2,25 @@
 import React, { useState, useTransition } from "react";
 import { Input } from "./ui/input";
 import { Label } from "./ui/label";
-import { PollPOJO } from "@/db/models/poll";
+import { OptionPOJO, PollPOJO } from "@/db/models/poll";
 import { Button } from "./ui/button";
-import { Grip, GripVertical, Plus } from "lucide-react";
 import { updatePollQuestionAndOptions } from "@/actions/poll";
+import PollOptions from "./PollOptions";
+import UploadPollMedia from "./UploadPollMedia";
 
 export default function PollForm({ poll }: { poll: PollPOJO }) {
     const [questionText, setQuestionText] = useState(poll.questionText);
     const [options, setOptions] = useState(poll.options);
+    const [mediaUrl, setMediaUrl] = useState(poll.mediaUrl)
     const [isPending, startTransition] = useTransition();
 
     const addOption = () => {
         setOptions([...options, { optionText: "", _id: "" }]);
     };
+
+    const updateOptions = (options: OptionPOJO[]) => {
+        setOptions(options)
+    }
 
     const handleOptionTextChange = (text: string, currentIndex: number) => {
         const newOptions = options.map((option, index) => {
@@ -37,6 +43,7 @@ export default function PollForm({ poll }: { poll: PollPOJO }) {
                 userID: poll.userID,
                 _id: poll._id,
                 options,
+                mediaUrl
             });
         });
     };
@@ -53,17 +60,20 @@ export default function PollForm({ poll }: { poll: PollPOJO }) {
                     onChange={(e) => setQuestionText(e.target.value)}
                     className="text-4xl placeholder:text-5xl placeholder:font-light py-12 border-0 border-bottom bg-background"
                 />
+                <UploadPollMedia mediaUrl={poll.mediaUrl} setMediaUrl={(url) => setMediaUrl(url)}/>
             </div>
 
             <div className="space-y-4">
-                
+                <PollOptions
+                    options={options}
+                    handleOptionTextChange={handleOptionTextChange}
+                    addOption={addOption}
+                    updateOptions={updateOptions}
+                />
+            </div>
 
-
-
-                
-                <div>
-                    <Button disabled={isPending}>Save</Button>
-                </div>
+            <div>
+                <Button disabled={isPending}>Save</Button>
             </div>
         </form>
     );

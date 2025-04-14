@@ -23,7 +23,7 @@ export async function createPoll() {
 
 type UpdatePollQuestionAndOptionsPayload = Pick<
     PollPOJO,
-    "questionText" | "options" | "_id" | "userID"
+    "questionText" | "options" | "_id" | "userID" | "mediaUrl"
 >;
 
 export async function updatePollQuestionAndOptions(
@@ -41,19 +41,21 @@ export async function updatePollQuestionAndOptions(
     if (!poll) return notFound();
 
     poll.questionText = payload.questionText;
+    poll.mediaUrl = payload.mediaUrl;
 
     // make sure that previous options retain their ids
     // but new options get assigned a new id
     poll.options = payload.options.map((option) => {
         return {
-            _id: option._id.length > 0
-                ? new Types.ObjectId(option._id)
-                : new Types.ObjectId(),
+            _id:
+                option._id.length > 0
+                    ? new Types.ObjectId(option._id)
+                    : new Types.ObjectId(),
             optionText: option.optionText,
         };
     });
 
-    console.log(poll.toObject())
+    console.log(poll.toObject());
 
     await poll.save();
 
