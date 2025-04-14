@@ -18,11 +18,6 @@ export interface OptionPOJO {
   optionText: string,
 }
 
-export interface LeanPoll extends IPoll {
-  _id: Types.ObjectId;
-  __v: number;
-}
-
 export interface PollPOJO extends Omit<IPoll, "options"> {
   _id: string;
   __v: number;

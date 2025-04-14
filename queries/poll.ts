@@ -1,5 +1,5 @@
 import dbConnect from "@/db/connect";
-import PollModel, { LeanPoll, PollPOJO } from "@/db/models/poll";
+import PollModel, { PollPOJO } from "@/db/models/poll";
 
 function serializeLeanDoc<T>(doc: any) {
   return JSON.parse(JSON.stringify(doc)) as T
