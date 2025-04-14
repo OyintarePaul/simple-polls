@@ -1,13 +1,13 @@
 "use client"
 
 import { placeVote } from "@/actions/poll"
-import { LeanPoll } from "@/db/models/poll"
+import { PollPOJO } from "@/db/models/poll"
 import { Input } from "./ui/input"
 import { Label } from "./ui/label"
 import { Button } from "./ui/button"
 import { useActionState } from "react"
 
-export default function PollVoteForm({ poll }: { poll: LeanPoll }) {
+export default function PollVoteForm({ poll }: { poll: PollPOJO }) {
     const [state, action, pending] = useActionState(placeVote, {
         success: false,
         message: ""
