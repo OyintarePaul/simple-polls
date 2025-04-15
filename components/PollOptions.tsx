@@ -1,4 +1,4 @@
-import { GripVertical, Plus } from "lucide-react";
+import { GripVertical, Plus, X } from "lucide-react";
 import { DndContext, DragEndEvent } from "@dnd-kit/core";
 import { arrayMove, SortableContext, useSortable } from "@dnd-kit/sortable";
 import { Label } from "./ui/label";
@@ -12,6 +12,7 @@ interface PollOptionsProps {
     updateOptions: (options: OptionPOJO[]) => void;
     handleOptionTextChange: (text: string, currentIndex: number) => void;
     addOption: () => void;
+    handleRemove: (index: number) => void;
 }
 
 export default function PollOptions({
@@ -19,13 +20,13 @@ export default function PollOptions({
     handleOptionTextChange,
     addOption,
     updateOptions,
+    handleRemove,
 }: PollOptionsProps) {
     const handleDragEnd = (e: DragEndEvent) => {
         const { active, over } = e;
         if (over && active.id !== over.id) {
             const oldIndex = +active.id;
             const newIndex = +over.id;
-            console.log(oldIndex, newIndex);
             updateOptions(arrayMove(options, oldIndex, newIndex));
         }
     };
@@ -34,13 +35,14 @@ export default function PollOptions({
         <div className="space-y-4">
             <Label>Options</Label>
             <DndContext onDragEnd={handleDragEnd}>
-                <SortableContext items={options}>
+                <SortableContext items={options.map((_, index) => index)}>
                     {options.map((option, index) => (
                         <Option
                             option={option}
                             index={index}
                             handleOptionTextChange={handleOptionTextChange}
                             key={index}
+                            handleRemove={handleRemove}
                         />
                     ))}
                 </SortableContext>
@@ -56,10 +58,16 @@ export default function PollOptions({
 interface OptionProps {
     option: OptionPOJO;
     index: number;
+    handleRemove: (index: number) => void;
     handleOptionTextChange: (text: string, currentIndex: number) => void;
 }
 
-function Option({ option, index, handleOptionTextChange }: OptionProps) {
+function Option({
+    option,
+    index,
+    handleOptionTextChange,
+    handleRemove,
+}: OptionProps) {
     const { attributes, listeners, setNodeRef, transform, transition } =
         useSortable({ id: index });
 
@@ -78,15 +86,39 @@ function Option({ option, index, handleOptionTextChange }: OptionProps) {
                 name="option"
                 value={option.optionText}
                 onChange={(e) => handleOptionTextChange(e.target.value, index)}
-                className="pl-6"
+                className="px-6"
             />
-            <div
-                className="absolute inset-y-1.5 start-0"
+            <Button
+                className="absolute inset-y-2.5 start-0 size-4 hover:bg-transparent"
                 {...attributes}
                 {...listeners}
+                variant="ghost"
+                type="button"
             >
                 <GripVertical />
+            </Button>
+            <div className="absolute inset-y-3 end-6">
+                <RemoveOption handleRemove={handleRemove} index={index} />
             </div>
         </div>
+    );
+}
+
+interface RemoveProps {
+    handleRemove: (index: number) => void;
+    index: number;
+}
+
+function RemoveOption({ handleRemove, index }: RemoveProps) {
+    return (
+        <Button
+            type="button"
+            size="icon"
+            variant="ghost"
+            className="absolute size-4"
+            onClick={(e) => handleRemove(index)}
+        >
+            <X className="text-destructive" />
+        </Button>
     );
 }

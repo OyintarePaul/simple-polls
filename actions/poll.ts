@@ -21,13 +21,13 @@ export async function createPoll() {
     redirect(`/dashboard/polls/${poll._id}/edit`);
 }
 
-type UpdatePollQuestionAndOptionsPayload = Pick<
+type UpdatePollDetailsProps = Pick<
     PollPOJO,
     "questionText" | "options" | "_id" | "userID" | "mediaUrl"
 >;
 
-export async function updatePollQuestionAndOptions(
-    payload: UpdatePollQuestionAndOptionsPayload
+export async function updatePollDetails(
+    payload: UpdatePollDetailsProps
 ) {
     const { userId } = await auth();
     if (!userId) throw new Error("You are not authenticated");

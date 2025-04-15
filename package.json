@@ -13,11 +13,11 @@
     "@dnd-kit/core": "^6.3.1",
     "@dnd-kit/sortable": "^10.0.0",
     "@dnd-kit/utilities": "^3.2.2",
+    "@imagekit/next": "^2.0.0",
     "@radix-ui/react-label": "^2.1.2",
     "@radix-ui/react-progress": "^1.1.2",
     "@radix-ui/react-radio-group": "^1.2.3",
     "@radix-ui/react-slot": "^1.1.2",
-    "@uploadthing/react": "^7.3.0",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
     "i": "^0.3.7",
@@ -31,8 +31,7 @@
     "react-use-clipboard": "^1.0.9",
     "recharts": "^2.15.2",
     "tailwind-merge": "^3.0.2",
-    "tailwindcss-animate": "^1.0.7",
-    "uploadthing": "^7.6.0"
+    "tailwindcss-animate": "^1.0.7"
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3",
