@@ -55,8 +55,6 @@ export async function updatePollDetails(
         };
     });
 
-    console.log(poll.toObject());
-
     await poll.save();
 
     revalidatePath("/dashboard");

@@ -64,7 +64,7 @@ export default async function PollDetailsPage({ params }: { params: Promise<{ po
                 </div>
             </div>
 
-            <div className="flex gap-12">
+            <div className="grid lg:grid-cols-2 gap-12">
                 <div className="space-y-4 flex-1">
                     {poll.options.map((option) => {
                         const voteCount = votesCount[option._id] || 0

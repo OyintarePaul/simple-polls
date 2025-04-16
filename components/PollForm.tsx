@@ -65,7 +65,7 @@ export default function PollForm({ poll }: { poll: PollPOJO }) {
                     placeholder="Enter Question Text"
                     value={questionText}
                     onChange={(e) => setQuestionText(e.target.value)}
-                    className="text-4xl placeholder:text-5xl placeholder:font-light py-12 border-0 border-bottom bg-background"
+                    className="text-5xl md:text-5xl placeholder:text-5xl placeholder:font-light py-10 border-0 border-b border-primary bg-background"
                 />
 
                 {mediaUrl && (
