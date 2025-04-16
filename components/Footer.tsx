@@ -36,7 +36,6 @@ export default function Footer () {
         <footer>
           <div className="flex flex-col items-start justify-between gap-10 text-center lg:flex-row lg:text-left">
             <div className="flex w-full max-w-96 shrink flex-col items-center justify-between gap-6 lg:items-start">
-              {/* Logo */}
               <div className="flex items-center gap-2 lg:justify-start">
                 <h2 className="text-xl font-semibold">Simple Polls</h2>
               </div>

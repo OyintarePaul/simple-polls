@@ -116,7 +116,7 @@ function RemoveOption({ handleRemove, index }: RemoveProps) {
             size="icon"
             variant="ghost"
             className="absolute size-4"
-            onClick={(e) => handleRemove(index)}
+            onClick={() => handleRemove(index)}
         >
             <X className="text-destructive" />
         </Button>

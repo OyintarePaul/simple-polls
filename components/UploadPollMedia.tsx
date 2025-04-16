@@ -14,7 +14,7 @@ export default function UploadPollMedia({
   mediaUrl,
   setMediaUrl,
 }: UploadPollMediaProps) {
-  const { beginUpload, progress } = useImageKitUpload();
+  const { beginUpload } = useImageKitUpload();
   const [isPending, startTransition] = useTransition();
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {

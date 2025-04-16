@@ -38,7 +38,7 @@ export default function Features() {
             </h2>
 
             <p className="text-muted-foreground md:max-w-2xl">
-            We've built SimplePolls with you in mind. Our core features are designed for a seamless and intuitive experience, allowing you to create and manage polls with ease, no matter your technical expertise
+            We&apos;ve built SimplePolls with you in mind. Our core features are designed for a seamless and intuitive experience, allowing you to create and manage polls with ease, no matter your technical expertise
             </p>
           </div>
         </div>
