@@ -1,9 +1,6 @@
 import dbConnect from "@/db/connect";
 import PollModel, { PollPOJO } from "@/db/models/poll";
-
-function serializeLeanDoc<T>(doc: any) {
-  return JSON.parse(JSON.stringify(doc)) as T
-}
+import { serializeLeanDoc } from "@/lib/utils";
 
 export async function getUserPolls(userID: string): Promise<PollPOJO[]> {
   await dbConnect();

@@ -5,8 +5,10 @@ interface IVote {
     option: Types.ObjectId
 }
 
-export interface LeanVote extends IVote {
-    _id: Types.ObjectId,
+export interface VotePOJO extends Omit<IVote, "poll" | "option"> {
+    poll: string, 
+    option: string,
+    _id: string,
     __v: number
 }
 

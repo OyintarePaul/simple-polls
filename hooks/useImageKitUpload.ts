@@ -12,6 +12,7 @@ import { useState } from "react";
 
 export default function useImageKitUpload() {
   const [progress, setProgress] = useState(0);
+  
   const abortController = new AbortController();
 
   const authenticator = async () => {
@@ -40,7 +41,6 @@ export default function useImageKitUpload() {
     // Call the ImageKit SDK upload function with the required parameters and callbacks.
     try {
       const uploadResponse = await upload({
-        // Authentication parameters
         expire,
         token,
         signature,

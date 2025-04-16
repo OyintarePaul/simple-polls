@@ -8,6 +8,7 @@ import { updatePollDetails } from "@/actions/poll";
 import PollOptions from "./PollOptions";
 import UploadPollMedia from "./UploadPollMedia";
 import RemovePollMedia from "./RemovePollMedia";
+import { Image } from "@imagekit/next";
 
 export default function PollForm({ poll }: { poll: PollPOJO }) {
     const [questionText, setQuestionText] = useState(poll.questionText);
@@ -42,7 +43,7 @@ export default function PollForm({ poll }: { poll: PollPOJO }) {
         setOptions(newOptions);
     };
 
-    const submitAction = async () => {
+    const submitAction = () => {
         startTransition(async () => {
             await updatePollDetails({
                 questionText,
@@ -66,7 +67,16 @@ export default function PollForm({ poll }: { poll: PollPOJO }) {
                     onChange={(e) => setQuestionText(e.target.value)}
                     className="text-4xl placeholder:text-5xl placeholder:font-light py-12 border-0 border-bottom bg-background"
                 />
-                <div className="space-x-4">
+
+                {mediaUrl && (
+                    <Image
+                        src={mediaUrl}
+                        alt="poll media"
+                        width={500}
+                        height={500}
+                    />
+                )}
+                <div className="space-x-2">
                     <UploadPollMedia
                         mediaUrl={mediaUrl}
                         setMediaUrl={(url) => setMediaUrl(url)}
@@ -75,6 +85,8 @@ export default function PollForm({ poll }: { poll: PollPOJO }) {
                         mediaUrl={mediaUrl}
                         setMediaUrl={(url) => setMediaUrl(url)}
                     />
+
+                   
                 </div>
             </div>
 
@@ -89,7 +101,7 @@ export default function PollForm({ poll }: { poll: PollPOJO }) {
             </div>
 
             <div>
-                <Button disabled={isPending}>Save</Button>
+                <Button loading={isPending}>Save</Button>
             </div>
         </form>
     );

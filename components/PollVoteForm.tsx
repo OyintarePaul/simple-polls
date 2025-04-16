@@ -27,7 +27,7 @@ export default function PollVoteForm({ poll }: { poll: PollPOJO }) {
             {state.success ?
                 <p className="text-green-500">You vote has been recorded successfully</p>
                 :
-                <Button disabled={pending}>Vote Now</Button>
+                <Button loading={pending}>Vote Now</Button>
             }
 
         </form>
