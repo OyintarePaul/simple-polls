@@ -7,7 +7,8 @@ const nextConfig: NextConfig = {
       hostname: "ik.imagekit.io",
     }]
   },
-  experimental: {
+  experimental: {   
+    turbopackFileSystemCacheForDev: true,
     serverActions: {
       allowedOrigins: ["localhost:3000"]
     }

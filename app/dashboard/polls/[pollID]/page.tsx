@@ -10,14 +10,11 @@ import { getPollVotes } from "@/queries/vote";
 import { Image } from "@imagekit/next";
 import { Pencil, Trash2 } from "lucide-react";
 import Link from "next/link";
+import type { PageProps } from "next";
 import { notFound } from "next/navigation";
 
-export default async function PollDetailsPage({
-  params,
-}: {
-  params: Promise<{ pollID: string }>;
-}) {
-  const { pollID } = await params;
+export default async function PollDetailsPage({ params }: PageProps<{ pollID: string }>) {
+  const { pollID } = params;
   await dbConnect();
   const [poll, votes] = await Promise.all([
     getPollById(pollID),

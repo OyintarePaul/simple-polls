@@ -1,14 +1,11 @@
 import PollVoteForm from "@/components/PollVoteForm";
 import { getPollById } from "@/queries/poll";
 import { Image } from "@imagekit/next";
+import type { PageProps } from "next";
 import { notFound } from "next/navigation";
 
-export default async function PollVotePage({
-    params,
-}: {
-    params: Promise<{ pollID: string }>;
-}) {
-    const { pollID } = await params;
+export default async function PollVotePage({ params }: PageProps<{ pollID: string }>) {
+    const { pollID } = params;
     const poll = await getPollById(pollID);
     if (!poll) return notFound();
 
