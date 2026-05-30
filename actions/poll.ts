@@ -1,5 +1,5 @@
 "use server";
-import dbConnect from "@/db/connect";
+import dbConnect from "@/database/connection";
 import PollModel, { PollPOJO } from "@/db/models/poll";
 import VoteModel from "@/db/models/vote";
 import { deletePoll } from "@/queries/poll";

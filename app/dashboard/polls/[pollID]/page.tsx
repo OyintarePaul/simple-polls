@@ -3,7 +3,7 @@ import CopyVoteLink from "@/components/CopyVoteLink";
 import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
 import VotesChart from "@/components/VotesChart";
-import dbConnect from "@/db/connect";
+import dbConnect from "@/database/connection";
 import { VotePOJO } from "@/db/models/vote";
 import { getPollById } from "@/queries/poll";
 import { getPollVotes } from "@/queries/vote";

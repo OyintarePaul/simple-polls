@@ -1,4 +1,4 @@
-import dbConnect from "@/db/connect";
+import dbConnect from "@/database/connection";
 import VoteModel, { VotePOJO } from "@/db/models/vote";
 import { serializeLeanDoc } from "@/lib/utils";
 
