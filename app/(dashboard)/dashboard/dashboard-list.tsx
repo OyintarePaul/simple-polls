@@ -1,6 +1,6 @@
 import { Button } from '@/components/ui/button';
 import { toast } from 'sonner';
-import { Copy, Eye, Lock, Globe, Layers3, CheckCircle2 } from 'lucide-react';
+import { Eye, Lock, Globe, Layers3, CheckCircle2 } from 'lucide-react';
 import Link from 'next/link';
 import CopyButton from '@/components/copy-button';
 

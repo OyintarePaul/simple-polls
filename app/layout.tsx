@@ -8,7 +8,7 @@ import NavBar from "@/components/NavBar";
 import { Toaster } from "sonner";
 import { cn } from "@/lib/utils";
 
-const inter = Inter({subsets:['latin'],variable:'--font-sans'});
+const inter = Inter({ subsets: ['latin'], variable: '--font-sans' });
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -32,19 +32,16 @@ export default function RootLayout({
 }>) {
   return (
     <ClerkProvider>
-    <html lang="en" className={cn("font-sans", inter.variable)}>
-      <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
-      >
-        <Providers>
-          <MainLayout>
-            <NavBar />
+      <html lang="en" className={cn("font-sans", inter.variable)}>
+        <body
+          className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+        >
+          <Providers>
             {children}
             <Toaster richColors />
-          </MainLayout>
-        </Providers>
-      </body>
-    </html>
+          </Providers>
+        </body>
+      </html>
     </ClerkProvider>
   );
 }
