@@ -1,11 +1,10 @@
 import Link from 'next/link';
+import { Show, SignInButton, SignUpButton, UserButton } from '@clerk/nextjs';
 import { auth } from '@clerk/nextjs/server';
 import { Button } from '@/components/ui/button';
 import { ArrowRight, BarChart3, CheckCircle2, Layers3, Lock, Zap } from 'lucide-react';
 
 export default async function LandingPage() {
-  
-  const { userId } = await auth();
 
   return (
     <div className="flex min-h-screen flex-col bg-slate-50/40 dark:bg-slate-950/20 selection:bg-indigo-500 selection:text-white">
@@ -16,28 +15,31 @@ export default async function LandingPage() {
             <Layers3 className="h-5 w-5 text-indigo-600 dark:text-indigo-400" />
             <span className="font-bold tracking-tight text-base">PollGrid</span>
           </div>
-          
+
           <div className="flex items-center gap-3">
-            {userId ? (
+            <Show when="signed-in">
               <Link href="/dashboard">
                 <Button size="sm" className="bg-indigo-600 hover:bg-indigo-700 text-white shadow-sm">
                   Go to Workspace
                 </Button>
               </Link>
-            ) : (
+              <UserButton />
+            </Show>
+            <Show when="signed-out">
               <>
-                <Link href="/sign-in">
+                <SignInButton mode="modal">
                   <Button variant="ghost" size="sm" className="font-medium">
                     Sign In
                   </Button>
-                </Link>
-                <Link href="/sign-up">
+                </SignInButton>
+
+                <SignUpButton mode="modal">
                   <Button size="sm" className="bg-indigo-600 hover:bg-indigo-700 text-white shadow-sm">
                     Get Started
                   </Button>
-                </Link>
+                </SignUpButton>
               </>
-            )}
+            </Show>
           </div>
         </div>
       </header>
@@ -66,26 +68,29 @@ export default async function LandingPage() {
             </p>
 
             <div className="pt-4 flex flex-col sm:flex-row items-center justify-center gap-3">
-              {userId ? (
+              <Show when="signed-in">
                 <Link href="/dashboard" className="w-full sm:w-auto">
                   <Button size="lg" className="w-full sm:w-auto bg-slate-900 hover:bg-slate-800 text-slate-50 dark:bg-slate-50 dark:hover:bg-slate-200 dark:text-slate-900 px-8 font-medium shadow-md gap-2">
                     Open Admin Control <ArrowRight className="w-4 h-4" />
                   </Button>
                 </Link>
-              ) : (
+              </Show>
+
+              <Show when="signed-out">
                 <>
-                  <Link href="/sign-up" className="w-full sm:w-auto">
+                  <SignInButton mode="modal">
                     <Button size="lg" className="w-full sm:w-auto bg-indigo-600 hover:bg-indigo-700 text-white px-8 font-medium shadow-md gap-2">
                       Deploy Your First Poll <ArrowRight className="w-4 h-4" />
                     </Button>
-                  </Link>
+                  </SignInButton>
                   <a href="#features" className="w-full sm:w-auto">
                     <Button variant="outline" size="lg" className="w-full sm:w-auto border-slate-200 text-slate-700 hover:text-slate-900 dark:border-slate-800 dark:text-slate-300 px-8 font-medium">
                       Explore Framework
                     </Button>
                   </a>
                 </>
-              )}
+              </Show>
+
             </div>
           </div>
         </section>

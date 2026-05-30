@@ -2,11 +2,10 @@ import "./globals.css";
 import type { Metadata } from "next";
 import { Geist, Geist_Mono, Inter } from "next/font/google";
 import Providers from "@/providers";
-import MainLayout from "@/components/MainLayout";
 import { ClerkProvider } from "@clerk/nextjs";
-import NavBar from "@/components/NavBar";
 import { Toaster } from "sonner";
 import { cn } from "@/lib/utils";
+import { dark } from '@clerk/themes';
 
 const inter = Inter({ subsets: ['latin'], variable: '--font-sans' });
 
@@ -31,8 +30,15 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <ClerkProvider>
-      <html lang="en" className={cn("font-sans", inter.variable)}>
+    <ClerkProvider afterSignOutUrl="/" appearance={{
+      theme: dark, 
+      variables: {
+        colorPrimary: '#4f46e5', // Optional: Match your indigo-600 background color layout
+        colorBackground: '#020617',
+        colorModalBackdrop: 'rgba(2, 6, 23, 0.75)'
+      }
+    }}>
+      <html lang="en" className={cn("font-sans", inter.variable, "dark")}>
         <body
           className={`${geistSans.variable} ${geistMono.variable} antialiased`}
         >
