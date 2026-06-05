@@ -4,17 +4,17 @@ import { Document, Types } from 'mongoose';
 export interface IOption {
   _id: Types.ObjectId;
   text: string;
-  imageUrl?: string;
   voteCount: number;
 }
 
 export interface IPoll extends Document {
-  creatorId: string; // Links to Clerk User ID (string)
+  creatorId: string;
   question: string;
-  imageUrl?: string;
   options: IOption[];
-  isPrivate: boolean; // True = Requires Clerk Auth to vote
+  isPrivate: boolean;
   isActive: boolean;
+  totalVotes: number;          
+  votedFingerprints: string[];
   createdAt: Date;
   updatedAt: Date;
 }

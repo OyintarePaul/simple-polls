@@ -3,7 +3,7 @@ import { useState, useTransition } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { Progress } from '@/components/ui/progress';
-import { castVote } from '@/app/actions/vote';
+import { castVote } from '@/actions/vote';
 import { toast } from 'sonner';
 import { SignInButton } from '@clerk/nextjs';
 import { CheckCircle2, Lock, Loader2 } from 'lucide-react';
@@ -41,7 +41,7 @@ export default function VotingForm({
   const [votedOptionId, setVotedOptionId] = useState<string | null>(initialVotedOptionId);
   const [totalVotes, setTotalVotes] = useState(initialTotalVotes);
   const [options, setOptions] = useState<ClientOption[]>(poll.options);
-  
+
   const [isPending, startTransition] = useTransition();
 
   const showAuthWall = poll.isPrivate && !isAuthenticated;
@@ -50,7 +50,7 @@ export default function VotingForm({
     if (!selectedOptionId) return;
 
     startTransition(async () => {
-      const result = await castVote(poll.id, selectedOptionId);
+      const result = await castVote({ pollId: poll.id, optionId: selectedOptionId });
 
       if (!result.success) {
         // Sonner error variant execution
@@ -110,11 +110,10 @@ export default function VotingForm({
                     </span>
                     <span className="text-slate-500 font-mono">{percentage}% ({option.voteCount})</span>
                   </div>
-                  <Progress 
-                    value={percentage} 
-                    className={`h-8 transition-all duration-1000 ${
-                      isUserChoice ? '[&>div]:bg-indigo-600' : '[&>div]:bg-slate-300 dark:[&>div]:bg-slate-700'
-                    }`} 
+                  <Progress
+                    value={percentage}
+                    className={`h-8 transition-all duration-1000 ${isUserChoice ? '[&>div]:bg-indigo-600' : '[&>div]:bg-slate-300 dark:[&>div]:bg-slate-700'
+                      }`}
                   />
                 </div>
               );
@@ -132,16 +131,14 @@ export default function VotingForm({
                   key={option.id}
                   disabled={showAuthWall || isPending}
                   onClick={() => setSelectedOptionId(option.id)}
-                  className={`w-full text-left p-4 rounded-xl border text-sm font-medium transition-all flex items-center justify-between ${
-                    isSelected
+                  className={`w-full text-left p-4 rounded-xl border text-sm font-medium transition-all flex items-center justify-between ${isSelected
                       ? 'border-indigo-600 bg-indigo-50/50 dark:bg-indigo-950/20 text-indigo-900 dark:text-indigo-400 ring-2 ring-indigo-600/20'
                       : 'border-slate-200 dark:border-slate-800 hover:bg-slate-50 dark:hover:bg-slate-900/60 text-slate-700 dark:text-slate-300'
-                  } ${showAuthWall ? 'opacity-60 cursor-not-allowed' : 'cursor-pointer'}`}
+                    } ${showAuthWall ? 'opacity-60 cursor-not-allowed' : 'cursor-pointer'}`}
                 >
                   <span>{option.text}</span>
-                  <div className={`w-4 h-4 rounded-full border flex items-center justify-center transition-all ${
-                    isSelected ? 'border-indigo-600 bg-indigo-600' : 'border-slate-300'
-                  }`}>
+                  <div className={`w-4 h-4 rounded-full border flex items-center justify-center transition-all ${isSelected ? 'border-indigo-600 bg-indigo-600' : 'border-slate-300'
+                    }`}>
                     {isSelected && <div className="w-1.5 h-1.5 rounded-full bg-white" />}
                   </div>
                 </button>

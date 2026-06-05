@@ -14,6 +14,7 @@ const serverSchema = clientSchema.extend({
     ),
     IMAGEKIT_PUBLIC_KEY: z.string().min(1, { error: "IMAGEKIT_PUBLIC_KEY cannot be empty" }),
     IMAGEKIT_PRIVATE_KEY: z.string().min(1, { error: "IMAGEKIT_PRIVATE_KEY cannot be empty" }),
+    FINGERPRINT_SECRET: z.string().min(32, { error: "FINGERPRINT_SECRET must be at least 32 characters long" }),
 });
 
 // Map values accurately
@@ -23,6 +24,7 @@ const processEnv = {
     NEXT_PUBLIC_IMAGEKIT_ENDPOINT: process.env.NEXT_PUBLIC_IMAGEKIT_ENDPOINT,
     IMAGEKIT_PUBLIC_KEY: process.env.IMAGEKIT_PUBLIC_KEY,
     IMAGEKIT_PRIVATE_KEY: process.env.IMAGEKIT_PRIVATE_KEY,
+    FINGERPRINT_SECRET: process.env.FINGERPRINT_SECRET,
 };
 
 // 3. Determine context: Are we executing in the browser or on the server?
@@ -49,3 +51,4 @@ export const {
 export const MONGODB_URI = (parsed.data as any).MONGODB_URI as string;
 export const IMAGEKIT_PUBLIC_KEY = (parsed.data as any).IMAGEKIT_PUBLIC_KEY as string;
 export const IMAGEKIT_PRIVATE_KEY = (parsed.data as any).IMAGEKIT_PRIVATE_KEY as string;
+export const FINGERPRINT_SECRET = (parsed.data as any).FINGERPRINT_SECRET as string;
