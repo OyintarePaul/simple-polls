@@ -32,11 +32,10 @@ export default function RootLayout({
   return (
     <ClerkProvider afterSignOutUrl="/" appearance={{
       theme: dark, 
-      variables: {
-        colorPrimary: '#4f46e5', // Optional: Match your indigo-600 background color layout
-        colorBackground: '#020617',
-        colorModalBackdrop: 'rgba(2, 6, 23, 0.75)'
-      }
+      cssLayerName: "clerk",
+      elements: {
+        modalBackdrop: "!bg-slate-950/80 backdrop-blur-md transition-all duration-300"
+      },
     }}>
       <html lang="en" className={cn("font-sans", inter.variable, "dark")}>
         <body

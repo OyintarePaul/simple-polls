@@ -38,7 +38,7 @@ export default function DashboardLayout({
 
           <div className="flex items-center gap-4">
             {/* Clerk User Management Portal */}
-            <UserButton afterSignOutUrl="/" />
+            <UserButton />
           </div>
         </div>
       </header>

@@ -1,8 +1,9 @@
 import { Button } from '@/components/ui/button';
 import { toast } from 'sonner';
-import { Eye, Lock, Globe, Layers3, CheckCircle2 } from 'lucide-react';
+import { Eye, Lock, Globe, Layers3, CheckCircle2, Plus } from 'lucide-react';
 import Link from 'next/link';
 import CopyButton from '@/components/copy-button';
+import { CreatePollModal } from '@/components/create-poll-modal';
 
 interface DashboardPoll {
     id: string;
@@ -41,20 +42,32 @@ export default function DashboardList({ initialPolls }: DashboardListProps) {
 
     // Graceful blank slate layout check
     if (polls.length === 0) {
-        return (
-            <div className="rounded-xl border border-dashed border-slate-200 dark:border-slate-800 p-12 text-center max-w-md mx-auto space-y-4 my-8">
-                <div className="w-12 h-12 bg-slate-50 dark:bg-slate-900 rounded-full flex items-center justify-center mx-auto text-slate-400">
-                    <Layers3 className="w-5 h-5" />
-                </div>
-                <div className="space-y-1">
-                    <h3 className="font-semibold text-sm text-slate-900 dark:text-slate-50">No polls deployed</h3>
-                    <p className="text-xs text-slate-500 dark:text-slate-400">
-                        Create your first public or private poll structure to open data intake links.
-                    </p>
-                </div>
+    return (
+        <div className="rounded-xl border border-dashed border-slate-200 dark:border-slate-800 p-12 text-center max-w-md mx-auto space-y-5 my-8 bg-slate-50/30 dark:bg-slate-900/10">
+            <div className="w-12 h-12 bg-slate-50 dark:bg-slate-900 rounded-full flex items-center justify-center mx-auto text-slate-400 border border-slate-100 dark:border-slate-800 shadow-inner">
+                <Layers3 className="w-5 h-5" />
             </div>
-        );
-    }
+            <div className="space-y-1">
+                <h3 className="font-semibold text-sm text-slate-900 dark:text-slate-50">No polls deployed</h3>
+                <p className="text-xs text-slate-500 dark:text-slate-400 max-w-[280px] mx-auto leading-relaxed">
+                    Create your first public or private poll structure to open data intake links.
+                </p>
+            </div>
+
+            {/* 👇 Drop the Modal right here with a custom trigger styled for the center grid CTA */}
+            <div className="pt-2 flex justify-center">
+                <CreatePollModal
+                    trigger={
+                        <Button className="bg-indigo-600 hover:bg-indigo-700 text-white font-medium text-xs h-9 px-4 shadow-md shadow-indigo-600/10 gap-2">
+                            <Plus className="w-3.5 h-3.5" />
+                            <span>Create Your First Poll</span>
+                        </Button>
+                    }
+                />
+            </div>
+        </div>
+    );
+}
 
     return (
         <div className="space-y-4">

@@ -3,6 +3,7 @@ import { auth } from '@clerk/nextjs/server';
 import { redirect } from 'next/navigation';
 import DashboardList from './dashboard-list';
 import { getDashboardPollsByCreator } from '@/services/poll-service';
+import { CreatePollModal } from '@/components/create-poll-modal';
 
 export default async function DashboardPage() {
   // 1. Enforce authentication lock at the layout root
@@ -25,6 +26,10 @@ export default async function DashboardPage() {
           <p className="text-sm text-muted-foreground mt-1">
             Build, distribute, and track user sentiment analytics across the grid.
           </p>
+        </div>
+
+        <div className="flex items-center shrink-0">
+          <CreatePollModal />
         </div>
       </div>
 

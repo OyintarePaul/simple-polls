@@ -3,7 +3,7 @@ import { useState, useTransition } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { Progress } from '@/components/ui/progress';
-import { castVote } from '@/app/actions/vote-actions';
+import { castVote } from '@/app/actions/vote';
 import { toast } from 'sonner';
 import { SignInButton } from '@clerk/nextjs';
 import { CheckCircle2, Lock, Loader2 } from 'lucide-react';

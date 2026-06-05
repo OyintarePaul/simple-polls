@@ -134,4 +134,13 @@
   html {
     @apply font-sans;
   }
+
+  button,
+  [role="button"],
+  [type="button"],
+  [type="submit"],
+  [role="switch"],
+  a {
+    cursor: pointer !important;
+  }
 }

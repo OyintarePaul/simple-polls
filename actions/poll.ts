@@ -1,89 +1,48 @@
 "use server";
-import dbConnect from "@/database/connection";
-import PollModel, { PollPOJO } from "@/db/models/poll";
-import VoteModel from "@/db/models/vote";
-import { deletePoll } from "@/queries/poll";
-import { deletePollVotes } from "@/queries/vote";
 import { auth } from "@clerk/nextjs/server";
-import { Types } from "mongoose";
 import { revalidatePath } from "next/cache";
-import { notFound, redirect } from "next/navigation";
+import { pollFormSchema, type PollFormValues } from "@/lib/validations/poll";
+import connectToDb from "@/database/connection";
+import { Poll } from "@/models/Poll";
 
-export async function createPoll() {
-    const { userId } = await auth();
-    if (!userId) throw new Error("You are not authenticated");
+export async function createPollAction(values: PollFormValues) {
+    try {
+        // 1. Authenticate the session
+        const { userId } = await auth();
+        if (!userId) {
+            return { success: false, error: "Authentication required." };
+        }
 
-    await dbConnect();
-    let poll = new PollModel({
-        userID: userId,
-    });
-    poll = await poll.save();
-    redirect(`/dashboard/polls/${poll._id}/edit`);
-}
+        // 2. Validate the data payload against the schema on the server
+        const parsed = pollFormSchema.safeParse(values);
+        if (!parsed.success) {
+            return { success: false, error: "Invalid form parameters provided." };
+        }
 
-type UpdatePollDetailsProps = Pick<
-    PollPOJO,
-    "questionText" | "options" | "_id" | "userID" | "mediaUrl"
->;
+        const { question, options, isPrivate } = parsed.data;
 
-export async function updatePollDetails(
-    payload: UpdatePollDetailsProps
-) {
-    const { userId } = await auth();
-    if (!userId) throw new Error("You are not authenticated");
+        // 3. Connect to MongoDB
+        await connectToDb();
 
-    if (userId !== payload.userID)
-        throw new Error("You don't have the permission to edit this poll");
+        // 4. Transform options into an array of objects tracking counts
+        const formattedOptions = options.map((opt) => ({
+            text: opt.text,
 
-    await dbConnect();
+        }));
+        // 5. Create the database record
+        await Poll.create({
+            creatorId: userId,
+            question,
+            options: formattedOptions,
+            isPrivate,
+        });
 
-    const poll = await PollModel.findById(payload._id);
-    if (!poll) return notFound();
+        // 6. Purge the Next.js layout cache so the dashboard immediately shows the new poll
+        revalidatePath("/dashboard");
 
-    poll.questionText = payload.questionText;
-    poll.mediaUrl = payload.mediaUrl;
-
-    // make sure that previous options retain their ids
-    // but new options get assigned a new id
-    poll.options = payload.options.map((option) => {
-        return {
-            _id:
-                option._id.length > 0
-                    ? new Types.ObjectId(option._id)
-                    : new Types.ObjectId(),
-            optionText: option.optionText,
-        };
-    });
-
-    await poll.save();
-
-    revalidatePath("/dashboard");
-    redirect("/dashboard");
-}
-
-export async function placeVote(_: any, formData: FormData) {
-    const payload: {
-        poll: string;
-        option: string;
-    } = {
-        poll: formData.get("pollID") as string,
-        option: formData.get("optionID") as string,
-    };
-    await dbConnect();
-    const vote = new VoteModel(payload);
-    const result = await vote.save();
-    return {
-        success: true,
-        message: "You vote has been recorded successfully.",
-    };
-}
-
-export async function deletePollAndVotes(formData: FormData) {
-    const pollID = formData.get("pollID") as string;
-
-    await dbConnect();
-    await Promise.all([deletePoll(pollID), deletePollVotes(pollID)]);
-
-    revalidatePath("/dashboard");
-    redirect("/dashboard");
+        return { success: true };
+    } catch (error) {
+        console.error("POLL_CREATION_FAILURE:", error);
+        return { success: false, error: "Internal server error occurred." };
+    }
 }
