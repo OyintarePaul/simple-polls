@@ -22,7 +22,7 @@ export interface IPoll extends Document {
 export interface IVote extends Document {
   pollId: Types.ObjectId;
   optionId: Types.ObjectId;
-  voterId?: string; // Stored if authenticated (Private Poll)
+  voterId?: string | null; // Stored if authenticated (Private Poll)
   voterFingerprint: string; // SHA-256 Hash of IP + UserAgent (Public Poll fallback)
   createdAt: Date;
 }

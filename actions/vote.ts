@@ -71,7 +71,8 @@ export async function castVote({ pollId, optionId }: CastVotePayload) {
         await Vote.create({
             pollId: poll._id,
             voterFingerprint: fingerprint,
-            optionId: optionId
+            optionId: optionId,
+            voterId: userId || null
         });
 
         // 7. PURGE THE VISUAL CACHE PIPELINE
