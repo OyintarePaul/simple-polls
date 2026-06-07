@@ -22,7 +22,6 @@ export default function DashboardLayout({
               {[
                 { label: 'Workspace', href: '/dashboard', icon: LayoutDashboard },
                 { label: 'Analytics', href: '/dashboard/analytics', icon: BarChart3 },
-                { label: 'Settings', href: '/dashboard/settings', icon: Settings },
               ].map((item) => (
                 <Link
                   key={item.href}

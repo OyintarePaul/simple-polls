@@ -11,10 +11,10 @@ export default async function GlobalAnalyticsPage() {
 
     await connectToDb();
 
-    // 1. Fetch all raw poll data owned by this specific creator
+    // 1. Fetch all poll data owned by this specific creator
     const polls = await Poll.find({ creatorId: userId }).lean();
 
-    // 2. Perform aggregate math transformations on the data stream
+    // 2. Perform math transformations on the data stream
     const totalPolls = polls.length;
     const activePolls = polls.filter((p: any) => p.isActive).length;
     const pausedPolls = totalPolls - activePolls;
@@ -24,7 +24,7 @@ export default async function GlobalAnalyticsPage() {
         return sum + pollVotes;
     }, 0);
 
-    // 3. Sort to isolate the top-performing intake funnels
+    // 3. Sort to isolate the top-performing polls
     const topPolls = [...polls]
         .map((poll: any) => {
             const votes = poll.options.reduce((sum: number, opt: any) => sum + opt.voteCount, 0);
@@ -40,78 +40,78 @@ export default async function GlobalAnalyticsPage() {
 
     return (
         <div className="space-y-8 max-w-5xl mx-auto py-6 px-4">
-            {/* Structural Header Context */}
+            {/* Header Text */}
             <div className="space-y-1">
                 <h1 className="text-2xl font-extrabold tracking-tight text-slate-100 sm:text-3xl">
-                    Global Performance Overview
+                    Overall Analytics
                 </h1>
                 <p className="text-sm text-slate-400 font-medium">
-                    Aggregated collection health metrics across your entire voting network.
+                    Total stats and performance across all your polls.
                 </p>
             </div>
 
             <hr className="border-slate-900" />
 
-            {/* Aggregate Scoreboards Row */}
+            {/* Stats Row */}
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-                {/* Total Captured Data Card */}
+                {/* Total Votes Card */}
                 <div className="bg-slate-900/40 border border-slate-900 p-5 rounded-xl space-y-2">
                     <div className="flex items-center justify-between text-muted-foreground">
-                        <span className="text-xs font-bold uppercase tracking-wider">Gross Responses</span>
+                        <span className="text-xs font-bold uppercase tracking-wider">Total Votes</span>
                         <Users className="w-4 h-4 text-indigo-400" />
                     </div>
                     <p className="text-3xl font-extrabold font-mono text-slate-100">{totalVotesAcrossPlatform}</p>
-                    <p className="text-[11px] text-slate-400">Aggregated device footprint</p>
+                    <p className="text-[11px] text-slate-400">Votes from all devices</p>
                 </div>
 
-                {/* Total Tunnels Active Card */}
+                {/* Total Polls Card */}
                 <div className="bg-slate-900/40 border border-slate-900 p-5 rounded-xl space-y-2">
                     <div className="flex items-center justify-between text-muted-foreground">
-                        <span className="text-xs font-bold uppercase tracking-wider">Total Pipelines</span>
+                        <span className="text-xs font-bold uppercase tracking-wider">Total Polls</span>
                         <BarChart3 className="w-4 h-4 text-indigo-400" />
                     </div>
                     <p className="text-3xl font-extrabold font-mono text-slate-100">{totalPolls}</p>
-                    <p className="text-[11px] text-slate-400">Initialized question paths</p>
+                    <p className="text-[11px] text-slate-400">Created questions</p>
                 </div>
 
-                {/* Active Intake Card */}
+                {/* Active Polls Card */}
                 <div className="bg-slate-900/40 border border-slate-900 p-5 rounded-xl space-y-2">
                     <div className="flex items-center justify-between text-muted-foreground">
-                        <span className="text-xs font-bold uppercase tracking-wider">Live Intake</span>
+                        <span className="text-xs font-bold uppercase tracking-wider">Active Polls</span>
                         <CheckCircle2 className="w-4 h-4 text-emerald-400" />
                     </div>
                     <p className="text-3xl font-extrabold font-mono text-emerald-400">{activePolls}</p>
-                    <p className="text-[11px] text-slate-400">Open to public collection</p>
+                    <p className="text-[11px] text-slate-400">Open for voting</p>
                 </div>
 
-                {/* Closed/Paused Tunnels Card */}
+                {/* Paused Polls Card */}
                 <div className="bg-slate-900/40 border border-slate-900 p-5 rounded-xl space-y-2">
                     <div className="flex items-center justify-between text-muted-foreground">
-                        <span className="text-xs font-bold uppercase tracking-wider">Paused Intake</span>
+                        <span className="text-xs font-bold uppercase tracking-wider">Paused Polls</span>
                         <AlertCircle className="w-4 h-4 text-amber-400" />
                     </div>
                     <p className="text-3xl font-extrabold font-mono text-amber-400">{pausedPolls}</p>
-                    <p className="text-[11px] text-slate-400">Temporarily blocking routes</p>
+                    <p className="text-[11px] text-slate-400">Closed to the public</p>
                 </div>
             </div>
 
-            {/* Top Performing Volume Highlights Section */}
+            {/* Top Performing Polls Section */}
             <div className="bg-slate-900/20 border border-slate-900 rounded-2xl p-6 sm:p-8 space-y-6">
                 <div>
-                    <h2 className="text-lg font-bold text-slate-200">Highest Volume Channels</h2>
-                    <p className="text-xs text-slate-400">Your top performing pipelines ranked by total vote footprint.</p>
+                    <h2 className="text-lg font-bold text-slate-200">Most Popular Polls</h2>
+                    <p className="text-xs text-slate-400">Your top polls ranked by total number of votes.</p>
                 </div>
 
                 {totalPolls === 0 ? (
                     <div className="text-center py-12 border border-dashed border-slate-900 rounded-xl space-y-2">
                         <Activity className="w-8 h-8 text-muted-foreground mx-auto animate-pulse" />
-                        <p className="text-sm text-slate-300 font-medium">No active streaming pipelines detected.</p>
-                        <p className="text-xs text-slate-500">Create a poll from your workspace to initialize global monitoring trackers.</p>
+                        <p className="text-sm text-slate-300 font-medium">No polls found.</p>
+                        <p className="text-xs text-slate-500">Create a poll from your workspace to see stats here.</p>
                     </div>
                 ) : (
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                         {topPolls.map((poll) => {
-                            // Calculate proportion against the total platform scale for a cool inner chart visual
+                            // Calculate percentage share of total votes
                             const platformShare = totalVotesAcrossPlatform > 0
                                 ? Math.round((poll.totalVotes / totalVotesAcrossPlatform) * 100)
                                 : 0;
@@ -136,8 +136,8 @@ export default async function GlobalAnalyticsPage() {
 
                                         <div className="space-y-1.5 pt-1">
                                             <div className="flex justify-between text-xs text-slate-400 font-medium">
-                                                <span>{poll.totalVotes} responses logged</span>
-                                                <span className="font-mono text-muted-foreground">{platformShare}% share</span>
+                                                <span>{poll.totalVotes} votes</span>
+                                                <span className="font-mono text-muted-foreground">{platformShare}% of total</span>
                                             </div>
                                             <div className="h-1.5 w-full bg-slate-950 rounded-full overflow-hidden">
                                                 <div
