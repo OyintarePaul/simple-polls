@@ -5,6 +5,7 @@ import CopyButton from '@/components/copy-button';
 import { CreatePollModal } from '@/components/create-poll-modal';
 import { DeletePoll } from '@/components/delete-poll';
 import { TogglePollStatus } from "@/components/toggle-poll-status";
+import { LaunchPoll } from '@/components/launch-poll';
 
 interface DashboardPoll {
     id: string;
@@ -63,12 +64,6 @@ export default function DashboardList({ initialPolls }: DashboardListProps) {
 
             <div className="grid grid-cols-1 gap-3">
                 {polls.map((poll) => {
-                    const dynamicShareUrl = typeof window !== 'undefined'
-                        ? `${window.location.origin}/p/${poll.id}`
-                        : `/p/${poll.id}`;
-
-
-
                     return (
                         <div
                             key={poll.id}
@@ -114,21 +109,11 @@ export default function DashboardList({ initialPolls }: DashboardListProps) {
                                     pollId={poll.id}
                                 />
 
+                                 {/* View Active Route Target */}
+                                <LaunchPoll pollId={poll.id} />
+
                                 {/* 💡 New Toggle Status Button (Pause / Play Icon) */}
                                 <TogglePollStatus pollId={poll.id} isActive={poll.isActive} />
-
-                                {/* View Active Route Target */}
-                                <Link href={`/p/${poll.id}`} passHref target="_blank">
-                                    <Button
-                                        variant="outline"
-                                        size="sm"
-                                        // 💡 THE FIX: Force h-9 w-9 p-0 for a perfect box on mobile, then expand it dynamically via xs:
-                                        className="h-9 w-9 p-0 xs:w-auto xs:px-3 gap-1.5 font-medium border-slate-200 text-slate-700 hover:text-slate-900 dark:border-slate-800 dark:text-slate-300"
-                                    >
-                                        <Eye className="w-3.5 h-3.5" />
-                                        <span className="hidden xs:inline">Launch</span>
-                                    </Button>
-                                </Link>
 
                                 {/* 💡 New Delete Button */}
                                 <DeletePoll pollId={poll.id} />
