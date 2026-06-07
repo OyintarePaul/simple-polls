@@ -1,4 +1,4 @@
-import dbConnect from "@/database/connection";
+import connectToDb from "@/database/connection";
 import { Poll } from "@/models/Poll";
 
 export interface DashboardPollDTO {
@@ -11,12 +11,15 @@ export interface DashboardPollDTO {
 }
 
 export async function getActivePollById(id: string) {
-  await dbConnect();
-  return Poll.findById(id).lean();
+  await connectToDb();
+  return Poll.findOne({ 
+    _id: id, 
+    isActive: true 
+  }).lean();
 }
 
 export async function getDashboardPollsByCreator(creatorId: string): Promise<DashboardPollDTO[]> {
-  await dbConnect();
+  await connectToDb();
 
   const rawPolls = await Poll.find({ creatorId })
     .sort({ createdAt: -1 })

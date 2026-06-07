@@ -1,9 +1,12 @@
+"use client";
+import { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { toast } from 'sonner';
-import { Eye, Lock, Globe, Layers3, CheckCircle2, Plus } from 'lucide-react';
+import { Eye, Lock, Globe, Layers3, Plus, Trash2, Power } from 'lucide-react';
 import Link from 'next/link';
 import CopyButton from '@/components/copy-button';
 import { CreatePollModal } from '@/components/create-poll-modal';
+import { togglePollStatus, deletePoll } from '@/actions/poll';
 
 interface DashboardPoll {
     id: string;
@@ -19,55 +22,67 @@ interface DashboardListProps {
 }
 
 export default function DashboardList({ initialPolls }: DashboardListProps) {
-    const polls = initialPolls
+    const polls = initialPolls;
 
-    const copyShareLink = async (pollId: string) => {
-        // Generates a fully qualified URL based on current origin domain context
-        const shareUrl = `${window.location.origin}/p/${pollId}`;
+    const [actionPendingId, setActionPendingId] = useState<string | null>(null);
+ 
+    const handleToggleStatus = async (pollId: string, currentStatus: boolean) => {
+        setActionPendingId(pollId);
+        const result = await togglePollStatus(pollId, currentStatus);
 
-        try {
-            await navigator.clipboard.writeText(shareUrl);
-
-            // Native modern Sonner implementation hook
-            toast.success('Share Link Copied', {
-                description: 'The poll URL has been copied to your clipboard.',
-                icon: <CheckCircle2 className="w-4 h-4 text-emerald-500" />
+        if (result.success) {
+            toast.success(currentStatus ? 'Poll Paused' : 'Poll Activated', {
+                description: currentStatus ? 'Responses are now blocked.' : 'Public links are open again.'
             });
-        } catch (err) {
-            toast.error('Failed to copy', {
-                description: 'Could not write to device clipboard buffer.'
-            });
+        } else {
+            toast.error('Operation failed', { description: result.error });
         }
+        setActionPendingId(null);
+    };
+
+    const handleDeletePoll = async (pollId: string) => {
+        if (!confirm("Are you absolutely sure you want to permanently delete this poll and all its data history?")) return;
+
+        setActionPendingId(pollId);
+        const result = await deletePoll(pollId);
+
+        if (result.success) {
+            toast.success('Poll Purged', {
+                description: 'The poll record has been successfully deleted.'
+            });
+        } else {
+            toast.error('Deletion failed', { description: result.error });
+        }
+        setActionPendingId(null);
     };
 
     // Graceful blank slate layout check
     if (polls.length === 0) {
-    return (
-        <div className="rounded-xl border border-dashed border-slate-200 dark:border-slate-800 p-12 text-center max-w-md mx-auto space-y-5 my-8 bg-slate-50/30 dark:bg-slate-900/10">
-            <div className="w-12 h-12 bg-slate-50 dark:bg-slate-900 rounded-full flex items-center justify-center mx-auto text-slate-400 border border-slate-100 dark:border-slate-800 shadow-inner">
-                <Layers3 className="w-5 h-5" />
-            </div>
-            <div className="space-y-1">
-                <h3 className="font-semibold text-sm text-slate-900 dark:text-slate-50">No polls deployed</h3>
-                <p className="text-xs text-slate-500 dark:text-slate-400 max-w-[280px] mx-auto leading-relaxed">
-                    Create your first public or private poll structure to open data intake links.
-                </p>
-            </div>
+        return (
+            <div className="rounded-xl border border-dashed border-slate-200 dark:border-slate-800 p-12 text-center max-w-md mx-auto space-y-5 my-8 bg-slate-50/30 dark:bg-slate-900/10">
+                <div className="w-12 h-12 bg-slate-50 dark:bg-slate-900 rounded-full flex items-center justify-center mx-auto text-slate-400 border border-slate-100 dark:border-slate-800 shadow-inner">
+                    <Layers3 className="w-5 h-5" />
+                </div>
+                <div className="space-y-1">
+                    <h3 className="font-semibold text-sm text-slate-900 dark:text-slate-50">No polls deployed</h3>
+                    <p className="text-xs text-slate-500 dark:text-slate-400 max-w-[280px] mx-auto leading-relaxed">
+                        Create your first public or private poll structure to open data intake links.
+                    </p>
+                </div>
 
-            {/* 👇 Drop the Modal right here with a custom trigger styled for the center grid CTA */}
-            <div className="pt-2 flex justify-center">
-                <CreatePollModal
-                    trigger={
-                        <Button className="bg-indigo-600 hover:bg-indigo-700 text-white font-medium text-xs h-9 px-4 shadow-md shadow-indigo-600/10 gap-2">
-                            <Plus className="w-3.5 h-3.5" />
-                            <span>Create Your First Poll</span>
-                        </Button>
-                    }
-                />
+                <div className="pt-2 flex justify-center">
+                    <CreatePollModal
+                        trigger={
+                            <Button className="bg-indigo-600 hover:bg-indigo-700 text-white font-medium text-xs h-9 px-4 shadow-md shadow-indigo-600/10 gap-2">
+                                <Plus className="w-3.5 h-3.5" />
+                                <span>Create Your First Poll</span>
+                            </Button>
+                        }
+                    />
+                </div>
             </div>
-        </div>
-    );
-}
+        );
+    }
 
     return (
         <div className="space-y-4">
@@ -85,10 +100,13 @@ export default function DashboardList({ initialPolls }: DashboardListProps) {
                     const dynamicShareUrl = typeof window !== 'undefined'
                         ? `${window.location.origin}/p/${poll.id}`
                         : `/p/${poll.id}`;
+
+                    const isMutating = actionPendingId === poll.id;
+
                     return (
                         <div
                             key={poll.id}
-                            className={`group rounded-xl border bg-card p-5 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 hover:border-slate-300 dark:hover:border-slate-700 transition-all shadow-sm ${!poll.isActive ? 'opacity-70 bg-slate-50/40 dark:bg-slate-950/20' : ''
+                            className={`group rounded-xl border bg-card p-5 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 hover:border-slate-300 dark:hover:border-slate-700 transition-all shadow-sm ${!poll.isActive ? 'opacity-75 bg-slate-50/40 dark:bg-slate-950/20' : ''
                                 }`}
                         >
                             {/* Core Info Panel */}
@@ -104,7 +122,7 @@ export default function DashboardList({ initialPolls }: DashboardListProps) {
                                         </span>
                                     )}
                                     {!poll.isActive && (
-                                        <span className="inline-flex items-center text-[10px] font-bold bg-slate-100 dark:bg-slate-800 text-slate-500 dark:text-slate-400 px-2 py-0.5 rounded-md uppercase tracking-wider">
+                                        <span className="inline-flex items-center text-[10px] font-bold bg-rose-500/10 text-rose-600 dark:text-rose-400 px-2 py-0.5 rounded-md uppercase tracking-wider border border-rose-500/10">
                                             Closed
                                         </span>
                                     )}
@@ -112,7 +130,8 @@ export default function DashboardList({ initialPolls }: DashboardListProps) {
                                         {new Date(poll.createdAt).toLocaleDateString(undefined, { dateStyle: 'medium' })}
                                     </span>
                                 </div>
-                                <h3 className="font-semibold text-slate-900 dark:text-slate-100 tracking-tight leading-snug">
+                                <h3 className={`font-semibold tracking-tight leading-snug ${poll.isActive ? 'text-slate-900 dark:text-slate-100' : 'text-slate-500 line-through'
+                                    }`}>
                                     {poll.question}
                                 </h3>
                             </div>
@@ -127,23 +146,51 @@ export default function DashboardList({ initialPolls }: DashboardListProps) {
                                 {/* Copy Share Trigger Button */}
                                 <CopyButton
                                     valueToCopy={dynamicShareUrl}
-                                    disabled={!poll.isActive}
+                                    disabled={!poll.isActive || isMutating}
                                 />
+
+                                {/* 💡 New Toggle Status Button (Pause / Play Icon) */}
+                                <Button
+                                    variant="outline"
+                                    size="sm"
+                                    disabled={isMutating}
+                                    onClick={() => handleToggleStatus(poll.id, poll.isActive)}
+                                    className={`h-9 w-9 p-0 border-slate-200 dark:border-slate-800 ${poll.isActive
+                                            ? "text-amber-500 hover:bg-amber-500/10 hover:text-amber-600"
+                                            : "text-emerald-500 hover:bg-emerald-500/10 hover:text-emerald-600"
+                                        }`}
+                                    title={poll.isActive ? "Pause Registration" : "Resume Registration"}
+                                >
+                                    <Power className="w-3.5 h-3.5" />
+                                </Button>
 
                                 {/* View Active Route Target */}
                                 <Link href={`/p/${poll.id}`} passHref target="_blank">
                                     <Button
                                         variant="outline"
                                         size="sm"
+                                        disabled={isMutating}
                                         className="h-9 gap-1.5 font-medium border-slate-200 text-slate-700 hover:text-slate-900 dark:border-slate-800 dark:text-slate-300"
                                     >
                                         <Eye className="w-3.5 h-3.5" />
-                                        <span>Launch View</span>
+                                        <span className="hidden xs:inline">Launch</span>
                                     </Button>
                                 </Link>
+
+                                {/* 💡 New Delete Button */}
+                                <Button
+                                    variant="outline"
+                                    size="sm"
+                                    disabled={isMutating}
+                                    onClick={() => handleDeletePoll(poll.id)}
+                                    className="h-9 w-9 p-0 border-slate-200 text-rose-500 hover:bg-rose-500/10 hover:text-rose-600 dark:border-slate-800"
+                                    title="Delete Poll Permanently"
+                                >
+                                    <Trash2 className="w-3.5 h-3.5" />
+                                </Button>
                             </div>
                         </div>
-                    )
+                    );
                 })}
             </div>
         </div>

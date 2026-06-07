@@ -13,7 +13,6 @@ import {
 import { CreatePollForm } from "./create-poll-form";
 
 interface CreatePollModalProps {
-  // Allows customizing the button text or passing an alternate trigger (like an empty state CTA)
   trigger?: React.ReactNode;
 }
 
