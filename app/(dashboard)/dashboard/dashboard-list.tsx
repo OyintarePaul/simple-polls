@@ -1,12 +1,10 @@
-"use client";
-import { useState } from 'react';
 import { Button } from '@/components/ui/button';
-import { toast } from 'sonner';
-import { Eye, Lock, Globe, Layers3, Plus, Trash2, Power } from 'lucide-react';
+import { Eye, Lock, Globe, Layers3, Plus, } from 'lucide-react';
 import Link from 'next/link';
 import CopyButton from '@/components/copy-button';
 import { CreatePollModal } from '@/components/create-poll-modal';
-import { togglePollStatus, deletePoll } from '@/actions/poll';
+import { DeletePoll } from '@/components/delete-poll';
+import { TogglePollStatus } from "@/components/toggle-poll-status";
 
 interface DashboardPoll {
     id: string;
@@ -23,38 +21,6 @@ interface DashboardListProps {
 
 export default function DashboardList({ initialPolls }: DashboardListProps) {
     const polls = initialPolls;
-
-    const [actionPendingId, setActionPendingId] = useState<string | null>(null);
- 
-    const handleToggleStatus = async (pollId: string, currentStatus: boolean) => {
-        setActionPendingId(pollId);
-        const result = await togglePollStatus(pollId, currentStatus);
-
-        if (result.success) {
-            toast.success(currentStatus ? 'Poll Paused' : 'Poll Activated', {
-                description: currentStatus ? 'Responses are now blocked.' : 'Public links are open again.'
-            });
-        } else {
-            toast.error('Operation failed', { description: result.error });
-        }
-        setActionPendingId(null);
-    };
-
-    const handleDeletePoll = async (pollId: string) => {
-        if (!confirm("Are you absolutely sure you want to permanently delete this poll and all its data history?")) return;
-
-        setActionPendingId(pollId);
-        const result = await deletePoll(pollId);
-
-        if (result.success) {
-            toast.success('Poll Purged', {
-                description: 'The poll record has been successfully deleted.'
-            });
-        } else {
-            toast.error('Deletion failed', { description: result.error });
-        }
-        setActionPendingId(null);
-    };
 
     // Graceful blank slate layout check
     if (polls.length === 0) {
@@ -101,7 +67,7 @@ export default function DashboardList({ initialPolls }: DashboardListProps) {
                         ? `${window.location.origin}/p/${poll.id}`
                         : `/p/${poll.id}`;
 
-                    const isMutating = actionPendingId === poll.id;
+
 
                     return (
                         <div
@@ -146,30 +112,17 @@ export default function DashboardList({ initialPolls }: DashboardListProps) {
                                 {/* Copy Share Trigger Button */}
                                 <CopyButton
                                     valueToCopy={dynamicShareUrl}
-                                    disabled={!poll.isActive || isMutating}
+                                    disabled={!poll.isActive}
                                 />
 
                                 {/* 💡 New Toggle Status Button (Pause / Play Icon) */}
-                                <Button
-                                    variant="outline"
-                                    size="sm"
-                                    disabled={isMutating}
-                                    onClick={() => handleToggleStatus(poll.id, poll.isActive)}
-                                    className={`h-9 w-9 p-0 border-slate-200 dark:border-slate-800 ${poll.isActive
-                                            ? "text-amber-500 hover:bg-amber-500/10 hover:text-amber-600"
-                                            : "text-emerald-500 hover:bg-emerald-500/10 hover:text-emerald-600"
-                                        }`}
-                                    title={poll.isActive ? "Pause Registration" : "Resume Registration"}
-                                >
-                                    <Power className="w-3.5 h-3.5" />
-                                </Button>
+                                <TogglePollStatus pollId={poll.id} isActive={poll.isActive} />
 
                                 {/* View Active Route Target */}
                                 <Link href={`/p/${poll.id}`} passHref target="_blank">
                                     <Button
                                         variant="outline"
                                         size="sm"
-                                        disabled={isMutating}
                                         className="h-9 gap-1.5 font-medium border-slate-200 text-slate-700 hover:text-slate-900 dark:border-slate-800 dark:text-slate-300"
                                     >
                                         <Eye className="w-3.5 h-3.5" />
@@ -178,16 +131,7 @@ export default function DashboardList({ initialPolls }: DashboardListProps) {
                                 </Link>
 
                                 {/* 💡 New Delete Button */}
-                                <Button
-                                    variant="outline"
-                                    size="sm"
-                                    disabled={isMutating}
-                                    onClick={() => handleDeletePoll(poll.id)}
-                                    className="h-9 w-9 p-0 border-slate-200 text-rose-500 hover:bg-rose-500/10 hover:text-rose-600 dark:border-slate-800"
-                                    title="Delete Poll Permanently"
-                                >
-                                    <Trash2 className="w-3.5 h-3.5" />
-                                </Button>
+                                <DeletePoll pollId={poll.id} />
                             </div>
                         </div>
                     );
