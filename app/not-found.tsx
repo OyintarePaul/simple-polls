@@ -1,44 +1,42 @@
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
-import { FileQuestion, MoveLeft } from 'lucide-react';
+import { FileQuestion, Plus } from 'lucide-react';
 
 export default function NotFound() {
   return (
     <main className="min-h-screen bg-slate-950 flex flex-col items-center justify-center px-6">
       {/* Visual Anchor */}
       <div className="relative mb-8">
-        <div className="absolute inset-0 bg-indigo-500/20 blur-3xl rounded-full" />
-        <div className="relative w-20 h-20 bg-slate-900 border border-slate-800 rounded-2xl flex items-center justify-center shadow-2xl">
-          <FileQuestion className="w-10 h-10 text-indigo-400" />
+        <div className="absolute inset-0 bg-indigo-500/10 blur-3xl rounded-full" />
+        <div className="relative w-16 h-16 bg-slate-900 border border-slate-800 rounded-2xl flex items-center justify-center shadow-2xl">
+          <FileQuestion className="w-8 h-8 text-indigo-400" />
         </div>
       </div>
 
       {/* Content */}
-      <div className="text-center space-y-4 max-w-md">
-        <h1 className="text-4xl font-extrabold text-slate-50 tracking-tight">
-          Poll Not Found
+      <div className="text-center space-y-3 max-w-sm">
+        <h1 className="text-3xl font-extrabold text-slate-50 tracking-tight sm:text-4xl">
+          Poll Unavailable
         </h1>
-        <p className="text-slate-400 leading-relaxed">
-          The intake pipeline you are looking for has been <span className="text-slate-200">closed</span>, 
-          <span className="text-slate-200"> moved</span>, or never existed in the first place.
+        <p className="text-sm text-slate-400 leading-relaxed">
+          This voting link is inactive. The poll may have concluded, been paused by its creator, or the URL might be incorrect.
         </p>
       </div>
 
-      {/* Action */}
-      <div className="mt-10">
+      {/* Action: Turning a 404 into a growth loop */}
+      <div className="mt-8 flex flex-col sm:flex-row gap-3">
         <Link href="/" passHref>
           <Button 
-            variant="outline" 
-            className="h-11 px-6 gap-2 border-slate-800 bg-slate-900/50 text-slate-300 hover:text-slate-100 hover:bg-slate-800 transition-all"
+            className="h-10 px-5 gap-2 bg-indigo-600 hover:bg-indigo-700 text-white font-medium text-sm shadow-md shadow-indigo-600/10"
           >
-            <MoveLeft className="w-4 h-4" />
-            Return to Dashboard
+            <Plus className="w-4 h-4" />
+            Create Your Own Poll
           </Button>
         </Link>
       </div>
 
-      {/* Subtle Background Detail */}
-      <div className="fixed bottom-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-slate-800 to-transparent opacity-50" />
+      {/* Subtle Bottom Border Detail */}
+      <div className="fixed bottom-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-slate-900 to-transparent" />
     </main>
   );
 }
