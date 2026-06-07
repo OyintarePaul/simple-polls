@@ -21,8 +21,8 @@ export default function DashboardLayout({
             <nav className="hidden md:flex gap-6">
               {[
                 { label: 'Workspace', href: '/dashboard', icon: LayoutDashboard },
-                { label: 'Analytics', href: '/analytics', icon: BarChart3 },
-                { label: 'Settings', href: '/settings', icon: Settings },
+                { label: 'Analytics', href: '/dashboard/analytics', icon: BarChart3 },
+                { label: 'Settings', href: '/dashboard/settings', icon: Settings },
               ].map((item) => (
                 <Link
                   key={item.href}
