@@ -1,5 +1,5 @@
 import { Button } from '@/components/ui/button';
-import { Lock, Globe, Layers3, Plus, } from 'lucide-react';
+import { Layers3, Plus, } from 'lucide-react';
 
 import CopyButton from '@/components/copy-button';
 import { CreatePollModal } from '@/components/create-poll-modal';
@@ -85,11 +85,7 @@ export default function DashboardList({ initialPolls }: DashboardListProps) {
                                             Paused
                                         </span>
                                     )}
-                                    {!poll.isActive && (
-                                        <span className="inline-flex items-center text-[10px] font-bold bg-rose-500/10 text-rose-600 dark:text-rose-400 px-2 py-0.5 rounded-md uppercase tracking-wider border border-rose-500/10">
-                                            Closed
-                                        </span>
-                                    )}
+
                                     <span className="text-xs text-muted-foreground font-mono">
                                         {new Date(poll.createdAt).toLocaleDateString(undefined, { dateStyle: 'medium' })}
                                     </span>
@@ -102,7 +98,7 @@ export default function DashboardList({ initialPolls }: DashboardListProps) {
 
                             {/* Action Interaction Controls */}
                             <div className="flex items-center gap-2 sm:self-center self-end border-t pt-3 sm:border-t-0 sm:pt-0 w-full sm:w-auto justify-end border-slate-100 dark:border-slate-900">
-                                
+
                                 <Link href={`/dashboard/polls/${poll.id}/analytics`} className="text-right px-4 hidden md:block group hover:opacity-80 transition-opacity">
                                     <p className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground group-hover:text-indigo-400 transition-colors">Responses</p>
                                     <p className="text-base font-bold font-mono text-slate-900 dark:text-slate-50">{poll.totalVotes}</p>

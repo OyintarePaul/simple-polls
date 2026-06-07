@@ -6,6 +6,7 @@ import connectToDb from "@/database/connection";
 import Link from 'next/link';
 
 export default async function GlobalAnalyticsPage() {
+    await new Promise(resolve => setTimeout(resolve, 5000));
     const { userId } = await auth();
     if (!userId) redirect('/sign-in');
 
@@ -20,7 +21,7 @@ export default async function GlobalAnalyticsPage() {
     const pausedPolls = totalPolls - activePolls;
 
     const totalVotesAcrossPlatform = polls.reduce((sum: number, poll: any) => {
-        const pollVotes = poll.options.reduce((optSum: number, opt: any) => optSum + opt.voteCount, 0);
+        const pollVotes = poll.options.reduce((optSum: number, opt: { voteCount: number }) => optSum + opt.voteCount, 0);
         return sum + pollVotes;
     }, 0);
 

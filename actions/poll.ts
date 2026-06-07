@@ -70,8 +70,9 @@ export async function togglePollStatus(pollId: string, currentState: boolean) {
         revalidatePath(`/p/${pollId}`);
         revalidatePath("/dashboard");
         return { success: true };
-    } catch (error: any) {
-        return { success: false, error: error.message || "Failed to alter status." };
+    } catch (error) {
+        const errorMessage = error instanceof Error ? error.message : "Failed to alter status.";
+        return { success: false, error: errorMessage };
     }
 }
 
@@ -88,7 +89,8 @@ export async function deletePoll(pollId: string) {
 
         revalidatePath("/dashboard");
         return { success: true };
-    } catch (error: any) {
-        return { success: false, error: error.message || "Failed to delete poll records." };
+    } catch (error) {
+        const errorMessage = error instanceof Error ? error.message : "Failed to delete poll records.";
+        return { success: false, error: errorMessage };
     }
 }

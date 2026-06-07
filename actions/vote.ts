@@ -28,13 +28,6 @@ export async function castVote({ pollId, optionId }: CastVotePayload) {
             return { success: false, error: "This poll has been closed." };
         }
 
-        // 3. Security Guard: Build the query matching your architecture
-        // We search by BOTH the unique fingerprint AND the poll container context
-        const hasVotedQuery = {
-            pollId: poll._id,
-            voterFingerprint: fingerprint
-        };
-
         const userVoteRecord =
             await Vote.findOne({
                 pollId: poll._id,
