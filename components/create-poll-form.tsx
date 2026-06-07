@@ -24,7 +24,6 @@ export function CreatePollForm({ onSuccess }: CreatePollFormProps) {
         { text: "", },
         { text: "", }
       ],
-      isPrivate: false,
     },
   });
 
@@ -121,18 +120,6 @@ export function CreatePollForm({ onSuccess }: CreatePollFormProps) {
       </div>
 
       <hr className="border-slate-800" />
-
-      {/* Privacy Toggle */}
-      <div className="flex items-center justify-between p-3 rounded-lg bg-slate-950 border border-slate-800">
-        <div className="space-y-0.5">
-          <label className="text-sm font-medium text-slate-300">Restrict to Authenticated Voters</label>
-          <p className="text-xs text-slate-500">Only signed-in users can participate in this poll.</p>
-        </div>
-        <Switch
-          checked={form.watch("isPrivate")}
-          onCheckedChange={(checked) => form.setValue("isPrivate", checked)}
-        />
-      </div>
 
       {/* Submit Button */}
       <Button

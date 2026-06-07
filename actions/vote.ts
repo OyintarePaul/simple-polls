@@ -4,7 +4,6 @@ import { Poll } from "@/models/Poll";
 import { Vote } from "@/models/Vote";
 import { IVote } from "@/types/poll";
 import { getVoterFingerprint } from "@/lib/fingerprint";
-import { auth } from "@clerk/nextjs/server";
 import { revalidatePath } from "next/cache";
 
 interface CastVotePayload {
@@ -17,7 +16,6 @@ export async function castVote({ pollId, optionId }: CastVotePayload) {
         await connectToDb();
 
         // 1. Resolve Identity Containers
-        const { userId } = await auth();
         const fingerprint = await getVoterFingerprint(pollId);
 
         // 2. Fetch the Target Poll
@@ -37,20 +35,17 @@ export async function castVote({ pollId, optionId }: CastVotePayload) {
             voterFingerprint: fingerprint
         };
 
-        const userVoteRecord = (poll.isPrivate && !userId)
-            ? null
-            : (await Vote.findOne(hasVotedQuery).lean()) as IVote | null;
+        const userVoteRecord =
+            await Vote.findOne({
+                pollId: poll._id,
+                voterFingerprint: fingerprint
+            }).lean() as IVote | null;
 
         // 🛑 THE FRAUD STOPPER: If a database record already exists, kick them out!
         if (userVoteRecord) {
             return { success: false, error: "You have already cast your vote on this poll." };
         }
-
-        // 4. Double-Check Layer: Handle Clerk-authenticated private constraints
-        if (poll.isPrivate && !userId) {
-            return { success: false, error: "Authentication required. Please sign in." };
-        }
-
+    
         // 5. ATOMIC VOTE UPDATE 
         // We execute the updates simultaneously to keep numbers perfectly in sync
         const updateResult = await Poll.updateOne(
@@ -72,7 +67,6 @@ export async function castVote({ pollId, optionId }: CastVotePayload) {
             pollId: poll._id,
             voterFingerprint: fingerprint,
             optionId: optionId,
-            voterId: userId || null
         });
 
         // 7. PURGE THE VISUAL CACHE PIPELINE

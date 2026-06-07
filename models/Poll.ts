@@ -19,7 +19,6 @@ const PollSchema = new Schema<IPoll>(
         'Minimum 2 options required' // Kept your exact validator configuration
       ]
     },
-    isPrivate: { type: Boolean, default: false },
     isActive: { type: Boolean, default: true },
     totalVotes: { type: Number, default: 0 },
     votedFingerprints: { type: [String], default: [] } // Secure signature pipeline storage array

@@ -11,22 +11,17 @@ export default async function PublicPollPage(props: PageProps<'/p/[pollId]'>) {
   const poll = await getActivePollById(pollId);
 
   // 1. Fetch Poll
-
   if (!poll) return notFound();
 
-  // 2. Resolve User Authentication & Anti-fraud footprint
-  const { userId } = await auth();
+  // 2. Anti-fraud footprint
   const fingerprint = await getVoterFingerprint(pollId);
 
   // 3. Determine if this user has already voted
-  const hasVotedQuery = poll.isPrivate
-    ? { pollId: poll._id, voterId: userId }
-    : { pollId: poll._id, voterFingerprint: fingerprint };
-
-  // If user is not logged in on a private poll, we skip checking the vote count (handled in UI)
-  const userVoteRecord = (poll.isPrivate && !userId)
-    ? null
-    : (await Vote.findOne(hasVotedQuery).lean()) as IVote | null;
+  const userVoteRecord =
+    await Vote.findOne({
+      pollId: poll._id,
+      voterFingerprint: fingerprint
+    }).lean() as IVote | null;
 
   // 4. Clean up MongoDB object formatting for client component consumption
   const sanitizedPoll = {
@@ -69,7 +64,6 @@ export default async function PublicPollPage(props: PageProps<'/p/[pollId]'>) {
         hasVoted={!!userVoteRecord}
         votedOptionId={userVoteRecord?.optionId?.toString() || null}
         totalVotes={totalVotes}
-        isAuthenticated={!!userId}
       />
     </main>
   );

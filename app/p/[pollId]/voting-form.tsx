@@ -26,7 +26,6 @@ interface VotingFormProps {
   hasVoted: boolean;
   votedOptionId: string | null;
   totalVotes: number;
-  isAuthenticated: boolean;
 }
 
 export default function VotingForm({
@@ -34,7 +33,6 @@ export default function VotingForm({
   hasVoted: initialHasVoted,
   votedOptionId: initialVotedOptionId,
   totalVotes: initialTotalVotes,
-  isAuthenticated,
 }: VotingFormProps) {
   const [selectedOptionId, setSelectedOptionId] = useState<string | null>(null);
   const [hasVoted, setHasVoted] = useState(initialHasVoted);
@@ -44,7 +42,6 @@ export default function VotingForm({
 
   const [isPending, startTransition] = useTransition();
 
-  const showAuthWall = poll.isPrivate && !isAuthenticated;
 
   const handleVoteSubmit = async () => {
     if (!selectedOptionId) return;
@@ -82,13 +79,6 @@ export default function VotingForm({
       <div className="absolute top-0 left-0 right-0 h-1.5 bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500" />
 
       <CardHeader className="space-y-2 pt-8">
-        <div className="flex items-center gap-2">
-          {poll.isPrivate && (
-            <span className="inline-flex items-center gap-1 text-xs font-semibold bg-amber-500/10 text-amber-600 dark:text-amber-400 px-2.5 py-0.5 rounded-full border border-amber-500/20">
-              <Lock className="w-3 h-3" /> Private Poll
-            </span>
-          )}
-        </div>
         <CardTitle className="text-2xl font-bold tracking-tight text-slate-900 dark:text-slate-50">
           {poll.question}
         </CardTitle>
@@ -129,12 +119,12 @@ export default function VotingForm({
               return (
                 <button
                   key={option.id}
-                  disabled={showAuthWall || isPending}
+                  disabled={isPending}
                   onClick={() => setSelectedOptionId(option.id)}
                   className={`w-full text-left p-4 rounded-xl border text-sm font-medium transition-all flex items-center justify-between ${isSelected
-                      ? 'border-indigo-600 bg-indigo-50/50 dark:bg-indigo-950/20 text-indigo-900 dark:text-indigo-400 ring-2 ring-indigo-600/20'
-                      : 'border-slate-200 dark:border-slate-800 hover:bg-slate-50 dark:hover:bg-slate-900/60 text-slate-700 dark:text-slate-300'
-                    } ${showAuthWall ? 'opacity-60 cursor-not-allowed' : 'cursor-pointer'}`}
+                    ? 'border-indigo-600 bg-indigo-50/50 dark:bg-indigo-950/20 text-indigo-900 dark:text-indigo-400 ring-2 ring-indigo-600/20'
+                    : 'border-slate-200 dark:border-slate-800 hover:bg-slate-50 dark:hover:bg-slate-900/60 text-slate-700 dark:text-slate-300'
+                    }`}
                 >
                   <span>{option.text}</span>
                   <div className={`w-4 h-4 rounded-full border flex items-center justify-center transition-all ${isSelected ? 'border-indigo-600 bg-indigo-600' : 'border-slate-300'
@@ -144,32 +134,11 @@ export default function VotingForm({
                 </button>
               );
             })}
-
-            {showAuthWall && (
-              <div className="absolute inset-0 bg-slate-50/40 dark:bg-slate-950/40 backdrop-blur-[2px] rounded-xl flex flex-col items-center justify-center p-6 text-center animate-fade-in border border-dashed border-slate-300 dark:border-slate-800">
-                <div className="bg-white dark:bg-slate-900 p-6 rounded-xl shadow-md border max-w-sm space-y-4">
-                  <div className="mx-auto w-10 h-10 bg-amber-100 dark:bg-amber-900/30 text-amber-600 dark:text-amber-400 rounded-full flex items-center justify-center">
-                    <Lock className="w-5 h-5" />
-                  </div>
-                  <div className="space-y-1">
-                    <h3 className="font-semibold text-sm">Verification Required</h3>
-                    <p className="text-xs text-muted-foreground">
-                      The creator has restricted responses to verified community accounts. Sign in to submit your vote.
-                    </p>
-                  </div>
-                  <SignInButton mode="modal">
-                    <Button size="sm" className="w-full bg-indigo-600 hover:bg-indigo-700 text-white">
-                      Sign In to Verify
-                    </Button>
-                  </SignInButton>
-                </div>
-              </div>
-            )}
           </div>
         )}
       </CardContent>
 
-      {!hasVoted && !showAuthWall && (
+      {!hasVoted && (
         <CardFooter className="bg-slate-50/50 dark:bg-slate-900/20 border-t border-slate-100 dark:border-slate-900 px-6 py-4 flex justify-end">
           <Button
             disabled={!selectedOptionId || isPending}

@@ -11,7 +11,6 @@ export const pollFormSchema = z.object({
     )
     .min(2, "You must provide at least 2 options.")
     .max(10, "Maximum of 10 options allowed."),
-  isPrivate: z.boolean()
 });
 
 export type PollFormValues = z.infer<typeof pollFormSchema>;

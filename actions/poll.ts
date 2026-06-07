@@ -20,7 +20,7 @@ export async function createPollAction(values: PollFormValues) {
             return { success: false, error: "Invalid form parameters provided." };
         }
 
-        const { question, options, isPrivate } = parsed.data;
+        const { question, options } = parsed.data;
 
         // 3. Connect to MongoDB
         await connectToDb();
@@ -35,7 +35,6 @@ export async function createPollAction(values: PollFormValues) {
             creatorId: userId,
             question,
             options: formattedOptions,
-            isPrivate,
         });
 
         // 6. Purge the Next.js layout cache so the dashboard immediately shows the new poll

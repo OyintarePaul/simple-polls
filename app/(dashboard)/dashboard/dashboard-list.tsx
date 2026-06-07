@@ -1,6 +1,6 @@
 import { Button } from '@/components/ui/button';
-import { Eye, Lock, Globe, Layers3, Plus, } from 'lucide-react';
-import Link from 'next/link';
+import { Lock, Globe, Layers3, Plus, } from 'lucide-react';
+
 import CopyButton from '@/components/copy-button';
 import { CreatePollModal } from '@/components/create-poll-modal';
 import { DeletePoll } from '@/components/delete-poll';
@@ -73,15 +73,17 @@ export default function DashboardList({ initialPolls }: DashboardListProps) {
                             {/* Core Info Panel */}
                             <div className="space-y-2 max-w-xl">
                                 <div className="flex flex-wrap items-center gap-2">
-                                    {poll.isPrivate ? (
-                                        <span className="inline-flex items-center gap-1 text-[10px] font-bold bg-amber-500/10 text-amber-600 dark:text-amber-400 px-2 py-0.5 rounded-md uppercase tracking-wider border border-amber-500/10">
-                                            <Lock className="w-2.5 h-2.5" /> Private Gate
-                                        </span>
-                                    ) : (
-                                        <span className="inline-flex items-center gap-1 text-[10px] font-bold bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 px-2 py-0.5 rounded-md uppercase tracking-wider border border-emerald-500/10">
-                                            <Globe className="w-2.5 h-2.5" /> Public Link
-                                        </span>
-                                    )}
+                                    {poll.isActive ? (
+  <span className="inline-flex items-center gap-1 text-[10px] font-bold bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 px-2 py-0.5 rounded-md uppercase tracking-wider border border-emerald-500/10">
+    <span className="h-1.5 w-1.5 rounded-full bg-emerald-500 animate-pulse mr-0.5" />
+    Accepting Responses
+  </span>
+) : (
+  <span className="inline-flex items-center gap-1 text-[10px] font-bold bg-amber-500/10 text-amber-600 dark:text-amber-400 px-2 py-0.5 rounded-md uppercase tracking-wider border border-amber-500/10">
+    <span className="h-1.5 w-1.5 rounded-full bg-amber-500 mr-0.5" />
+    Paused
+  </span>
+)}
                                     {!poll.isActive && (
                                         <span className="inline-flex items-center text-[10px] font-bold bg-rose-500/10 text-rose-600 dark:text-rose-400 px-2 py-0.5 rounded-md uppercase tracking-wider border border-rose-500/10">
                                             Closed
@@ -109,7 +111,7 @@ export default function DashboardList({ initialPolls }: DashboardListProps) {
                                     pollId={poll.id}
                                 />
 
-                                 {/* View Active Route Target */}
+                                {/* View Active Route Target */}
                                 <LaunchPoll pollId={poll.id} />
 
                                 {/* 💡 New Toggle Status Button (Pause / Play Icon) */}
