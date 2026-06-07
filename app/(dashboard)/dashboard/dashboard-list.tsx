@@ -6,6 +6,7 @@ import { CreatePollModal } from '@/components/create-poll-modal';
 import { DeletePoll } from '@/components/delete-poll';
 import { TogglePollStatus } from "@/components/toggle-poll-status";
 import { LaunchPoll } from '@/components/launch-poll';
+import Link from 'next/link';
 
 interface DashboardPoll {
     id: string;
@@ -74,16 +75,16 @@ export default function DashboardList({ initialPolls }: DashboardListProps) {
                             <div className="space-y-2 max-w-xl">
                                 <div className="flex flex-wrap items-center gap-2">
                                     {poll.isActive ? (
-  <span className="inline-flex items-center gap-1 text-[10px] font-bold bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 px-2 py-0.5 rounded-md uppercase tracking-wider border border-emerald-500/10">
-    <span className="h-1.5 w-1.5 rounded-full bg-emerald-500 animate-pulse mr-0.5" />
-    Accepting Responses
-  </span>
-) : (
-  <span className="inline-flex items-center gap-1 text-[10px] font-bold bg-amber-500/10 text-amber-600 dark:text-amber-400 px-2 py-0.5 rounded-md uppercase tracking-wider border border-amber-500/10">
-    <span className="h-1.5 w-1.5 rounded-full bg-amber-500 mr-0.5" />
-    Paused
-  </span>
-)}
+                                        <span className="inline-flex items-center gap-1 text-[10px] font-bold bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 px-2 py-0.5 rounded-md uppercase tracking-wider border border-emerald-500/10">
+                                            <span className="h-1.5 w-1.5 rounded-full bg-emerald-500 animate-pulse mr-0.5" />
+                                            Accepting Responses
+                                        </span>
+                                    ) : (
+                                        <span className="inline-flex items-center gap-1 text-[10px] font-bold bg-amber-500/10 text-amber-600 dark:text-amber-400 px-2 py-0.5 rounded-md uppercase tracking-wider border border-amber-500/10">
+                                            <span className="h-1.5 w-1.5 rounded-full bg-amber-500 mr-0.5" />
+                                            Paused
+                                        </span>
+                                    )}
                                     {!poll.isActive && (
                                         <span className="inline-flex items-center text-[10px] font-bold bg-rose-500/10 text-rose-600 dark:text-rose-400 px-2 py-0.5 rounded-md uppercase tracking-wider border border-rose-500/10">
                                             Closed
@@ -101,10 +102,11 @@ export default function DashboardList({ initialPolls }: DashboardListProps) {
 
                             {/* Action Interaction Controls */}
                             <div className="flex items-center gap-2 sm:self-center self-end border-t pt-3 sm:border-t-0 sm:pt-0 w-full sm:w-auto justify-end border-slate-100 dark:border-slate-900">
-                                <div className="text-right px-4 hidden md:block">
-                                    <p className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground">Responses</p>
+                                
+                                <Link href={`/dashboard/polls/${poll.id}/analytics`} className="text-right px-4 hidden md:block group hover:opacity-80 transition-opacity">
+                                    <p className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground group-hover:text-indigo-400 transition-colors">Responses</p>
                                     <p className="text-base font-bold font-mono text-slate-900 dark:text-slate-50">{poll.totalVotes}</p>
-                                </div>
+                                </Link>
 
                                 {/* Copy Share Trigger Button */}
                                 <CopyButton
