@@ -1,21 +1,16 @@
 'use client';
+
 import { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { toast } from 'sonner';
 import { Copy, Check, CheckCircle2 } from 'lucide-react';
 
 interface CopyButtonProps extends Omit<React.ComponentProps<typeof Button>, 'onClick'> {
-  valueToCopy: string;
-  successTitle?: string;
-  successDescription?: string;
-  showText?: boolean;
+  pollId: string;
 }
 
 export default function CopyButton({
-  valueToCopy,
-  successTitle = 'Link Copied',
-  successDescription = 'The target URL has been written to your clipboard.',
-  showText = true,
+  pollId,
   className,
   variant = 'outline',
   size = 'sm',
@@ -26,7 +21,6 @@ export default function CopyButton({
   // Revert back to copy icon state after a small delay
   useEffect(() => {
     if (!hasCopied) return;
-    
     const timeout = setTimeout(() => setHasCopied(false), 2000);
     return () => clearTimeout(timeout);
   }, [hasCopied]);
@@ -35,13 +29,15 @@ export default function CopyButton({
     e.preventDefault();
     e.stopPropagation(); // Avoid triggering parent item card clicks
 
+    // 💡 THE FIX: Construct the full URL safely inside the client-side click event context
+    const fullUrl = `${window.location.origin}/p/${pollId}`;
+
     try {
-      await navigator.clipboard.writeText(valueToCopy);
+      await navigator.clipboard.writeText(fullUrl);
       setHasCopied(true);
 
-      // Trigger your global Sonner pipeline alert
-      toast.success(successTitle, {
-        description: successDescription,
+      toast.success('Share Link Copied', {
+        description: 'The full poll URL has been copied to your clipboard.',
         icon: <CheckCircle2 className="w-4 h-4 text-emerald-500" />
       });
     } catch (err) {
@@ -57,22 +53,22 @@ export default function CopyButton({
       variant={variant}
       size={size}
       onClick={handleCopyExecution}
-      className={`h-9 font-medium select-none gap-1.5 transition-all duration-200 ${
-        hasCopied 
-          ? 'border-emerald-500/30 bg-emerald-50/50 text-emerald-700 dark:bg-emerald-950/20 dark:text-emerald-400 dark:border-emerald-500/20' 
+      // 💡 Made this h-9 w-9 p-0 baseline to match your clean, square icon button rows on mobile layout
+      className={`h-9 w-9 p-0 xs:w-auto xs:px-3 font-medium select-none gap-1.5 transition-all duration-200 ${hasCopied
+          ? 'border-emerald-500/30 bg-emerald-50/50 text-emerald-700 dark:bg-emerald-950/20 dark:text-emerald-400 dark:border-emerald-500/20'
           : 'border-slate-200 text-slate-700 hover:text-slate-900 dark:border-slate-800 dark:text-slate-300'
-      } ${className}`}
+        } ${className}`}
       {...props}
     >
       {hasCopied ? (
         <>
-          <Check className="w-3.5 h-3.5 text-emerald-600 dark:text-emerald-400 animate-scale-in" />
-          {showText && <span className="hidden sm:inline transition-all">Copied!</span>}
+          <Check className="w-3.5 h-3.5 text-emerald-600 dark:text-emerald-400" />
+          <span className="hidden xs:inline transition-all">Copied!</span>
         </>
       ) : (
         <>
           <Copy className="w-3.5 h-3.5 transition-all" />
-          {showText && <span className="hidden sm:inline transition-all">Copy Link</span>}
+          <span className="hidden xs:inline transition-all">Copy Link</span>
         </>
       )}
     </Button>

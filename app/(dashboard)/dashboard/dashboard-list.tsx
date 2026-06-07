@@ -111,8 +111,7 @@ export default function DashboardList({ initialPolls }: DashboardListProps) {
 
                                 {/* Copy Share Trigger Button */}
                                 <CopyButton
-                                    valueToCopy={dynamicShareUrl}
-                                    disabled={!poll.isActive}
+                                    pollId={poll.id}
                                 />
 
                                 {/* 💡 New Toggle Status Button (Pause / Play Icon) */}
@@ -123,7 +122,8 @@ export default function DashboardList({ initialPolls }: DashboardListProps) {
                                     <Button
                                         variant="outline"
                                         size="sm"
-                                        className="h-9 gap-1.5 font-medium border-slate-200 text-slate-700 hover:text-slate-900 dark:border-slate-800 dark:text-slate-300"
+                                        // 💡 THE FIX: Force h-9 w-9 p-0 for a perfect box on mobile, then expand it dynamically via xs:
+                                        className="h-9 w-9 p-0 xs:w-auto xs:px-3 gap-1.5 font-medium border-slate-200 text-slate-700 hover:text-slate-900 dark:border-slate-800 dark:text-slate-300"
                                     >
                                         <Eye className="w-3.5 h-3.5" />
                                         <span className="hidden xs:inline">Launch</span>
