@@ -6,7 +6,6 @@ import connectToDb from "@/database/connection";
 import Link from 'next/link';
 
 export default async function GlobalAnalyticsPage() {
-    await new Promise(resolve => setTimeout(resolve, 5000));
     const { userId } = await auth();
     if (!userId) redirect('/sign-in');
 

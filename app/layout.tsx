@@ -37,13 +37,13 @@ export default function RootLayout({
         modalBackdrop: "!bg-slate-950/80 backdrop-blur-md transition-all duration-300"
       },
     }}>
-      <html lang="en" className={cn("font-sans", inter.variable, "dark")}>
+      <html lang="en" className={cn("font-sans", inter.variable,)}>
         <body
           className={`${geistSans.variable} ${geistMono.variable} antialiased`}
         >
           <Providers>
             {children}
-            <Toaster richColors />
+            <Toaster richColors theme="system"/>
           </Providers>
         </body>
       </html>

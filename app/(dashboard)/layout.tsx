@@ -1,6 +1,7 @@
 import Link from 'next/link';
 import { UserButton } from '@clerk/nextjs';
 import { Layers3, LayoutDashboard, BarChart3, Settings } from 'lucide-react';
+import { ThemeToggle } from '@/components/theme-toggle';
 
 export default function DashboardLayout({
   children,
@@ -36,6 +37,7 @@ export default function DashboardLayout({
           </div>
 
           <div className="flex items-center gap-4">
+            <ThemeToggle />
             {/* Clerk User Management Portal */}
             <UserButton />
           </div>
