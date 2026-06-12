@@ -75,86 +75,98 @@ export default function VotingForm({
   };
 
   return (
-    <Card className="w-full border-slate-200/60 dark:border-slate-800/60 shadow-xl backdrop-blur-md relative overflow-hidden">
-      <div className="absolute top-0 left-0 right-0 h-1.5 bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500" />
+    <Card className="w-full border-border shadow-xl backdrop-blur-md relative overflow-hidden bg-card text-card-foreground">
+  <div className="absolute top-0 left-0 right-0 h-1.5 bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500" />
 
-      <CardHeader className="space-y-2 pt-8">
-        <CardTitle className="text-2xl font-bold tracking-tight text-slate-900 dark:text-slate-50">
-          {poll.question}
-        </CardTitle>
-      </CardHeader>
+  <CardHeader className="space-y-2 pt-8">
+    <CardTitle className="text-2xl font-bold tracking-tight text-foreground">
+      {poll.question}
+    </CardTitle>
+  </CardHeader>
 
-      <CardContent className="space-y-4 relative">
-        {hasVoted ? (
-          <div className="space-y-4 animate-fade-in">
-            {options.map((option) => {
-              const percentage = totalVotes > 0 ? Math.round((option.voteCount / totalVotes) * 100) : 0;
-              const isUserChoice = option.id === votedOptionId;
+  <CardContent className="space-y-4 relative">
+    {hasVoted ? (
+      <div className="space-y-4 animate-fade-in">
+        {options.map((option) => {
+          const percentage = totalVotes > 0 ? Math.round((option.voteCount / totalVotes) * 100) : 0;
+          const isUserChoice = option.id === votedOptionId;
 
-              return (
-                <div key={option.id} className="space-y-1.5 relative">
-                  <div className="flex justify-between text-sm font-medium px-1">
-                    <span className="flex items-center gap-2 text-slate-700 dark:text-slate-300">
-                      {option.text}
-                      {isUserChoice && <CheckCircle2 className="w-4 h-4 text-emerald-500 inline" />}
-                    </span>
-                    <span className="text-slate-500 font-mono">{percentage}% ({option.voteCount})</span>
-                  </div>
-                  <Progress
-                    value={percentage}
-                    className={`h-8 transition-all duration-1000 ${isUserChoice ? '[&>div]:bg-indigo-600' : '[&>div]:bg-slate-300 dark:[&>div]:bg-slate-700'
-                      }`}
-                  />
-                </div>
-              );
-            })}
-            <p className="text-right text-xs text-muted-foreground font-mono pt-2">
-              Total Responses: {totalVotes}
-            </p>
-          </div>
+          return (
+            <div key={option.id} className="space-y-1.5 relative">
+              <div className="flex justify-between text-sm font-medium px-1">
+                <span className="flex items-center gap-2 text-foreground/90">
+                  {option.text}
+                  {isUserChoice && <CheckCircle2 className="w-4 h-4 text-emerald-500 inline shrink-0" />}
+                </span>
+                <span className="text-muted-foreground font-mono">{percentage}% ({option.voteCount})</span>
+              </div>
+              <Progress
+                value={percentage}
+                className="h-8 transition-all duration-1000 bg-muted border border-border/40"
+                /* Directly inject style parameters to handle internal track adjustments cleanly across modes */
+                style={
+                  {
+                    "--progress-background": isUserChoice ? "var(--indigo-600)" : "currentColor"
+                  } as React.CSSProperties
+                }
+                className={`h-8 transition-all duration-1000 bg-secondary ${
+                  isUserChoice 
+                    ? '[&>div]:bg-indigo-600 dark:[&>div]:bg-indigo-500' 
+                    : '[&>div]:bg-muted-foreground/30 dark:[&>div]:bg-slate-700'
+                }`}
+              />
+            </div>
+          );
+        })}
+        <p className="text-right text-xs text-muted-foreground font-mono pt-2">
+          Total Responses: {totalVotes}
+        </p>
+      </div>
+    ) : (
+      <div className="space-y-3 relative">
+        {options.map((option) => {
+          const isSelected = option.id === selectedOptionId;
+          return (
+            <button
+              key={option.id}
+              disabled={isPending}
+              onClick={() => setSelectedOptionId(option.id)}
+              className={`w-full text-left p-4 rounded-xl border text-sm font-medium transition-all flex items-center justify-between ${
+                isSelected
+                  ? 'border-indigo-600 dark:border-indigo-500 bg-indigo-50/50 dark:bg-indigo-950/20 text-indigo-950 dark:text-indigo-400 ring-2 ring-indigo-600/20'
+                  : 'border-input bg-background hover:bg-muted/60 text-foreground/90'
+              }`}
+            >
+              <span>{option.text}</span>
+              <div className={`w-4 h-4 rounded-full border flex items-center justify-center transition-all shrink-0 ${
+                isSelected ? 'border-indigo-600 dark:border-indigo-500 bg-indigo-600 dark:bg-indigo-500' : 'border-muted-foreground/40'
+              }`}>
+                {isSelected && <div className="w-1.5 h-1.5 rounded-full bg-white" />}
+              </div>
+            </button>
+          );
+        })}
+      </div>
+    )}
+  </CardContent>
+
+  {!hasVoted && (
+    <CardFooter className="bg-muted/30 dark:bg-slate-900/20 border-t border-border px-6 py-4 flex justify-end">
+      <Button
+        disabled={!selectedOptionId || isPending}
+        onClick={handleVoteSubmit}
+        className="px-6 font-medium tracking-wide shadow-sm"
+      >
+        {isPending ? (
+          <>
+            <Loader2 className="w-4 h-4 mr-2 animate-spin" /> Recording...
+          </>
         ) : (
-          <div className="space-y-3 relative">
-            {options.map((option) => {
-              const isSelected = option.id === selectedOptionId;
-              return (
-                <button
-                  key={option.id}
-                  disabled={isPending}
-                  onClick={() => setSelectedOptionId(option.id)}
-                  className={`w-full text-left p-4 rounded-xl border text-sm font-medium transition-all flex items-center justify-between ${isSelected
-                    ? 'border-indigo-600 bg-indigo-50/50 dark:bg-indigo-950/20 text-indigo-900 dark:text-indigo-400 ring-2 ring-indigo-600/20'
-                    : 'border-slate-200 dark:border-slate-800 hover:bg-slate-50 dark:hover:bg-slate-900/60 text-slate-700 dark:text-slate-300'
-                    }`}
-                >
-                  <span>{option.text}</span>
-                  <div className={`w-4 h-4 rounded-full border flex items-center justify-center transition-all ${isSelected ? 'border-indigo-600 bg-indigo-600' : 'border-slate-300'
-                    }`}>
-                    {isSelected && <div className="w-1.5 h-1.5 rounded-full bg-white" />}
-                  </div>
-                </button>
-              );
-            })}
-          </div>
+          'Submit Response'
         )}
-      </CardContent>
-
-      {!hasVoted && (
-        <CardFooter className="bg-slate-50/50 dark:bg-slate-900/20 border-t border-slate-100 dark:border-slate-900 px-6 py-4 flex justify-end">
-          <Button
-            disabled={!selectedOptionId || isPending}
-            onClick={handleVoteSubmit}
-            className="bg-slate-900 hover:bg-slate-800 text-slate-50 dark:bg-slate-50 dark:hover:bg-slate-200 dark:text-slate-900 px-6 font-medium tracking-wide shadow-sm"
-          >
-            {isPending ? (
-              <>
-                <Loader2 className="w-4 h-4 mr-2 animate-spin" /> Recording...
-              </>
-            ) : (
-              'Submit Response'
-            )}
-          </Button>
-        </CardFooter>
-      )}
-    </Card>
+      </Button>
+    </CardFooter>
+  )}
+</Card>
   );
 }

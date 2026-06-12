@@ -2,6 +2,7 @@ import Link from 'next/link';
 import { UserButton } from '@clerk/nextjs';
 import { Layers3, LayoutDashboard, BarChart3, Settings } from 'lucide-react';
 import { ThemeToggle } from '@/components/theme-toggle';
+import { MainNav } from '@/components/main-nav';
 
 export default function DashboardLayout({
   children,
@@ -19,21 +20,7 @@ export default function DashboardLayout({
               <span className="font-bold tracking-tight text-sm sm:text-base">PollGrid</span>
             </Link>
             
-            <nav className="hidden md:flex gap-6">
-              {[
-                { label: 'Workspace', href: '/dashboard', icon: LayoutDashboard },
-                { label: 'Analytics', href: '/dashboard/analytics', icon: BarChart3 },
-              ].map((item) => (
-                <Link
-                  key={item.href}
-                  href={item.href}
-                  className="flex items-center gap-1.5 text-sm font-medium text-muted-foreground hover:text-foreground transition-colors"
-                >
-                  <item.icon className="h-4 w-4" />
-                  {item.label}
-                </Link>
-              ))}
-            </nav>
+            <MainNav />
           </div>
 
           <div className="flex items-center gap-4">
