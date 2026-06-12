@@ -14,3 +14,15 @@ export const pollFormSchema = z.object({
 });
 
 export type PollFormValues = z.infer<typeof pollFormSchema>;
+
+
+export const createPollSchema = z.object({
+  creatorId: z.string(),
+  question: z.string().min(3, "Question is too short").trim(),
+  options: z.array(
+    z.object({
+      text: z.string().min(1, "Option cannot be empty").trim()
+    })
+  ).min(2, "You must provide at least 2 options"),
+  expiresAt: z.iso.datetime("Invalid expiration date").transform(val => new Date(val)),
+});

@@ -1,7 +1,7 @@
 import { notFound } from 'next/navigation';
 import Link from 'next/link';
 import { ArrowLeft, BarChart3, Users, Calendar } from 'lucide-react';
-import { Poll } from '@/models/Poll';
+import { Poll } from '@/models/poll';
 import connectToDb from "@/database/connection"
 
 interface PageProps {

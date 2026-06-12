@@ -1,5 +1,5 @@
 import connectToDb from "@/database/connection";
-import { Poll } from "@/models/Poll";
+import { Poll } from "@/models/poll";
 
 export interface DashboardPollDTO {
   id: string;

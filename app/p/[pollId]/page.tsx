@@ -1,5 +1,5 @@
 import { notFound } from 'next/navigation';
-import { Vote } from '@/models/Vote';
+import { Vote } from '@/models/vote';
 import { getVoterFingerprint } from '@/lib/fingerprint';
 import { auth } from '@clerk/nextjs/server';
 import VotingForm from './voting-form';

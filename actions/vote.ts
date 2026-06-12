@@ -1,7 +1,7 @@
 "use server";
 import connectToDb from "@/database/connection"
-import { Poll } from "@/models/Poll";
-import { Vote } from "@/models/Vote";
+import { Poll } from "@/models/poll";
+import { Vote } from "@/models/vote";
 import { IVote } from "@/types/poll";
 import { getVoterFingerprint } from "@/lib/fingerprint";
 import { revalidatePath } from "next/cache";

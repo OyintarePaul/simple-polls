@@ -1,7 +1,6 @@
-import { Schema, models, model } from 'mongoose';
-import { IVote } from '@/types/poll';
+import { Schema, models, model, InferSchemaType, Types } from 'mongoose';
 
-const VoteSchema = new Schema<IVote>(
+const VoteSchema = new Schema(
   {
     pollId: { type: Schema.Types.ObjectId, ref: 'Poll', required: true },
     optionId: { type: Schema.Types.ObjectId, required: true },
@@ -10,7 +9,12 @@ const VoteSchema = new Schema<IVote>(
   { timestamps: true }
 );
 
-// CRITICAL PORTFOLIO FIX: Compound unique index prevents double voting at the DB level
 VoteSchema.index({ pollId: 1, voterFingerprint: 1 }, { unique: true });
 
-export const Vote = models.Vote || model<IVote>('Vote', VoteSchema);
+export type VoteDocument = InferSchemaType<typeof VoteSchema> & {
+  _id: Types.ObjectId;
+  createdAt: Date;
+  updatedAt: Date;
+};
+
+export const Vote = models.Vote || model('Vote', VoteSchema);

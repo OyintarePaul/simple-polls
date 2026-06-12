@@ -1,6 +1,6 @@
 import { Loader2 } from 'lucide-react';
 
-export default function GlobalAnalyticsLoading() {
+export default function AnalyticsSkeleton() {
     return (
         <div className="space-y-8 max-w-5xl mx-auto py-6 px-4 animate-pulse">
             {/* Core Summary Cards (Across all polls) */}

@@ -1,5 +1,4 @@
-// types/poll.ts
-import { Document, Types } from 'mongoose';
+import { Document, Types, InferSchemaType } from 'mongoose';
 
 export interface IOption {
   _id: Types.ObjectId;
@@ -11,7 +10,6 @@ export interface IPoll extends Document {
   creatorId: string;
   question: string;
   options: IOption[];
-  isPrivate: boolean;
   isActive: boolean;
   totalVotes: number;          
   votedFingerprints: string[];

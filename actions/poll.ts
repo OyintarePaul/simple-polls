@@ -3,8 +3,8 @@ import { auth } from "@clerk/nextjs/server";
 import { revalidatePath } from "next/cache";
 import { pollFormSchema, type PollFormValues } from "@/lib/validations/poll";
 import connectToDb from "@/database/connection";
-import { Poll } from "@/models/Poll";
-import { Vote } from "@/models/Vote";
+import { Poll } from "@/models/poll";
+import { Vote } from "@/models/vote";
 
 export async function createPollAction(values: PollFormValues) {
     try {

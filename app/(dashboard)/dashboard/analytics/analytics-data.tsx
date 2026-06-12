@@ -1,6 +1,6 @@
 import { Users, BarChart3, CheckCircle2, AlertCircle, Activity } from 'lucide-react';
 import Link from 'next/link';
-import { Poll } from '@/models/Poll';
+import { Poll } from '@/models/poll';
 import connectToDb from "@/database/connection";
 import { requireAuth } from '@/lib/auth';
 
