@@ -3,14 +3,6 @@ import { Loader2 } from 'lucide-react';
 export default function GlobalAnalyticsLoading() {
     return (
         <div className="space-y-8 max-w-5xl mx-auto py-6 px-4 animate-pulse">
-            {/* Top Header Skeleton */}
-            <div className="space-y-3">
-                <div className="h-8 w-56 bg-muted rounded-lg" />
-                <div className="h-4 w-80 bg-muted/60 rounded-md" />
-            </div>
-
-            <hr className="border-border" />
-
             {/* Core Summary Cards (Across all polls) */}
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
                 {[...Array(3)].map((_, i) => (

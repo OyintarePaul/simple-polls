@@ -1,28 +1,22 @@
 import { Button } from '@/components/ui/button';
 import { Layers3, Plus, } from 'lucide-react';
-
 import CopyButton from '@/components/copy-button';
 import { CreatePollModal } from '@/components/create-poll-modal';
 import { DeletePoll } from '@/components/delete-poll';
 import { TogglePollStatus } from "@/components/toggle-poll-status";
 import { LaunchPoll } from '@/components/launch-poll';
 import Link from 'next/link';
+import { getDashboardPollsByCreator } from '@/services/poll-service';
+import { requireAuth } from '@/lib/auth';
 
-interface DashboardPoll {
-    id: string;
-    question: string;
-    isPrivate: boolean;
-    isActive: boolean;
-    createdAt: string;
-    totalVotes: number;
-}
-
-interface DashboardListProps {
-    initialPolls: DashboardPoll[];
-}
-
-export default function DashboardList({ initialPolls }: DashboardListProps) {
-    const polls = initialPolls;
+export default async function DashboardList() {
+    const userId = await requireAuth()
+    const polls = await getDashboardPollsByCreator(userId);
+    const globalMetrics = {
+        totalPolls: polls.length,
+        activePolls: polls.filter(p => p.isActive).length,
+        cumulativeVotes: polls.reduce((acc, p) => acc + p.totalVotes, 0),
+    };
 
     // Graceful blank slate layout check
     if (polls.length === 0) {
@@ -53,75 +47,91 @@ export default function DashboardList({ initialPolls }: DashboardListProps) {
     }
 
     return (
-        <div className="space-y-4">
-            <div className="flex items-center justify-between px-1">
-                <h2 className="text-lg font-semibold tracking-tight text-slate-900 dark:text-slate-50">
-                    Active Pipeline Records
-                </h2>
-                <span className="text-xs font-mono text-muted-foreground bg-slate-100 dark:bg-slate-800/60 px-2 py-0.5 rounded-md">
-                    {polls.length} Registered
-                </span>
+        <>
+              {/* Metrics Banner */}
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                {[
+                    { label: 'Total Engines', val: globalMetrics.totalPolls },
+                    { label: 'Active Live Links', val: globalMetrics.activePolls },
+                    { label: 'Cumulative Data Votes', val: globalMetrics.cumulativeVotes },
+                ].map((m, i) => (
+                    <div key={i} className="rounded-xl border bg-card p-5 shadow-sm">
+                        <p className="text-xs font-medium text-muted-foreground uppercase tracking-wider">{m.label}</p>
+                        <p className="text-2xl font-bold mt-2 font-mono tracking-tight">{m.val}</p>
+                    </div>
+                ))}
             </div>
 
-            <div className="grid grid-cols-1 gap-3">
-                {polls.map((poll) => {
-                    return (
-                        <div
-                            key={poll.id}
-                            className={`group rounded-xl border bg-card p-5 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 hover:border-slate-300 dark:hover:border-slate-700 transition-all shadow-sm ${!poll.isActive ? 'opacity-75 bg-slate-50/40 dark:bg-slate-950/20' : ''
-                                }`}
-                        >
-                            {/* Core Info Panel */}
-                            <div className="space-y-2 max-w-xl">
-                                <div className="flex flex-wrap items-center gap-2">
-                                    {poll.isActive ? (
-                                        <span className="inline-flex items-center gap-1 text-[10px] font-bold bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 px-2 py-0.5 rounded-md uppercase tracking-wider border border-emerald-500/10">
-                                            <span className="h-1.5 w-1.5 rounded-full bg-emerald-500 animate-pulse mr-0.5" />
-                                            Accepting Responses
-                                        </span>
-                                    ) : (
-                                        <span className="inline-flex items-center gap-1 text-[10px] font-bold bg-amber-500/10 text-amber-600 dark:text-amber-400 px-2 py-0.5 rounded-md uppercase tracking-wider border border-amber-500/10">
-                                            <span className="h-1.5 w-1.5 rounded-full bg-amber-500 mr-0.5" />
-                                            Paused
-                                        </span>
-                                    )}
+            <div className="space-y-4">
+                <div className="flex items-center justify-between px-1">
+                    <h2 className="text-lg font-semibold tracking-tight text-slate-900 dark:text-slate-50">
+                        Active Pipeline Records
+                    </h2>
+                    <span className="text-xs font-mono text-muted-foreground bg-slate-100 dark:bg-slate-800/60 px-2 py-0.5 rounded-md">
+                        {polls.length} Registered
+                    </span>
+                </div>
 
-                                    <span className="text-xs text-muted-foreground font-mono">
-                                        {new Date(poll.createdAt).toLocaleDateString(undefined, { dateStyle: 'medium' })}
-                                    </span>
+                <div className="grid grid-cols-1 gap-3">
+                    {polls.map((poll) => {
+                        return (
+                            <div
+                                key={poll.id}
+                                className={`group rounded-xl border bg-card p-5 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 hover:border-slate-300 dark:hover:border-slate-700 transition-all shadow-sm ${!poll.isActive ? 'opacity-75 bg-slate-50/40 dark:bg-slate-950/20' : ''
+                                    }`}
+                            >
+                                {/* Core Info Panel */}
+                                <div className="space-y-2 max-w-xl">
+                                    <div className="flex flex-wrap items-center gap-2">
+                                        {poll.isActive ? (
+                                            <span className="inline-flex items-center gap-1 text-[10px] font-bold bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 px-2 py-0.5 rounded-md uppercase tracking-wider border border-emerald-500/10">
+                                                <span className="h-1.5 w-1.5 rounded-full bg-emerald-500 animate-pulse mr-0.5" />
+                                                Accepting Responses
+                                            </span>
+                                        ) : (
+                                            <span className="inline-flex items-center gap-1 text-[10px] font-bold bg-amber-500/10 text-amber-600 dark:text-amber-400 px-2 py-0.5 rounded-md uppercase tracking-wider border border-amber-500/10">
+                                                <span className="h-1.5 w-1.5 rounded-full bg-amber-500 mr-0.5" />
+                                                Paused
+                                            </span>
+                                        )}
+
+                                        <span className="text-xs text-muted-foreground font-mono">
+                                            {new Date(poll.createdAt).toLocaleDateString(undefined, { dateStyle: 'medium' })}
+                                        </span>
+                                    </div>
+                                    <h3 className={`font-semibold tracking-tight leading-snug ${poll.isActive ? 'text-slate-900 dark:text-slate-100' : 'text-slate-500 line-through'
+                                        }`}>
+                                        {poll.question}
+                                    </h3>
                                 </div>
-                                <h3 className={`font-semibold tracking-tight leading-snug ${poll.isActive ? 'text-slate-900 dark:text-slate-100' : 'text-slate-500 line-through'
-                                    }`}>
-                                    {poll.question}
-                                </h3>
+
+                                {/* Action Interaction Controls */}
+                                <div className="flex items-center gap-2 sm:self-center self-end border-t pt-3 sm:border-t-0 sm:pt-0 w-full sm:w-auto justify-end border-slate-100 dark:border-slate-900">
+
+                                    <Link href={`/dashboard/polls/${poll.id}/analytics`} className="text-right px-4 hidden md:block group hover:opacity-80 transition-opacity">
+                                        <p className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground group-hover:text-indigo-400 transition-colors">Responses</p>
+                                        <p className="text-base font-bold font-mono text-slate-900 dark:text-slate-50">{poll.totalVotes}</p>
+                                    </Link>
+
+                                    {/* Copy Share Trigger Button */}
+                                    <CopyButton
+                                        pollId={poll.id}
+                                    />
+
+                                    {/* View Active Route Target */}
+                                    <LaunchPoll pollId={poll.id} />
+
+                                    {/* 💡 New Toggle Status Button (Pause / Play Icon) */}
+                                    <TogglePollStatus pollId={poll.id} isActive={poll.isActive} />
+
+                                    {/* 💡 New Delete Button */}
+                                    <DeletePoll pollId={poll.id} />
+                                </div>
                             </div>
-
-                            {/* Action Interaction Controls */}
-                            <div className="flex items-center gap-2 sm:self-center self-end border-t pt-3 sm:border-t-0 sm:pt-0 w-full sm:w-auto justify-end border-slate-100 dark:border-slate-900">
-
-                                <Link href={`/dashboard/polls/${poll.id}/analytics`} className="text-right px-4 hidden md:block group hover:opacity-80 transition-opacity">
-                                    <p className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground group-hover:text-indigo-400 transition-colors">Responses</p>
-                                    <p className="text-base font-bold font-mono text-slate-900 dark:text-slate-50">{poll.totalVotes}</p>
-                                </Link>
-
-                                {/* Copy Share Trigger Button */}
-                                <CopyButton
-                                    pollId={poll.id}
-                                />
-
-                                {/* View Active Route Target */}
-                                <LaunchPoll pollId={poll.id} />
-
-                                {/* 💡 New Toggle Status Button (Pause / Play Icon) */}
-                                <TogglePollStatus pollId={poll.id} isActive={poll.isActive} />
-
-                                {/* 💡 New Delete Button */}
-                                <DeletePoll pollId={poll.id} />
-                            </div>
-                        </div>
-                    );
-                })}
+                        );
+                    })}
+                </div>
             </div>
-        </div>
+        </>
     );
 }

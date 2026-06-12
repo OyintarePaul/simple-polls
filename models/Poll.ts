@@ -1,11 +1,9 @@
 import { Schema, models, model, Model } from 'mongoose';
 import { IPoll, IOption } from '@/types/poll';
 
-
-
 const OptionSchema = new Schema<IOption>({
-    text: { type: String, required: true, trim: true },
-    voteCount: { type: Number, default: 0, min: 0 }
+  text: { type: String, required: true, trim: true },
+  voteCount: { type: Number, default: 0, min: 0 }
 });
 
 const PollSchema = new Schema<IPoll>(
@@ -26,5 +24,5 @@ const PollSchema = new Schema<IPoll>(
   { timestamps: true }
 );
 
-export const Poll: Model<IPoll> = 
+export const Poll: Model<IPoll> =
   models.Poll || model<IPoll>("Poll", PollSchema);
