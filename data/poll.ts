@@ -4,18 +4,11 @@ import connectToDb from "@/database/connection";
 import { Poll, PollDocument } from "@/models/poll";
 import { Vote, VoteDocument } from "@/models/vote";
 
-export async function getVotesByPoll(pollId: string): Promise<VoteDocument[]> {
-  await connectToDb();
-  return Vote.find({ pollId })
-    .lean<VoteDocument[]>();
-}
-
 export async function getVoteByPollAndFingerprint(pollId: string, fingerprint: string): Promise<VoteDocument | null> {
   await connectToDb();
   return Vote.findOne({ pollId, voterFingerprint: fingerprint })
     .lean<VoteDocument>();
 }
-
 
 export type PollWithStats = PollDocument & {
   totalVotes: number;

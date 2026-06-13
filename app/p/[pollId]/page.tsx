@@ -1,21 +1,18 @@
 import { notFound } from 'next/navigation';
+import { Suspense } from 'react';
 
+import PollDataBoundary from './poll-data-boundary';
 import { getVoterFingerprint } from '@/lib/fingerprint';
 import VotingForm from './voting-form';
 import { getPollDetailsWithVoteCounts, getVoteByPollAndFingerprint } from '@/data/poll';
 
-export default async function PublicPollPage(props: PageProps<'/p/[pollId]'>) {
-  const { pollId } = await props.params;
-  const poll = await getPollDetailsWithVoteCounts(pollId);
 
-  // 1. Fetch Poll
-  if (!poll) return notFound();
+interface PageProps {
+  params: Promise<{ pollId: string }>;
+}
 
-  // 2. Anti-fraud footprint
-  const fingerprint = await getVoterFingerprint(pollId);
+export default async function PublicPollPage({ params }: PageProps) {
 
-  // 3. Determine if this user has already voted
-  const userVoteRecord = await getVoteByPollAndFingerprint(poll._id.toString(), fingerprint);
 
   return (
     <main className="container max-w-xl mx-auto px-4 py-12 min-h-screen flex flex-col justify-center gap-8">
@@ -40,12 +37,9 @@ export default async function PublicPollPage(props: PageProps<'/p/[pollId]'>) {
         </p>
       </div>
 
-      <VotingForm
-        poll={poll}
-        hasVoted={!!userVoteRecord}
-        votedOptionId={userVoteRecord?.optionId?.toString() || null}
-        totalVotes={poll.totalVotes}
-      />
+      <Suspense>
+        <PollDataBoundary paramsPromise={params} />
+      </Suspense>
     </main>
   );
 }
