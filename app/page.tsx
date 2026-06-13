@@ -1,8 +1,8 @@
-import Link from 'next/link';
 import { Show, SignInButton, SignUpButton, UserButton } from '@clerk/nextjs';
-import { auth } from '@clerk/nextjs/server';
-import { Button } from '@/components/ui/button';
 import { ArrowRight, BarChart3, CheckCircle2, Layers3, Lock, Zap } from 'lucide-react';
+import Link from 'next/link';
+
+import { Button } from '@/components/ui/button';
 
 export default async function LandingPage() {
 

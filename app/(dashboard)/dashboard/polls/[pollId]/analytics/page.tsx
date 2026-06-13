@@ -97,7 +97,7 @@ export default async function PollAnalyticsPage({ params }: PageProps) {
 
         <div className="rounded-2xl border border-neutral-900 bg-neutral-950/30 p-6 sm:p-8 space-y-8">
             <div className="space-y-6">
-            {poll.options.map((option: any) => {
+            {poll.options.map((option) => {
                 const percentage = poll.totalVotes > 0 ? Math.round((option.voteCount / poll.totalVotes) * 100) : 0;
 
                 return (

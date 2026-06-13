@@ -1,4 +1,3 @@
-// components/theme-toggle.tsx
 "use client";
 
 import { useTheme } from "next-themes";
@@ -12,6 +11,7 @@ export function ThemeToggle() {
 
   // Prevent hydration mismatch by waiting until mounted on the client
   useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     setMounted(true);
   }, []);
 

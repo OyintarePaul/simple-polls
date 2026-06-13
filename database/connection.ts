@@ -1,11 +1,7 @@
-// lib/dbConnect.ts
-import * as env from "@/env";
 import mongoose from "mongoose";
 
-/**
- * Strict TypeScript definition of our global cache object.
- * Eliminates 'any' type pollution.
- */
+import * as env from "@/env";
+
 interface MongooseCache {
   conn: typeof mongoose | null;
   promise: Promise<typeof mongoose> | null;
@@ -13,7 +9,6 @@ interface MongooseCache {
 
 // Attach cache cleanly to the Node/Bun global runtime scope
 declare global {
-  // eslint-disable-next-line no-var
   var mongooseCache: MongooseCache | undefined;
 }
 
@@ -25,7 +20,7 @@ if (!global.mongooseCache) {
 const cached: MongooseCache = global.mongooseCache;
 
 async function connectToDb(): Promise<typeof mongoose> {
-  const MONGODB_URI: string = env.MONGODB_URI;
+  const MONGODB_URI = env.MONGODB_URI;
 
   if (!MONGODB_URI) {
     throw new Error(

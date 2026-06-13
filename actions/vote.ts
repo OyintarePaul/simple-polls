@@ -1,8 +1,7 @@
 "use server";
 import connectToDb from "@/database/connection"
 import { Poll } from "@/models/poll";
-import { Vote } from "@/models/vote";
-import { IVote } from "@/types/poll";
+import { Vote, VoteDocument } from "@/models/vote";
 import { getVoterFingerprint } from "@/lib/fingerprint";
 import { revalidatePath } from "next/cache";
 
@@ -24,38 +23,21 @@ export async function castVote({ pollId, optionId }: CastVotePayload) {
             return { success: false, error: "The targeted poll does not exist." };
         }
 
-        if (!poll.isActive) {
-            return { success: false, error: "This poll has been closed." };
+        if (!poll.isActive || poll.expiresAt < new Date()) {
+            return { success: false, error: "This poll has been closed or is expired." };
         }
 
         const userVoteRecord =
             await Vote.findOne({
                 pollId: poll._id,
                 voterFingerprint: fingerprint
-            }).lean() as IVote | null;
+            }).lean() as VoteDocument | null;
 
         // 🛑 THE FRAUD STOPPER: If a database record already exists, kick them out!
         if (userVoteRecord) {
             return { success: false, error: "You have already cast your vote on this poll." };
         }
-    
-        // 5. ATOMIC VOTE UPDATE 
-        // We execute the updates simultaneously to keep numbers perfectly in sync
-        const updateResult = await Poll.updateOne(
-            { _id: pollId, "options._id": optionId },
-            {
-                $inc: {
-                    "options.$.voteCount": 1,
-                    totalVotes: 1
-                }
-            }
-        );
 
-        if (updateResult.modifiedCount === 0) {
-            return { success: false, error: "Invalid option selection." };
-        }
-
-        // 6. WRITE LOGS: Save the receipt so Vote.findOne() catches them on a refresh
         await Vote.create({
             pollId: poll._id,
             voterFingerprint: fingerprint,

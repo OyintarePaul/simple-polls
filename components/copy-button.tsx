@@ -40,7 +40,7 @@ export default function CopyButton({
         description: 'The full poll URL has been copied to your clipboard.',
         icon: <CheckCircle2 className="w-4 h-4 text-emerald-500" />
       });
-    } catch (err) {
+    } catch {
       toast.error('Clipboard Error', {
         description: 'Device permissions blocked writing to clipboard.'
       });

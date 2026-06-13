@@ -1,4 +1,3 @@
-// lib/fingerprint.ts
 import { headers } from "next/headers";
 import { createHash } from "crypto";
 
@@ -9,16 +8,15 @@ import { createHash } from "crypto";
 export async function getVoterFingerprint(pollId: string): Promise<string> {
   const headersList = await headers();
 
-  const ip = 
-    headersList.get("x-forwarded-for")?.split(",")[0] || 
-    headersList.get("x-real-ip") || 
+  const ip =
+    headersList.get("x-forwarded-for")?.split(",")[0] ||
+    headersList.get("x-real-ip") ||
     "127.0.0.1";
 
   const userAgent = headersList.get("user-agent") || "unknown-agent";
   const acceptLanguage = headersList.get("accept-language") || "unknown-lang";
   const appSalt = process.env.FINGERPRINT_SECRET;
 
-  // 💡 Mixing the pollId directly into the signature buffer isolates the hash to this poll only!
   const rawPayload = `${pollId}-${ip}-${userAgent}-${acceptLanguage}-${appSalt}`;
 
   return createHash("sha256")

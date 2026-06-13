@@ -1,10 +1,11 @@
 "use server";
-import { auth } from "@clerk/nextjs/server";
-import { revalidatePath } from "next/cache";
-import { createPollSchema, type CreatePollData } from "@/lib/validations/poll";
 import connectToDb from "@/database/connection";
+import { verifyPollOwnership } from "@/lib/auth";
+import { createPollSchema, type CreatePollData } from "@/lib/validations/poll";
 import { Poll } from "@/models/poll";
 import { Vote } from "@/models/vote";
+import { auth } from "@clerk/nextjs/server";
+import { revalidatePath } from "next/cache";
 
 export async function createPollAction(values: CreatePollData) {
     try {
@@ -45,7 +46,7 @@ export async function createPollAction(values: CreatePollData) {
 
 export async function togglePollStatus(pollId: string, currentState: boolean) {
     try {
-        await verifyOwnership(pollId);
+        await verifyPollOwnership(pollId);
 
         await Poll.findByIdAndUpdate(pollId, {
             $set: { isActive: !currentState },
@@ -62,7 +63,7 @@ export async function togglePollStatus(pollId: string, currentState: boolean) {
 
 export async function deletePoll(pollId: string) {
     try {
-        await verifyOwnership(pollId);
+        await verifyPollOwnership(pollId);
 
         await Promise.all([
             // Remove the main poll structure entry
