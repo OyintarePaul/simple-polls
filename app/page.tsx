@@ -160,7 +160,7 @@ export default async function LandingPage() {
 
 
 
-function FooterYear() {
+async function FooterYear() {
   "use cache";
   cacheLife("hours")
   return <>{new Date().getFullYear()}</>
