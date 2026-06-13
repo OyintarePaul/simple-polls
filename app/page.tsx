@@ -1,5 +1,6 @@
 import { Show, SignInButton, SignUpButton, UserButton } from '@clerk/nextjs';
 import { ArrowRight, BarChart3, CheckCircle2, Layers3, Lock, Zap } from 'lucide-react';
+import { cacheLife } from 'next/cache';
 import Link from 'next/link';
 
 import { Button } from '@/components/ui/button';
@@ -146,7 +147,7 @@ export default async function LandingPage() {
       {/* Basic Footer */}
       <footer className="border-t border-slate-200/60 dark:border-slate-800/60 py-6 bg-background">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-slate-400 font-mono">
-          <p>© {new Date().getFullYear()} PollGrid. All operations system authenticated.</p>
+          <p>© <FooterYear /> PollGrid. All operations system authenticated.</p>
           <div className="flex gap-4">
             <span className="hover:text-slate-600 dark:hover:text-slate-200 cursor-pointer">Security Protocol</span>
             <span className="hover:text-slate-600 dark:hover:text-slate-200 cursor-pointer">API Core</span>
@@ -155,4 +156,12 @@ export default async function LandingPage() {
       </footer>
     </div>
   );
+}
+
+
+
+function FooterYear() {
+  "use cache";
+  cacheLife("hours")
+  return <>{new Date().getFullYear()}</>
 }
