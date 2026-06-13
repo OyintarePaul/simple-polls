@@ -1,11 +1,12 @@
-import "./globals.css";
-import type { Metadata } from "next";
 import { Geist, Geist_Mono, Inter } from "next/font/google";
-import Providers from "@/providers";
 import { ClerkProvider } from "@clerk/nextjs";
-import { Toaster } from "sonner";
-import { cn } from "@/lib/utils";
 import { dark } from '@clerk/themes';
+import { Toaster } from "sonner";
+import type { Metadata } from "next";
+
+import "./globals.css";
+import { cn } from "@/lib/utils";
+import Providers from "@/providers";
 
 const inter = Inter({ subsets: ['latin'], variable: '--font-sans' });
 
@@ -37,7 +38,7 @@ export default function RootLayout({
         modalBackdrop: "!bg-slate-950/80 backdrop-blur-md transition-all duration-300"
       },
     }}>
-      <html lang="en" className={cn("font-sans", inter.variable,)}>
+      <html lang="en" className={cn("font-sans", inter.variable,)} suppressHydrationWarning>
         <body
           className={`${geistSans.variable} ${geistMono.variable} antialiased`}
         >

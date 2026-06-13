@@ -5,7 +5,6 @@ import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 
 export default async function LandingPage() {
-
   return (
     <div className="flex min-h-screen flex-col bg-slate-50/40 dark:bg-slate-950/20 selection:bg-indigo-500 selection:text-white">
       {/* Marketing Header */}
