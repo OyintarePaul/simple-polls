@@ -5,7 +5,7 @@ import AnalyticsData from "./analytics-data";
 import { requireAuth } from "@/lib/auth";
 
 export default async function GlobalAnalyticsPage() {
-    await requireAuth(); // Ensure the user is authenticated before rendering the page
+    await requireAuth();
     return (
         <div className="space-y-8 max-w-5xl mx-auto py-6 px-4">
             {/* Header Text */}
