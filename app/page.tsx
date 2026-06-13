@@ -1,6 +1,5 @@
 import { Show, SignInButton, SignUpButton, UserButton } from '@clerk/nextjs';
 import { ArrowRight, BarChart3, CheckCircle2, Layers3, Lock, Zap } from 'lucide-react';
-import { cacheLife } from 'next/cache';
 import Link from 'next/link';
 
 import { FooterYear } from '@/components/footer-year';
