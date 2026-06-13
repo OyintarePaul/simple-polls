@@ -32,19 +32,19 @@ export default function RootLayout({
 }>) {
   return (
     <ClerkProvider afterSignOutUrl="/" appearance={{
-      theme: dark, 
+      theme: dark,
       cssLayerName: "clerk",
       elements: {
         modalBackdrop: "!bg-slate-950/80 backdrop-blur-md transition-all duration-300"
       },
     }}>
-      <html lang="en" className={cn("font-sans", inter.variable,)} suppressHydrationWarning>
+      <html lang="en" className={cn("font-sans", inter.variable,)}>
         <body
           className={`${geistSans.variable} ${geistMono.variable} antialiased`}
         >
           <Providers>
             {children}
-            <Toaster richColors theme="system"/>
+            <Toaster richColors theme="system" />
           </Providers>
         </body>
       </html>
