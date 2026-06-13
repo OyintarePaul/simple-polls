@@ -3,6 +3,7 @@ import { ArrowRight, BarChart3, CheckCircle2, Layers3, Lock, Zap } from 'lucide-
 import { cacheLife } from 'next/cache';
 import Link from 'next/link';
 
+import { FooterYear } from '@/components/footer-year';
 import { Button } from '@/components/ui/button';
 
 export default async function LandingPage() {
@@ -160,8 +161,3 @@ export default async function LandingPage() {
 
 
 
-async function FooterYear() {
-  "use cache";
-  cacheLife("hours")
-  return <>{new Date().getFullYear()}</>
-}
