@@ -1,42 +1,23 @@
-import { Users, BarChart3, CheckCircle2, AlertCircle, Activity } from 'lucide-react';
+import { Activity, AlertCircle, BarChart3, CheckCircle2, History, Users } from 'lucide-react';
 import Link from 'next/link';
-import { Poll } from '@/models/poll';
-import connectToDb from "@/database/connection";
+
+import { getUserAnalytics } from '@/data/analytics';
 import { requireAuth } from '@/lib/auth';
 
 export default async function AnalyticsData() {
     const userId = await requireAuth();
-    await connectToDb();
+    const globalAnalytics = await getUserAnalytics(userId);
 
-    // 1. Fetch all poll data owned by this specific creator
-    const polls = await Poll.find({ creatorId: userId }).lean();
-
-    // 2. Perform math transformations on the data stream
-    const totalPolls = polls.length;
-    const activePolls = polls.filter((p: any) => p.isActive).length;
-    const pausedPolls = totalPolls - activePolls;
-
-    const totalVotesAcrossPlatform = polls.reduce((sum: number, poll: any) => {
-        const pollVotes = poll.options.reduce((optSum: number, opt: { voteCount: number }) => optSum + opt.voteCount, 0);
-        return sum + pollVotes;
-    }, 0);
-
-    // 3. Sort to isolate the top-performing polls
-    const topPolls = [...polls]
-        .map((poll: any) => {
-            const votes = poll.options.reduce((sum: number, opt: any) => sum + opt.voteCount, 0);
-            return {
-                id: poll._id.toString(),
-                question: poll.question,
-                totalVotes: votes,
-                isActive: poll.isActive,
-            };
-        })
-        .sort((a, b) => b.totalVotes - a.totalVotes)
-        .slice(0, 4); // Display top 4 standouts
+    const totalPolls = globalAnalytics.metrics.totalPolls;
+    const activePolls = globalAnalytics.metrics.activePolls;
+    const pausedPolls = globalAnalytics.metrics.pausedPolls;
+    const expiredPolls = globalAnalytics.metrics.expiredPolls;
+    const totalVotesAcrossPlatform = globalAnalytics.metrics.totalVotesAcrossPlatform;
+    const topPolls = [...globalAnalytics.topPolls];
     return (
         <>
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+            {/* Overview Metrics Grid - Updated to 5 columns on large screens */}
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4">
                 {/* Total Votes Card */}
                 <div className="bg-card border border-border p-5 rounded-xl space-y-2 shadow-sm">
                     <div className="flex items-center justify-between text-muted-foreground">
@@ -60,7 +41,7 @@ export default async function AnalyticsData() {
                 {/* Active Polls Card */}
                 <div className="bg-card border border-border p-5 rounded-xl space-y-2 shadow-sm">
                     <div className="flex items-center justify-between text-muted-foreground">
-                        <span className="text-xs font-bold uppercase tracking-wider">Active Polls</span>
+                        <span className="text-xs font-bold uppercase tracking-wider">Active</span>
                         <CheckCircle2 className="w-4 h-4 text-emerald-500 dark:text-emerald-400" />
                     </div>
                     <p className="text-3xl font-extrabold font-mono text-emerald-600 dark:text-emerald-400">{activePolls}</p>
@@ -70,11 +51,21 @@ export default async function AnalyticsData() {
                 {/* Paused Polls Card */}
                 <div className="bg-card border border-border p-5 rounded-xl space-y-2 shadow-sm">
                     <div className="flex items-center justify-between text-muted-foreground">
-                        <span className="text-xs font-bold uppercase tracking-wider">Paused Polls</span>
+                        <span className="text-xs font-bold uppercase tracking-wider">Paused</span>
                         <AlertCircle className="w-4 h-4 text-amber-500 dark:text-amber-400" />
                     </div>
                     <p className="text-3xl font-extrabold font-mono text-amber-600 dark:text-amber-400">{pausedPolls}</p>
-                    <p className="text-[11px] text-muted-foreground">Closed to the public</p>
+                    <p className="text-[11px] text-muted-foreground">Manually disabled</p>
+                </div>
+
+                {/* Expired Polls Card - NEW */}
+                <div className="bg-card border border-border p-5 rounded-xl space-y-2 shadow-sm">
+                    <div className="flex items-center justify-between text-muted-foreground">
+                        <span className="text-xs font-bold uppercase tracking-wider">Expired</span>
+                        <History className="w-4 h-4 text-rose-500 dark:text-rose-400" />
+                    </div>
+                    <p className="text-3xl font-extrabold font-mono text-rose-600 dark:text-rose-400">{expiredPolls}</p>
+                    <p className="text-[11px] text-muted-foreground">Reached time limit</p>
                 </div>
             </div>
 
@@ -100,17 +91,25 @@ export default async function AnalyticsData() {
 
                             return (
                                 <Link
-                                    key={poll.id}
-                                    href={`/dashboard/polls/${poll.id}/analytics`}
+                                    key={poll._id}
+                                    href={`/dashboard/polls/${poll._id}/analytics`}
                                     className="group bg-background hover:bg-muted/50 border border-border p-5 rounded-xl block transition-all duration-200 hover:border-slate-300 dark:hover:border-slate-800 shadow-sm"
                                 >
                                     <div className="space-y-3">
                                         <div className="flex items-start justify-between gap-4">
-                                            <h3 className="text-sm font-bold text-foreground/90 group-hover:text-indigo-600 dark:group-hover:text-indigo-400 transition-colors line-clamp-2">
+                                            <h3 className={`text-sm font-bold group-hover:text-indigo-600 dark:group-hover:text-indigo-400 transition-colors line-clamp-2 ${poll.isExpired ? 'text-muted-foreground line-through decoration-slate-400/50' : 'text-foreground/90'
+                                                }`}>
                                                 {poll.question}
                                             </h3>
-                                            {poll.isActive ? (
-                                                <span className="h-2 w-2 rounded-full bg-emerald-500 shrink-0 mt-1 shadow-sm shadow-emerald-500" />
+
+                                            {/* 3-State Dynamic Status Dot */}
+                                            {poll.isExpired ? (
+                                                <div className="flex items-center gap-1.5 shrink-0 mt-1">
+                                                    <span className="text-[10px] font-bold uppercase text-rose-500 tracking-tighter">Ended</span>
+                                                    <span className="h-2 w-2 rounded-full bg-rose-500" />
+                                                </div>
+                                            ) : poll.isActive ? (
+                                                <span className="h-2 w-2 rounded-full bg-emerald-500 shrink-0 mt-1 shadow-sm shadow-emerald-500 animate-pulse" />
                                             ) : (
                                                 <span className="h-2 w-2 rounded-full bg-amber-500 shrink-0 mt-1" />
                                             )}
@@ -123,7 +122,8 @@ export default async function AnalyticsData() {
                                             </div>
                                             <div className="h-1.5 w-full bg-muted border border-border/40 rounded-full overflow-hidden">
                                                 <div
-                                                    className="h-full bg-indigo-500 group-hover:bg-indigo-600 dark:group-hover:bg-indigo-400 transition-all duration-300"
+                                                    className={`h-full transition-all duration-300 ${poll.isExpired ? 'bg-slate-400' : 'bg-indigo-500 group-hover:bg-indigo-600'
+                                                        }`}
                                                     style={{ width: `${platformShare}%` }}
                                                 />
                                             </div>

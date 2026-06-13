@@ -1,11 +1,10 @@
-import { auth } from '@clerk/nextjs/server'; // or your auth provider
+import { auth } from '@clerk/nextjs/server';
 import { redirect } from 'next/navigation';
-import { cache } from "react"
+import { cache } from "react";
 
-/**
- * Validates the user session. 
- * Redirects to sign-in if unauthenticated, otherwise returns the verified userId.
- */
+import connectToDb from '@/database/connection';
+import { Poll } from "@/models/poll";
+
 export const requireAuth = cache(async (): Promise<string> => {
     const { userId } = await auth();
 
@@ -15,3 +14,15 @@ export const requireAuth = cache(async (): Promise<string> => {
 
     return userId;
 })
+
+async function verifyOwnership(pollId: string) {
+    const { userId } = await auth();
+    if (!userId) throw new Error("Authentication required.");
+
+    await connectToDb();
+    const poll = await Poll.findById(pollId);
+    if (!poll) throw new Error("Poll not found.");
+    if (poll.creatorId !== userId) throw new Error("Unauthorized access.");
+
+    return { poll, userId };
+}

@@ -1,11 +1,10 @@
 "use client";
 import { useForm, useFieldArray } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Plus, Trash2, Layers3 } from "lucide-react";
+import { Plus, Trash2, CalendarDays, Layers3 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Switch } from "@/components/ui/switch";
-import { pollFormSchema, type PollFormValues } from "@/lib/validations/poll";
+import { createPollSchema, type CreatePollData } from "@/lib/validations/poll";
 import { toast } from "sonner";
 import { createPollAction } from "@/actions/poll";
 import { useTransition } from "react";
@@ -16,23 +15,25 @@ interface CreatePollFormProps {
 
 export function CreatePollForm({ onSuccess }: CreatePollFormProps) {
   const [pending, startTransition] = useTransition()
-  const form = useForm<PollFormValues>({
-    resolver: zodResolver(pollFormSchema),
+  const form = useForm<CreatePollData>({
+    resolver: zodResolver(createPollSchema),
     defaultValues: {
       question: "",
       options: [
         { text: "", },
         { text: "", }
       ],
+      expiresAt: ""
     },
   });
 
-  const { fields, append, remove } = useFieldArray<PollFormValues>({
+  const { fields, append, remove } = useFieldArray<CreatePollData>({
     control: form.control,
     name: "options",
   });
 
-  function onSubmit(data: PollFormValues) {
+  function onSubmit(data: CreatePollData) {
+    console.log(data)
     startTransition(async () => {
       try {
         const result = await createPollAction(data);
@@ -119,12 +120,28 @@ export function CreatePollForm({ onSuccess }: CreatePollFormProps) {
         )}
       </div>
 
+      {/* Expiry At Date Time Input block */}
+      <div className="space-y-2">
+        <label className="text-sm font-medium text-slate-300 flex items-center gap-1.5">
+          <CalendarDays className="w-4 h-4 text-slate-400" />
+          <span>Poll Expiration Date</span>
+        </label>
+        <Input
+          type="datetime-local"
+          {...form.register("expiresAt")}
+          className="bg-slate-950 border-slate-800 focus-visible:ring-indigo-500 text-slate-300 w-full [color-scheme:dark]"
+        />
+        {form.formState.errors.expiresAt && (
+          <p className="text-xs text-rose-500">{form.formState.errors.expiresAt.message}</p>
+        )}
+      </div>
+
       <hr className="border-slate-800" />
 
       {/* Submit Button */}
       <Button
         type="submit"
-        disabled={form.formState.isSubmitting}
+        disabled={form.formState.isSubmitting || pending}
         className="w-full bg-indigo-600 hover:bg-indigo-700 text-white shadow-md gap-2"
       >
         <Layers3 className="w-4 h-4" />

@@ -1,17 +1,18 @@
-import { Button } from '@/components/ui/button';
-import { Layers3, Plus, } from 'lucide-react';
-import CopyButton from '@/components/copy-button';
-import { CreatePollModal } from '@/components/create-poll-modal';
-import { DeletePoll } from '@/components/delete-poll';
-import { TogglePollStatus } from "@/components/toggle-poll-status";
-import { LaunchPoll } from '@/components/launch-poll';
+import { Layers3, Plus } from 'lucide-react';
 import Link from 'next/link';
-import { getDashboardPollsByCreator } from '@/services/poll-service';
+
+import { TogglePollStatus } from "@/components/toggle-poll-status";
+import { CreatePollModal } from '@/components/create-poll-modal';
+import CopyButton from '@/components/copy-button';
+import { DeletePoll } from '@/components/delete-poll';
+import { LaunchPoll } from '@/components/launch-poll';
+import { Button } from '@/components/ui/button';
+import { getCreatorPollsWithVoteCounts } from '@/data/poll';
 import { requireAuth } from '@/lib/auth';
 
 export default async function DashboardList() {
     const userId = await requireAuth()
-    const polls = await getDashboardPollsByCreator(userId);
+    const polls = await getCreatorPollsWithVoteCounts(userId);
     const globalMetrics = {
         totalPolls: polls.length,
         activePolls: polls.filter(p => p.isActive).length,
@@ -48,7 +49,7 @@ export default async function DashboardList() {
 
     return (
         <>
-              {/* Metrics Banner */}
+            {/* Metrics Banner */}
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
                 {[
                     { label: 'Total Engines', val: globalMetrics.totalPolls },
@@ -74,21 +75,38 @@ export default async function DashboardList() {
 
                 <div className="grid grid-cols-1 gap-3">
                     {polls.map((poll) => {
+                        // 1. Precompute semantic status states for cleaner logic down below
+                        const isExpired = new Date().getTime() > new Date(poll.expiresAt).getTime();
+                        const isPaused = !poll.isActive && !isExpired;
+                        const isActiveLive = poll.isActive && !isExpired;
+
                         return (
                             <div
-                                key={poll.id}
-                                className={`group rounded-xl border bg-card p-5 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 hover:border-slate-300 dark:hover:border-slate-700 transition-all shadow-sm ${!poll.isActive ? 'opacity-75 bg-slate-50/40 dark:bg-slate-950/20' : ''
+                                key={poll._id.toString()}
+                                className={`group rounded-xl border bg-card p-5 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 hover:border-slate-300 dark:hover:border-slate-700 transition-all shadow-sm ${
+                                    // If the poll is paused or expired, soften its visual container weight
+                                    !isActiveLive ? 'opacity-75 bg-slate-50/40 dark:bg-slate-950/20' : ''
                                     }`}
                             >
                                 {/* Core Info Panel */}
                                 <div className="space-y-2 max-w-xl">
                                     <div className="flex flex-wrap items-center gap-2">
-                                        {poll.isActive ? (
+                                        {/* Dynamic Status Badges rendering based on state */}
+                                        {isExpired && (
+                                            <span className="inline-flex items-center gap-1 text-[10px] font-bold bg-slate-500/10 text-slate-500 dark:text-slate-400 px-2 py-0.5 rounded-md uppercase tracking-wider border border-slate-500/10">
+                                                <span className="h-1.5 w-1.5 rounded-full bg-slate-400 mr-0.5" />
+                                                Ended
+                                            </span>
+                                        )}
+
+                                        {isActiveLive && (
                                             <span className="inline-flex items-center gap-1 text-[10px] font-bold bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 px-2 py-0.5 rounded-md uppercase tracking-wider border border-emerald-500/10">
                                                 <span className="h-1.5 w-1.5 rounded-full bg-emerald-500 animate-pulse mr-0.5" />
                                                 Accepting Responses
                                             </span>
-                                        ) : (
+                                        )}
+
+                                        {isPaused && (
                                             <span className="inline-flex items-center gap-1 text-[10px] font-bold bg-amber-500/10 text-amber-600 dark:text-amber-400 px-2 py-0.5 rounded-md uppercase tracking-wider border border-amber-500/10">
                                                 <span className="h-1.5 w-1.5 rounded-full bg-amber-500 mr-0.5" />
                                                 Paused
@@ -99,7 +117,8 @@ export default async function DashboardList() {
                                             {new Date(poll.createdAt).toLocaleDateString(undefined, { dateStyle: 'medium' })}
                                         </span>
                                     </div>
-                                    <h3 className={`font-semibold tracking-tight leading-snug ${poll.isActive ? 'text-slate-900 dark:text-slate-100' : 'text-slate-500 line-through'
+
+                                    <h3 className={`font-semibold tracking-tight leading-snug ${isActiveLive ? 'text-slate-900 dark:text-slate-100' : 'text-slate-500 line-through'
                                         }`}>
                                         {poll.question}
                                     </h3>
@@ -108,24 +127,26 @@ export default async function DashboardList() {
                                 {/* Action Interaction Controls */}
                                 <div className="flex items-center gap-2 sm:self-center self-end border-t pt-3 sm:border-t-0 sm:pt-0 w-full sm:w-auto justify-end border-slate-100 dark:border-slate-900">
 
-                                    <Link href={`/dashboard/polls/${poll.id}/analytics`} className="text-right px-4 hidden md:block group hover:opacity-80 transition-opacity">
+                                    <Link href={`/dashboard/polls/${poll._id.toString()}/analytics`} className="text-right px-4 hidden md:block group hover:opacity-80 transition-opacity">
                                         <p className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground group-hover:text-indigo-400 transition-colors">Responses</p>
                                         <p className="text-base font-bold font-mono text-slate-900 dark:text-slate-50">{poll.totalVotes}</p>
                                     </Link>
 
                                     {/* Copy Share Trigger Button */}
-                                    <CopyButton
-                                        pollId={poll.id}
-                                    />
+                                    <CopyButton pollId={poll._id.toString()} />
 
                                     {/* View Active Route Target */}
-                                    <LaunchPoll pollId={poll.id} />
+                                    <LaunchPoll pollId={poll._id.toString()} />
 
-                                    {/* 💡 New Toggle Status Button (Pause / Play Icon) */}
-                                    <TogglePollStatus pollId={poll.id} isActive={poll.isActive} />
+                                    {/* New Toggle Status Button (Disabled if expired since an ended poll cannot be toggled back active) */}
+                                    <TogglePollStatus
+                                        pollId={poll._id.toString()}
+                                        isActive={poll.isActive}
+                                        disabled={isExpired}
+                                    />
 
-                                    {/* 💡 New Delete Button */}
-                                    <DeletePoll pollId={poll.id} />
+                                    {/* New Delete Button */}
+                                    <DeletePoll pollId={poll._id.toString()} />
                                 </div>
                             </div>
                         );

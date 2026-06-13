@@ -1,9 +1,12 @@
 import { Suspense } from 'react';
-import DashboardList from './dashboard-list';
+
 import { CreatePollModal } from '@/components/create-poll-modal';
 import DashboardSkeleton from './dashboard-skeleton';
+import DashboardList from './dashboard-list';
+import { requireAuth } from '@/lib/auth';
 
 export default async function DashboardPage() {
+  await requireAuth(); // Ensure the user is authenticated before rendering the page
   return (
     <div className="container max-w-5xl mx-auto px-4 py-10 space-y-8 min-h-screen">
       {/* Header Panel */}
@@ -19,9 +22,6 @@ export default async function DashboardPage() {
           <CreatePollModal />
         </div>
       </div>
-
-
-
 
       {/* Main Interactive Control List */}
       <Suspense fallback={<DashboardSkeleton />}>

@@ -1,16 +1,17 @@
 "use client"
-import { useTransition } from "react";
-import { Button } from "@/components/ui/button";
-import { Power, Loader2 } from "lucide-react";
-import { toast } from "sonner";
 import { togglePollStatus } from "@/actions/poll";
+import { Button } from "@/components/ui/button";
+import { Loader2, Power } from "lucide-react";
+import { useTransition } from "react";
+import { toast } from "sonner";
 
 interface ToggleButtonProps {
     pollId: string;
     isActive: boolean;
+    disabled: boolean;
 }
 
-export function TogglePollStatus({ pollId, isActive }: ToggleButtonProps) {
+export function TogglePollStatus({ pollId, isActive, disabled }: ToggleButtonProps) {
     const [isPending, startTransition] = useTransition();
 
     const handleToggle = () => {
@@ -31,7 +32,7 @@ export function TogglePollStatus({ pollId, isActive }: ToggleButtonProps) {
         <Button
             variant="outline"
             size="sm"
-            disabled={isPending}
+            disabled={isPending || disabled}
             onClick={handleToggle}
             className={`h-9 w-9 p-0 border-slate-200 dark:border-slate-800 ${isActive
                     ? "text-amber-500 hover:bg-amber-500/10 hover:text-amber-600"

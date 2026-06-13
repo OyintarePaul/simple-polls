@@ -1,4 +1,4 @@
-import { Schema, models, model, InferSchemaType, Types } from 'mongoose';
+import { InferSchemaType, model, Model, models, Schema, Types } from 'mongoose';
 
 const VoteSchema = new Schema(
   {
@@ -13,8 +13,6 @@ VoteSchema.index({ pollId: 1, voterFingerprint: 1 }, { unique: true });
 
 export type VoteDocument = InferSchemaType<typeof VoteSchema> & {
   _id: Types.ObjectId;
-  createdAt: Date;
-  updatedAt: Date;
 };
 
-export const Vote = models.Vote || model('Vote', VoteSchema);
+export const Vote: Model<VoteDocument> = models.Vote || model<VoteDocument>('Vote', VoteSchema);

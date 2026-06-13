@@ -1,12 +1,12 @@
 "use server";
 import { auth } from "@clerk/nextjs/server";
 import { revalidatePath } from "next/cache";
-import { pollFormSchema, type PollFormValues } from "@/lib/validations/poll";
+import { createPollSchema, type CreatePollData } from "@/lib/validations/poll";
 import connectToDb from "@/database/connection";
 import { Poll } from "@/models/poll";
 import { Vote } from "@/models/vote";
 
-export async function createPollAction(values: PollFormValues) {
+export async function createPollAction(values: CreatePollData) {
     try {
         // 1. Authenticate the session
         const { userId } = await auth();
@@ -15,26 +15,21 @@ export async function createPollAction(values: PollFormValues) {
         }
 
         // 2. Validate the data payload against the schema on the server
-        const parsed = pollFormSchema.safeParse(values);
+        const parsed = createPollSchema.safeParse(values);
         if (!parsed.success) {
             return { success: false, error: "Invalid form parameters provided." };
         }
 
-        const { question, options } = parsed.data;
+        const { question, options, expiresAt } = parsed.data;
 
         // 3. Connect to MongoDB
         await connectToDb();
 
-        // 4. Transform options into an array of objects tracking counts
-        const formattedOptions = options.map((opt) => ({
-            text: opt.text,
-
-        }));
-        // 5. Create the database record
         await Poll.create({
             creatorId: userId,
             question,
-            options: formattedOptions,
+            options,
+            expiresAt
         });
 
         // 6. Purge the Next.js layout cache so the dashboard immediately shows the new poll
@@ -47,17 +42,6 @@ export async function createPollAction(values: PollFormValues) {
     }
 }
 
-async function verifyOwnership(pollId: string) {
-    const { userId } = await auth();
-    if (!userId) throw new Error("Authentication required.");
-
-    await connectToDb();
-    const poll = await Poll.findById(pollId);
-    if (!poll) throw new Error("Poll not found.");
-    if (poll.creatorId !== userId) throw new Error("Unauthorized access.");
-
-    return { poll, userId };
-}
 
 export async function togglePollStatus(pollId: string, currentState: boolean) {
     try {
@@ -76,16 +60,16 @@ export async function togglePollStatus(pollId: string, currentState: boolean) {
     }
 }
 
-
 export async function deletePoll(pollId: string) {
     try {
         await verifyOwnership(pollId);
 
-        // Remove the main poll structure entry
-        await Poll.findByIdAndDelete(pollId);
-
-        // Cascade delete: Purge all the voting receipts linked to this poll container
-        await Vote.deleteMany({ pollId });
+        await Promise.all([
+            // Remove the main poll structure entry
+            Poll.findByIdAndDelete(pollId),
+            // Cascade delete: Purge all the voting receipts linked to this poll container
+            Vote.deleteMany({ pollId })
+        ])
 
         revalidatePath("/dashboard");
         return { success: true };

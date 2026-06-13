@@ -1,14 +1,12 @@
 import { notFound } from 'next/navigation';
-import { Vote } from '@/models/vote';
+
 import { getVoterFingerprint } from '@/lib/fingerprint';
-import { auth } from '@clerk/nextjs/server';
 import VotingForm from './voting-form';
-import { getActivePollById } from '@/services/poll-service';
-import { IVote } from '@/types/poll';
+import { getPollDetailsWithVoteCounts, getVoteByPollAndFingerprint } from '@/data/poll';
 
 export default async function PublicPollPage(props: PageProps<'/p/[pollId]'>) {
   const { pollId } = await props.params;
-  const poll = await getActivePollById(pollId);
+  const poll = await getPollDetailsWithVoteCounts(pollId);
 
   // 1. Fetch Poll
   if (!poll) return notFound();
@@ -17,25 +15,7 @@ export default async function PublicPollPage(props: PageProps<'/p/[pollId]'>) {
   const fingerprint = await getVoterFingerprint(pollId);
 
   // 3. Determine if this user has already voted
-  const userVoteRecord =
-    await Vote.findOne({
-      pollId: poll._id,
-      voterFingerprint: fingerprint
-    }).lean() as IVote | null;
-
-  // 4. Clean up MongoDB object formatting for client component consumption
-  const sanitizedPoll = {
-    id: poll._id.toString(),
-    question: poll.question,
-    isPrivate: poll.isPrivate,
-    options: poll.options.map((opt: any) => ({
-      id: opt._id.toString(),
-      text: opt.text,
-      voteCount: opt.voteCount,
-    })),
-  };
-
-  const totalVotes = sanitizedPoll.options.reduce((acc, opt) => acc + opt.voteCount, 0);
+  const userVoteRecord = await getVoteByPollAndFingerprint(poll._id.toString(), fingerprint);
 
   return (
     <main className="container max-w-xl mx-auto px-4 py-12 min-h-screen flex flex-col justify-center gap-8">
@@ -61,10 +41,10 @@ export default async function PublicPollPage(props: PageProps<'/p/[pollId]'>) {
       </div>
 
       <VotingForm
-        poll={sanitizedPoll}
+        poll={poll}
         hasVoted={!!userVoteRecord}
         votedOptionId={userVoteRecord?.optionId?.toString() || null}
-        totalVotes={totalVotes}
+        totalVotes={poll.totalVotes}
       />
     </main>
   );
