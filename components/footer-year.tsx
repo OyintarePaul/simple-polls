@@ -1,12 +1,7 @@
-"use client";
-import { useEffect, useState } from "react";
+import { connection } from "next/server";
 
-export function FooterYear() {
-    const [year, setYear] = useState(2026);
-
-    useEffect(() => {
-        setYear(new Date().getFullYear());
-    }, []);
-
+export async function FooterYear() {
+    await connection()
+    const year = new Date().getFullYear();
     return <>{year}</>;
 }

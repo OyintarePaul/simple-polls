@@ -1,9 +1,10 @@
-import { Show, SignInButton, SignUpButton, UserButton } from '@clerk/nextjs';
-import { ArrowRight, BarChart3, CheckCircle2, Layers3, Lock, Zap } from 'lucide-react';
-import Link from 'next/link';
+import { BarChart3, CheckCircle2, Layers3, Lock, Zap } from 'lucide-react';
+import { Suspense } from 'react';
 
+import { AuthControls } from '@/components/auth-controls';
+import { HeroActions } from '@/components/hero-actions';
 import { FooterYear } from '@/components/footer-year';
-import { Button } from '@/components/ui/button';
+import { Skeleton } from '@/components/ui/skeleton';
 
 export default async function LandingPage() {
   return (
@@ -16,31 +17,9 @@ export default async function LandingPage() {
             <span className="font-bold tracking-tight text-base">PollGrid</span>
           </div>
 
-          <div className="flex items-center gap-3">
-            <Show when="signed-in">
-              <Link href="/dashboard">
-                <Button size="sm" className="bg-indigo-600 hover:bg-indigo-700 text-white shadow-sm">
-                  Go to Workspace
-                </Button>
-              </Link>
-              <UserButton />
-            </Show>
-            <Show when="signed-out">
-              <>
-                <SignInButton mode="modal">
-                  <Button variant="ghost" size="sm" className="font-medium">
-                    Sign In
-                  </Button>
-                </SignInButton>
-
-                <SignUpButton mode="modal">
-                  <Button size="sm" className="bg-indigo-600 hover:bg-indigo-700 text-white shadow-sm">
-                    Get Started
-                  </Button>
-                </SignUpButton>
-              </>
-            </Show>
-          </div>
+          <Suspense fallback={<div className="flex items-center gap-2"><Skeleton className="h-9 w-20 rounded-md" /><Skeleton className="h-9 w-24 rounded-md" /></div>}>
+            <AuthControls />
+          </Suspense>
         </div>
       </header>
 
@@ -66,32 +45,14 @@ export default async function LandingPage() {
             <p className="mx-auto max-w-2xl text-base sm:text-lg text-slate-500 dark:text-slate-400 font-medium leading-relaxed">
               Build stunning custom public sentiment pipelines or restricted verified-community polls. Distributed instantly via highly micro-optimized share wrappers.
             </p>
-
-            <div className="pt-4 flex flex-col sm:flex-row items-center justify-center gap-3">
-              <Show when="signed-in">
-                <Link href="/dashboard" className="w-full sm:w-auto">
-                  <Button size="lg" className="w-full sm:w-auto bg-slate-900 hover:bg-slate-800 text-slate-50 dark:bg-slate-50 dark:hover:bg-slate-200 dark:text-slate-900 px-8 font-medium shadow-md gap-2">
-                    Open Admin Control <ArrowRight className="w-4 h-4" />
-                  </Button>
-                </Link>
-              </Show>
-
-              <Show when="signed-out">
-                <>
-                  <SignInButton mode="modal">
-                    <Button size="lg" className="w-full sm:w-auto bg-indigo-600 hover:bg-indigo-700 text-white px-8 font-medium shadow-md gap-2">
-                      Deploy Your First Poll <ArrowRight className="w-4 h-4" />
-                    </Button>
-                  </SignInButton>
-                  <a href="#features" className="w-full sm:w-auto">
-                    <Button variant="outline" size="lg" className="w-full sm:w-auto border-slate-200 text-slate-700 hover:text-slate-900 dark:border-slate-800 dark:text-slate-300 px-8 font-medium">
-                      Explore Framework
-                    </Button>
-                  </a>
-                </>
-              </Show>
-
-            </div>
+            <Suspense fallback={
+              <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
+                <Skeleton className="h-11 w-full sm:w-48 rounded-md" />
+                <Skeleton className="h-11 w-full sm:w-40 rounded-md" />
+              </div>
+            }>
+              <HeroActions />
+            </Suspense>
           </div>
         </section>
 
@@ -147,7 +108,7 @@ export default async function LandingPage() {
       {/* Basic Footer */}
       <footer className="border-t border-slate-200/60 dark:border-slate-800/60 py-6 bg-background">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-slate-400 font-mono">
-          <p>© <FooterYear /> PollGrid. All operations system authenticated.</p>
+          <p>© <Suspense fallback={<div className="w-8 h-8 rounded-full bg-muted animate-pulse" />}><FooterYear /></Suspense> PollGrid. All operations system authenticated.</p>
           <div className="flex gap-4">
             <span className="hover:text-slate-600 dark:hover:text-slate-200 cursor-pointer">Security Protocol</span>
             <span className="hover:text-slate-600 dark:hover:text-slate-200 cursor-pointer">API Core</span>

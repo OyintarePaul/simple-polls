@@ -1,6 +1,8 @@
-import Link from 'next/link';
 import { UserButton } from '@clerk/nextjs';
 import { Layers3 } from 'lucide-react';
+import Link from 'next/link';
+import { Suspense } from 'react';
+
 import { ThemeToggle } from '@/components/theme-toggle';
 import { MainNav } from '@/components/main-nav';
 
@@ -16,16 +18,19 @@ export default function DashboardLayout({
           <div className="flex items-center gap-6 md:gap-10">
             <Link href="/dashboard" className="flex items-center space-x-2">
               <Layers3 className="h-5 w-5 text-indigo-600 dark:text-indigo-400" />
-              <span className="font-bold tracking-tight text-sm sm:text-base">PollGrid</span>
+              <span className="font-bold tracking-tight text-sm sm:text-base">SimplePolls</span>
             </Link>
 
-            <MainNav />
+            <Suspense>
+              <MainNav />
+            </Suspense>
           </div>
 
           <div className="flex items-center gap-4">
             <ThemeToggle />
-            {/* Clerk User Management Portal */}
-            <UserButton />
+            <Suspense fallback={<div className="w-8 h-8 rounded-full bg-muted animate-pulse" />}>
+              <UserButton />
+            </Suspense>
           </div>
         </div>
       </header>
