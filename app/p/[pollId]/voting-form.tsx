@@ -4,7 +4,7 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { Progress } from '@/components/ui/progress';
 import { PollWithVoteCounts } from '@/data/poll';
-import { CheckCircle2, Loader2 } from 'lucide-react';
+import { CheckCircle2, Loader2, Lock } from 'lucide-react';
 import { useState, useTransition } from 'react';
 import { toast } from 'sonner';
 
@@ -13,6 +13,7 @@ interface VotingFormProps {
   hasVoted: boolean;
   votedOptionId: string | null;
   totalVotes: number;
+  isClosed: boolean; // 🌟 Accept prop
 }
 
 export default function VotingForm({
@@ -20,6 +21,7 @@ export default function VotingForm({
   hasVoted: initialHasVoted,
   votedOptionId: initialVotedOptionId,
   totalVotes: initialTotalVotes,
+  isClosed, // 🌟 Destructure
 }: VotingFormProps) {
   const [selectedOptionId, setSelectedOptionId] = useState<string | null>(null);
   const [hasVoted, setHasVoted] = useState(initialHasVoted);
@@ -29,22 +31,22 @@ export default function VotingForm({
 
   const [isPending, startTransition] = useTransition();
 
+  // 🌟 Force view transition state to true if the entire poll has been closed
+  const showResults = hasVoted || isClosed;
 
   const handleVoteSubmit = async () => {
-    if (!selectedOptionId) return;
+    if (!selectedOptionId || isClosed) return;
 
     startTransition(async () => {
       const result = await castVote({ pollId: poll._id.toString(), optionId: selectedOptionId });
 
       if (!result.success) {
-        // Sonner error variant execution
         toast.error('Action Blocked', {
           description: result.error || 'Failed to submit vote.',
         });
         return;
       }
 
-      // Optimistic layout mutation
       setOptions((prevOptions) =>
         prevOptions.map((opt) =>
           opt._id.toString() === selectedOptionId ? { ...opt, voteCount: opt.voteCount + 1 } : opt
@@ -54,7 +56,6 @@ export default function VotingForm({
       setVotedOptionId(selectedOptionId);
       setHasVoted(true);
 
-      // Sonner success variant execution
       toast.success('Vote Counted!', {
         description: 'Your response has been securely tracked.',
       });
@@ -63,7 +64,8 @@ export default function VotingForm({
 
   return (
     <Card className="w-full border-border shadow-xl backdrop-blur-md relative overflow-hidden bg-card text-card-foreground">
-      <div className="absolute top-0 left-0 right-0 h-1.5 bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500" />
+      {/* Dynamic top gradient bar based on open/closed state */}
+      <div className={`absolute top-0 left-0 right-0 h-1.5 ${isClosed ? 'bg-slate-400 dark:bg-slate-600' : 'bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500'}`} />
 
       <CardHeader className="space-y-2 pt-8">
         <CardTitle className="text-2xl font-bold tracking-tight text-foreground">
@@ -72,7 +74,7 @@ export default function VotingForm({
       </CardHeader>
 
       <CardContent className="space-y-4 relative">
-        {hasVoted ? (
+        {showResults ? (
           <div className="space-y-4 animate-fade-in">
             {options.map((option) => {
               const percentage = totalVotes > 0 ? Math.round((option.voteCount / totalVotes) * 100) : 0;
@@ -89,11 +91,6 @@ export default function VotingForm({
                   </div>
                   <Progress
                     value={percentage}
-                    style={
-                      {
-                        "--progress-background": isUserChoice ? "var(--indigo-600)" : "currentColor"
-                      } as React.CSSProperties
-                    }
                     className={`h-8 transition-all duration-1000 bg-muted border border-border/40 ${isUserChoice
                       ? '[&>div]:bg-indigo-600 dark:[&>div]:bg-indigo-500'
                       : '[&>div]:bg-muted-foreground/30 dark:[&>div]:bg-slate-700'
@@ -102,9 +99,12 @@ export default function VotingForm({
                 </div>
               );
             })}
-            <p className="text-right text-xs text-muted-foreground font-mono pt-2">
-              Total Responses: {totalVotes}
-            </p>
+            <div className="flex items-center justify-between text-xs text-muted-foreground font-mono pt-2">
+              <span className="flex items-center gap-1">
+                {isClosed && <Lock className="w-3 h-3 text-slate-400" />} {isClosed ? "Read-Only Final Results" : "Accepting real-time inputs"}
+              </span>
+              <span>Total Responses: {totalVotes}</span>
+            </div>
           </div>
         ) : (
           <div className="space-y-3 relative">
@@ -132,7 +132,8 @@ export default function VotingForm({
         )}
       </CardContent>
 
-      {!hasVoted && (
+      {/* 🌟 Only show submit button container if user hasn't voted AND the poll is still active */}
+      {!showResults && (
         <CardFooter className="bg-muted/30 dark:bg-slate-900/20 border-t border-border px-6 py-4 flex justify-end">
           <Button
             disabled={!selectedOptionId || isPending}
