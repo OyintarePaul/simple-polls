@@ -11,7 +11,7 @@ import { getCreatorPollsWithVoteCounts } from '@/data/poll';
 import { requireAuth } from '@/lib/auth';
 
 export default async function DashboardList() {
-    const userId = await requireAuth()
+    const userId = await requireAuth() // Ensure the user is authenticated before fetching polls
     const polls = await getCreatorPollsWithVoteCounts(userId);
     const globalMetrics = {
         totalPolls: polls.length,
@@ -52,9 +52,9 @@ export default async function DashboardList() {
             {/* Metrics Banner */}
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
                 {[
-                    { label: 'Total Engines', val: globalMetrics.totalPolls },
-                    { label: 'Active Live Links', val: globalMetrics.activePolls },
-                    { label: 'Cumulative Data Votes', val: globalMetrics.cumulativeVotes },
+                    { label: 'Total Polls', val: globalMetrics.totalPolls },
+                    { label: 'Active Live Polls', val: globalMetrics.activePolls },
+                    { label: 'Cumulative Votes', val: globalMetrics.cumulativeVotes },
                 ].map((m, i) => (
                     <div key={i} className="rounded-xl border bg-card p-5 shadow-sm">
                         <p className="text-xs font-medium text-muted-foreground uppercase tracking-wider">{m.label}</p>
@@ -66,7 +66,7 @@ export default async function DashboardList() {
             <div className="space-y-4">
                 <div className="flex items-center justify-between px-1">
                     <h2 className="text-lg font-semibold tracking-tight text-slate-900 dark:text-slate-50">
-                        Active Pipeline Records
+                        All Poll Records
                     </h2>
                     <span className="text-xs font-mono text-muted-foreground bg-slate-100 dark:bg-slate-800/60 px-2 py-0.5 rounded-md">
                         {polls.length} Registered

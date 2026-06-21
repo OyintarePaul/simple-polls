@@ -1,19 +1,12 @@
-import { notFound } from 'next/navigation';
 import { Suspense } from 'react';
 
 import PollDataBoundary from './poll-data-boundary';
-import { getVoterFingerprint } from '@/lib/fingerprint';
-import VotingForm from './voting-form';
-import { getPollDetailsWithVoteCounts, getVoteByPollAndFingerprint } from '@/data/poll';
-
 
 interface PageProps {
   params: Promise<{ pollId: string }>;
 }
 
 export default async function PublicPollPage({ params }: PageProps) {
-
-
   return (
     <main className="container max-w-xl mx-auto px-4 py-12 min-h-screen flex flex-col justify-center gap-8">
       <div className="text-center space-y-3">
