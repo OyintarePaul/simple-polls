@@ -1,6 +1,7 @@
 @import "tailwindcss";
 @import "tw-animate-css";
 @import "shadcn/tailwind.css";
+@import '@clerk/ui/themes/shadcn.css';
 
 @plugin "tailwindcss-animate";
 
@@ -9,7 +10,7 @@
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --font-sans: var(--font-sans);
+  --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
   --color-sidebar-ring: var(--sidebar-ring);
   --color-sidebar-border: var(--sidebar-border);
@@ -52,74 +53,104 @@
 }
 
 :root {
+  /* Layout Fundamentals (Clean Slate whites with a hint of Indigo hue) */
+  --background: oklch(0.99 0.003 275);
+  --foreground: oklch(0.15 0.015 275);
+  
+  /* Container Blocks */
   --card: oklch(1 0 0);
-  --card-foreground: oklch(0.145 0 0);
+  --card-foreground: oklch(0.15 0.015 275);
   --popover: oklch(1 0 0);
-  --popover-foreground: oklch(0.145 0 0);
-  --primary: oklch(0.527 0.154 150.069);
-  --primary-foreground: oklch(0.982 0.018 155.826);
-  --secondary: oklch(0.967 0.001 286.375);
-  --secondary-foreground: oklch(0.21 0.006 285.885);
-  --muted: oklch(0.97 0 0);
-  --muted-foreground: oklch(0.556 0 0);
-  --accent: oklch(0.97 0 0);
-  --accent-foreground: oklch(0.205 0 0);
+  --popover-foreground: oklch(0.15 0.015 275);
+  
+  /* 🌟 Primary Theme Accent (Exact Tailwind v4 Indigo-600) */
+  --primary: oklch(0.511 0.262 276.966);
+  --primary-foreground: oklch(0.99 0.005 275);
+  
+  /* Secondary / Structural utilities (Harmonized with Indigo) */
+  --secondary: oklch(0.95 0.015 275);
+  --secondary-foreground: oklch(0.35 0.18 276.966);
+  --muted: oklch(0.95 0.008 275);
+  --muted-foreground: oklch(0.50 0.02 275);
+  --accent: oklch(0.93 0.025 275);
+  --accent-foreground: oklch(0.30 0.18 276.966);
+  
+  /* Destructive Operations (Vibrant Red) */
   --destructive: oklch(0.577 0.245 27.325);
-  --destructive-foreground: hsl(0 0% 98%);
-  --border: oklch(0.922 0 0);
-  --input: oklch(0.922 0 0);
-  --ring: oklch(0.708 0 0);
+  --destructive-foreground: oklch(0.99 0.005 275);
+  
+  /* Lines & Board Focus rules */
+  --border: oklch(0.91 0.01 275);
+  --input: oklch(0.91 0.01 275);
+  --ring: oklch(0.511 0.262 276.966 / 40%);
   --radius: 0.625rem;
-  --chart-1: oklch(0.87 0 0);
-  --chart-2: oklch(0.556 0 0);
-  --chart-3: oklch(0.439 0 0);
-  --chart-4: oklch(0.371 0 0);
-  --chart-5: oklch(0.269 0 0);
-  --sidebar: oklch(0.985 0 0);
-  --sidebar-foreground: oklch(0.145 0 0);
-  --sidebar-primary: oklch(0.627 0.194 149.214);
-  --sidebar-primary-foreground: oklch(0.982 0.018 155.826);
-  --sidebar-accent: oklch(0.97 0 0);
-  --sidebar-accent-foreground: oklch(0.205 0 0);
-  --sidebar-border: oklch(0.922 0 0);
-  --sidebar-ring: oklch(0.708 0 0);
-  --background: oklch(1 0 0);
-  --foreground: oklch(0.145 0 0);
+
+  /* Chart Palette (Stepped variants of your Indigo anchor) */
+  --chart-1: oklch(0.511 0.262 276.966); /* Indigo 600 */
+  --chart-2: oklch(0.673 0.182 276.935); /* Indigo 400 */
+  --chart-3: oklch(0.359 0.144 278.697); /* Indigo 900 */
+  --chart-4: oklch(0.870 0.065 274.039); /* Indigo 200 */
+  --chart-5: oklch(0.585 0.233 277.117); /* Indigo 500 */
+  
+  /* Sidebar Configurations */
+  --sidebar: oklch(0.98 0.005 275);
+  --sidebar-foreground: oklch(0.15 0.015 275);
+  --sidebar-primary: oklch(0.511 0.262 276.966);
+  --sidebar-primary-foreground: oklch(0.99 0.005 275);
+  --sidebar-accent: oklch(0.93 0.025 275);
+  --sidebar-accent-foreground: oklch(0.30 0.18 276.966);
+  --sidebar-border: oklch(0.91 0.01 275);
+  --sidebar-ring: oklch(0.511 0.262 276.966 / 30%);
 }
 
 .dark {
-  --background: oklch(0.145 0 0);
-  --foreground: oklch(0.985 0 0);
-  --card: oklch(0.205 0 0);
-  --card-foreground: oklch(0.985 0 0);
-  --popover: oklch(0.205 0 0);
-  --popover-foreground: oklch(0.985 0 0);
-  --primary: oklch(0.448 0.119 151.328);
-  --primary-foreground: oklch(0.982 0.018 155.826);
-  --secondary: oklch(0.274 0.006 286.033);
-  --secondary-foreground: oklch(0.985 0 0);
-  --muted: oklch(0.269 0 0);
-  --muted-foreground: oklch(0.708 0 0);
-  --accent: oklch(0.269 0 0);
-  --accent-foreground: oklch(0.985 0 0);
-  --destructive: oklch(0.704 0.191 22.216);
-  --destructive-foreground: hsl(0 85.7% 97.3%);
-  --border: oklch(1 0 0 / 10%);
-  --input: oklch(1 0 0 / 15%);
-  --ring: oklch(0.556 0 0);
-  --chart-1: oklch(0.87 0 0);
-  --chart-2: oklch(0.556 0 0);
-  --chart-3: oklch(0.439 0 0);
-  --chart-4: oklch(0.371 0 0);
-  --chart-5: oklch(0.269 0 0);
-  --sidebar: oklch(0.205 0 0);
-  --sidebar-foreground: oklch(0.985 0 0);
-  --sidebar-primary: oklch(0.723 0.219 149.579);
-  --sidebar-primary-foreground: oklch(0.982 0.018 155.826);
-  --sidebar-accent: oklch(0.269 0 0);
-  --sidebar-accent-foreground: oklch(0.985 0 0);
-  --sidebar-border: oklch(1 0 0 / 10%);
-  --sidebar-ring: oklch(0.556 0 0);
+  /* Dark Mode Layout Fundamentals (Deep Charcoal Rich-Indigo) */
+  --background: oklch(0.12 0.012 275);
+  --foreground: oklch(0.98 0.005 275);
+  
+  /* Dark Container Blocks */
+  --card: oklch(0.16 0.015 275);
+  --card-foreground: oklch(0.98 0.005 275);
+  --popover: oklch(0.16 0.015 275);
+  --popover-foreground: oklch(0.98 0.005 275);
+  
+  /* 🌟 Dark Mode Indigo (Using Indigo-500 for better contrast on dark backgrounds) */
+  --primary: oklch(0.585 0.233 277.117); 
+  --primary-foreground: oklch(0.12 0.012 275);
+  
+  /* Dark Mode Sub-elements */
+  --secondary: oklch(0.20 0.02 275);
+  --secondary-foreground: oklch(0.87 0.04 275);
+  --muted: oklch(0.18 0.015 275);
+  --muted-foreground: oklch(0.65 0.02 275);
+  --accent: oklch(0.22 0.025 275);
+  --accent-foreground: oklch(0.95 0.02 275);
+  
+  /* Dark Mode Destructive */
+  --destructive: oklch(0.505 0.213 27.518);
+  --destructive-foreground: oklch(0.99 0.005 275);
+  
+  /* Dark Mode Layout Lines */
+  --border: oklch(0.22 0.015 275);
+  --input: oklch(0.22 0.015 275);
+  --ring: oklch(0.585 0.233 277.117 / 50%);
+  
+  /* Dark Mode Charts */
+  --chart-1: oklch(0.585 0.233 277.117);
+  --chart-2: oklch(0.398 0.195 277.366);
+  --chart-3: oklch(0.785 0.115 274.713);
+  --chart-4: oklch(0.359 0.144 278.697);
+  --chart-5: oklch(0.930 0.034 272.788);
+  
+  /* Dark Mode Sidebar */
+  --sidebar: oklch(0.14 0.015 275);
+  --sidebar-foreground: oklch(0.98 0.005 275);
+  --sidebar-primary: oklch(0.585 0.233 277.117);
+  --sidebar-primary-foreground: oklch(0.12 0.012 275);
+  --sidebar-accent: oklch(0.20 0.02 275);
+  --sidebar-accent-foreground: oklch(0.95 0.02 275);
+  --sidebar-border: oklch(0.22 0.015 275);
+  --sidebar-ring: oklch(0.585 0.233 277.117 / 40%);
 }
 
 @layer base {

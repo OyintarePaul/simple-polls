@@ -92,7 +92,7 @@ export default function VotingForm({
                   <Progress
                     value={percentage}
                     className={`h-8 transition-all duration-1000 bg-muted border border-border/40 ${isUserChoice
-                      ? '[&>div]:bg-indigo-600 dark:[&>div]:bg-indigo-500'
+                      ? '[&>div]:bg-primary dark:[&>div]:bg-indigo-500'
                       : '[&>div]:bg-muted-foreground/30 dark:[&>div]:bg-slate-700'
                       }`}
                   />
@@ -101,7 +101,7 @@ export default function VotingForm({
             })}
             <div className="flex items-center justify-between text-xs text-muted-foreground font-mono pt-2">
               <span className="flex items-center gap-1">
-                {isClosed && <Lock className="w-3 h-3 text-slate-400" />} {isClosed ? "Read-Only Final Results" : "Accepting real-time inputs"}
+                {isClosed && <Lock className="w-3 h-3 text-muted-foreground" />} {isClosed ? "Read-Only Final Results" : "Accepting real-time inputs"}
               </span>
               <span>Total Responses: {totalVotes}</span>
             </div>
@@ -116,12 +116,12 @@ export default function VotingForm({
                   disabled={isPending}
                   onClick={() => setSelectedOptionId(option._id.toString())}
                   className={`w-full text-left p-4 rounded-xl border text-sm font-medium transition-all flex items-center justify-between ${isSelected
-                    ? 'border-indigo-600 dark:border-indigo-500 bg-indigo-50/50 dark:bg-indigo-950/20 text-indigo-950 dark:text-indigo-400 ring-2 ring-indigo-600/20'
+                    ? 'border-primary bg-primary/5 dark:bg-indigo-950/20 text-indigo-950 dark:text-indigo-400 ring-2 ring-indigo-600/20'
                     : 'border-input bg-background hover:bg-muted/60 text-foreground/90'
                     }`}
                 >
                   <span>{option.text}</span>
-                  <div className={`w-4 h-4 rounded-full border flex items-center justify-center transition-all shrink-0 ${isSelected ? 'border-indigo-600 dark:border-indigo-500 bg-indigo-600 dark:bg-indigo-500' : 'border-muted-foreground/40'
+                  <div className={`w-4 h-4 rounded-full border flex items-center justify-center transition-all shrink-0 ${isSelected ? 'border-primary dark:border-indigo-500 bg-primary dark:bg-indigo-500' : 'border-muted-foreground/40'
                     }`}>
                     {isSelected && <div className="w-1.5 h-1.5 rounded-full bg-white" />}
                   </div>

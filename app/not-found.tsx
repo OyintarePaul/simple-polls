@@ -18,7 +18,7 @@ export default function NotFound() {
         <h1 className="text-4xl font-extrabold text-slate-50 tracking-tight">
           Page Not Found
         </h1>
-        <p className="text-slate-400 leading-relaxed">
+        <p className="text-muted-foreground leading-relaxed">
           The page you are looking for might have been <span className="text-slate-200">removed</span>,
           <span className="text-slate-200"> renamed</span>, or is temporarily unavailable.
         </p>

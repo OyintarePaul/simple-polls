@@ -1,36 +1,35 @@
 "use client";
 
+import * as React from "react";
+import { Moon, Sun } from "lucide-react";
 import { useTheme } from "next-themes";
-import { Sun, Moon } from "lucide-react";
-import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 
 export function ThemeToggle() {
-  const { theme, setTheme } = useTheme();
-  const [mounted, setMounted] = useState(false);
+  const { theme, setTheme, resolvedTheme } = useTheme();
+  const [mounted, setMounted] = React.useState(false);
 
-  // Prevent hydration mismatch by waiting until mounted on the client
-  useEffect(() => {
-    // eslint-disable-next-line react-hooks/set-state-in-effect
+  // Prevent hydration mismatches by waiting until client-side mount
+  React.useEffect(() => {
     setMounted(true);
   }, []);
 
   if (!mounted) {
-    return <div className="w-9 h-9" />; // Blank placeholder to match button size during load
+    return <Button variant="ghost" size="icon" className="w-9 h-9" disabled />;
   }
 
   return (
     <Button
       variant="ghost"
       size="icon"
-      onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
-      className="w-9 h-9 text-muted-foreground hover:text-foreground rounded-lg border border-transparent hover:bg-slate-900/40 dark:hover:bg-slate-900/60"
+      className="w-9 h-9 rounded-lg text-muted-foreground hover:text-foreground"
+      onClick={() => setTheme(resolvedTheme === "dark" ? "light" : "dark")}
       aria-label="Toggle theme"
     >
-      {theme === "dark" ? (
-        <Sun className="h-[1.2rem] w-[1.2rem] transition-all text-amber-400" />
+      {resolvedTheme === "dark" ? (
+        <Sun className="h-[1.2rem] w-[1.2rem] transition-all" />
       ) : (
-        <Moon className="h-[1.2rem] w-[1.2rem] transition-all text-slate-700" />
+        <Moon className="h-[1.2rem] w-[1.2rem] transition-all" />
       )}
     </Button>
   );

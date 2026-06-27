@@ -1,28 +1,50 @@
-import { Geist, Geist_Mono, Inter } from "next/font/google";
+import "./globals.css";
+import { shadcn } from '@clerk/ui/themes';
+import { Geist, Geist_Mono } from "next/font/google";
 import { ClerkProvider } from "@clerk/nextjs";
-import { dark } from '@clerk/themes';
 import { Toaster } from "sonner";
 import type { Metadata } from "next";
 
-import "./globals.css";
 import { cn } from "@/lib/utils";
-import Providers from "@/providers";
-
-const inter = Inter({ subsets: ['latin'], variable: '--font-sans' });
+import { ThemeProvider } from "@/providers/theme-provider";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
   subsets: ["latin"],
+  display: "swap",
 });
 
 const geistMono = Geist_Mono({
   variable: "--font-geist-mono",
   subsets: ["latin"],
+  display: "swap",
 });
 
 export const metadata: Metadata = {
-  title: "Simple Polls",
-  description: "Create simple multichoice polls to settle disputes.",
+  title: {
+    default: "SimplePoll | Real-time Community Polling",
+    template: "%s | SimplePoll", // Allows sub-pages to dynamically become "Analytics | SimplePoll"
+  },
+  description: "Create anonymous, encrypted, real-time community polls with instant analytics syncing.",
+  keywords: ["polling", "voting app", "real-time analytics", "nextjs", "anonymous feedback"],
+  authors: [{ name: "Egrenbido Oyintare Paul" }],
+  icons: {
+    icon: "/favicon.ico",
+    apple: "/apple-touch-icon.png",
+  },
+  openGraph: {
+    title: "SimplePoll | Real-time Community Polling",
+    description: "Create anonymous, encrypted, real-time community polls with instant analytics syncing.",
+    url: "https://yourdomain.com",
+    siteName: "SimplePoll",
+    type: "website",
+    locale: "en_US",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "SimplePoll | Real-time Community Polling",
+    description: "Create anonymous, encrypted, real-time community polls with instant analytics syncing.",
+  },
 };
 
 export default function RootLayout({
@@ -31,21 +53,18 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <ClerkProvider afterSignOutUrl="/" appearance={{
-      theme: dark,
-      cssLayerName: "clerk",
-      elements: {
-        modalBackdrop: "!bg-slate-950/80 backdrop-blur-md transition-all duration-300"
-      },
-    }}>
-      <html lang="en" className={cn("font-sans", inter.variable,)}>
-        <body
-          className={`${geistSans.variable} ${geistMono.variable} antialiased`}
-        >
-          <Providers>
+    <ClerkProvider afterSignOutUrl="/" appearance={{ theme: shadcn, }}>
+      <html lang="en" className={cn("font-sans", geistSans.variable, geistMono.variable)}>
+        <body className="antialiased">
+          <ThemeProvider
+            attribute="class"
+            defaultTheme="system"
+            enableSystem
+            disableTransitionOnChange
+          >
             {children}
             <Toaster richColors theme="system" />
-          </Providers>
+          </ThemeProvider>
         </body>
       </html>
     </ClerkProvider>

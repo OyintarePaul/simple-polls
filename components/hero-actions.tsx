@@ -18,13 +18,13 @@ export function HeroActions() {
       <Show when="signed-out">
         <div className="flex flex-col sm:flex-row items-center gap-3 w-full sm:w-auto">
           <SignInButton mode="modal">
-            <Button size="lg" className="w-full sm:w-auto bg-indigo-600 hover:bg-indigo-700 text-white px-8 font-medium shadow-md gap-2">
-              Deploy Your First Poll <ArrowRight className="w-4 h-4 shrink-0" />
+            <Button size="lg" className="w-full sm:w-auto px-8">
+              Deploy Your First Poll <ArrowRight className="w-4 h-4" />
             </Button>
           </SignInButton>
           
           <a href="#features" className="w-full sm:w-auto">
-            <Button variant="outline" size="lg" className="w-full sm:w-auto border-input bg-background hover:bg-muted text-foreground px-8 font-medium">
+            <Button variant="outline" size="lg" className="w-full sm:w-auto px-8">
               Explore Framework
             </Button>
           </a>

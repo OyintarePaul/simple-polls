@@ -113,7 +113,7 @@ export function CreatePollForm({ onSuccess }: CreatePollFormProps) {
             variant="outline"
             size="sm"
             onClick={() => append({ text: "" })}
-            className="mt-2 border-dashed border-slate-800 hover:border-indigo-500 text-slate-400 hover:text-slate-200 bg-transparent gap-1.5"
+            className="mt-2 border-dashed border-slate-800 hover:border-indigo-500 text-muted-foreground hover:text-slate-200 bg-transparent gap-1.5"
           >
             <Plus className="w-4 h-4" /> Add Option
           </Button>
@@ -123,7 +123,7 @@ export function CreatePollForm({ onSuccess }: CreatePollFormProps) {
       {/* Expiry At Date Time Input block */}
       <div className="space-y-2">
         <label className="text-sm font-medium text-slate-300 flex items-center gap-1.5">
-          <CalendarDays className="w-4 h-4 text-slate-400" />
+          <CalendarDays className="w-4 h-4 text-muted-foreground" />
           <span>Poll Expiration Date</span>
         </label>
         <Input
@@ -142,7 +142,7 @@ export function CreatePollForm({ onSuccess }: CreatePollFormProps) {
       <Button
         type="submit"
         disabled={form.formState.isSubmitting || pending}
-        className="w-full bg-indigo-600 hover:bg-indigo-700 text-white shadow-md gap-2"
+        className="w-full bg-primary hover:bg-indigo-700 text-white shadow-md gap-2"
       >
         <Layers3 className="w-4 h-4" />
         {pending ? "Deploying Pipeline..." : "Launch Live Poll"}

@@ -8,27 +8,25 @@ export function AuthControls() {
     <div className="flex items-center gap-3">
       <Show when="signed-in">
         <Link href="/dashboard">
-          <Button size="sm" className="bg-indigo-600 hover:bg-indigo-700 text-white shadow-sm">
+          <Button size="sm">
             Go to Workspace
           </Button>
         </Link>
         <UserButton />
       </Show>
-      
-      <Show when="signed-out">
-        <div className="flex items-center gap-2">
-          <SignInButton mode="modal">
-            <Button variant="ghost" size="sm" className="font-medium">
-              Sign In
-            </Button>
-          </SignInButton>
 
-          <SignUpButton mode="modal">
-            <Button size="sm" className="bg-indigo-600 hover:bg-indigo-700 text-white shadow-sm">
-              Get Started
-            </Button>
-          </SignUpButton>
-        </div>
+      <Show when="signed-out">
+        <SignInButton mode="modal">
+          <Button variant="ghost" size="sm" className="font-medium">
+            Log In
+          </Button>
+        </SignInButton>
+
+        <SignUpButton mode="modal">
+          <Button size="sm">
+            Create Account
+          </Button>
+        </SignUpButton>
       </Show>
     </div>
   );

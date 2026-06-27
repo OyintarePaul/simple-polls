@@ -56,7 +56,7 @@ export default function CopyButton({
       // 💡 Made this h-9 w-9 p-0 baseline to match your clean, square icon button rows on mobile layout
       className={`h-9 w-9 p-0 sm:w-auto sm:px-3 font-medium select-none gap-1.5 transition-all duration-200 ${hasCopied
         ? 'border-emerald-500/30 bg-emerald-50/50 text-emerald-700 dark:bg-emerald-950/20 dark:text-emerald-400 dark:border-emerald-500/20'
-        : 'border-slate-200 text-slate-700 hover:text-slate-900 dark:border-slate-800 dark:text-slate-300'
+        : 'border-slate-200 text-slate-700 hover:text-foreground dark:border-slate-800 dark:text-slate-300'
         } ${className}`}
       {...props}
     >

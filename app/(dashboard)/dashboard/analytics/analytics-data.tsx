@@ -122,7 +122,7 @@ export default async function AnalyticsData() {
                                             </div>
                                             <div className="h-1.5 w-full bg-muted border border-border/40 rounded-full overflow-hidden">
                                                 <div
-                                                    className={`h-full transition-all duration-300 ${poll.isExpired ? 'bg-slate-400' : 'bg-indigo-500 group-hover:bg-indigo-600'
+                                                    className={`h-full transition-all duration-300 ${poll.isExpired ? 'bg-slate-400' : 'bg-indigo-500 group-hover:bg-primary'
                                                         }`}
                                                     style={{ width: `${platformShare}%` }}
                                                 />

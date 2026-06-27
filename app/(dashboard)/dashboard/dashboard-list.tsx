@@ -23,12 +23,12 @@ export default async function DashboardList() {
     if (polls.length === 0) {
         return (
             <div className="rounded-xl border border-dashed border-slate-200 dark:border-slate-800 p-12 text-center max-w-md mx-auto space-y-5 my-8 bg-slate-50/30 dark:bg-slate-900/10">
-                <div className="w-12 h-12 bg-slate-50 dark:bg-slate-900 rounded-full flex items-center justify-center mx-auto text-slate-400 border border-slate-100 dark:border-slate-800 shadow-inner">
+                <div className="w-12 h-12 bg-slate-50 dark:bg-slate-900 rounded-full flex items-center justify-center mx-auto text-muted-foreground border border-slate-100 dark:border-slate-800 shadow-inner">
                     <Layers3 className="w-5 h-5" />
                 </div>
                 <div className="space-y-1">
-                    <h3 className="font-semibold text-sm text-slate-900 dark:text-slate-50">No polls deployed</h3>
-                    <p className="text-xs text-slate-500 dark:text-slate-400 max-w-[280px] mx-auto leading-relaxed">
+                    <h3 className="font-semibold text-sm text-foreground ">No polls deployed</h3>
+                    <p className="text-xs text-muted-foreground max-w-[280px] mx-auto leading-relaxed">
                         Create your first public or private poll structure to open data intake links.
                     </p>
                 </div>
@@ -36,7 +36,7 @@ export default async function DashboardList() {
                 <div className="pt-2 flex justify-center">
                     <CreatePollModal
                         trigger={
-                            <Button className="bg-indigo-600 hover:bg-indigo-700 text-white font-medium text-xs h-9 px-4 shadow-md shadow-indigo-600/10 gap-2">
+                            <Button className="bg-primary hover:bg-indigo-700 text-white font-medium text-xs h-9 px-4 shadow-md shadow-indigo-600/10 gap-2">
                                 <Plus className="w-3.5 h-3.5" />
                                 <span>Create Your First Poll</span>
                             </Button>
@@ -65,7 +65,7 @@ export default async function DashboardList() {
 
             <div className="space-y-4">
                 <div className="flex items-center justify-between px-1">
-                    <h2 className="text-lg font-semibold tracking-tight text-slate-900 dark:text-slate-50">
+                    <h2 className="text-lg font-semibold tracking-tight text-foreground ">
                         All Poll Records
                     </h2>
                     <span className="text-xs font-mono text-muted-foreground bg-slate-100 dark:bg-slate-800/60 px-2 py-0.5 rounded-md">
@@ -85,7 +85,7 @@ export default async function DashboardList() {
                                 key={poll._id.toString()}
                                 className={`group rounded-xl border bg-card p-5 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 hover:border-slate-300 dark:hover:border-slate-700 transition-all shadow-sm ${
                                     // If the poll is paused or expired, soften its visual container weight
-                                    !isActiveLive ? 'opacity-75 bg-slate-50/40 dark:bg-slate-950/20' : ''
+                                    !isActiveLive ? 'opacity-75 bg-muted/30' : ''
                                     }`}
                             >
                                 {/* Core Info Panel */}
@@ -93,7 +93,7 @@ export default async function DashboardList() {
                                     <div className="flex flex-wrap items-center gap-2">
                                         {/* Dynamic Status Badges rendering based on state */}
                                         {isExpired && (
-                                            <span className="inline-flex items-center gap-1 text-[10px] font-bold bg-slate-500/10 text-slate-500 dark:text-slate-400 px-2 py-0.5 rounded-md uppercase tracking-wider border border-slate-500/10">
+                                            <span className="inline-flex items-center gap-1 text-[10px] font-bold bg-slate-500/10 text-muted-foreground px-2 py-0.5 rounded-md uppercase tracking-wider border border-slate-500/10">
                                                 <span className="h-1.5 w-1.5 rounded-full bg-slate-400 mr-0.5" />
                                                 Ended
                                             </span>
@@ -118,7 +118,7 @@ export default async function DashboardList() {
                                         </span>
                                     </div>
 
-                                    <h3 className={`font-semibold tracking-tight leading-snug ${isActiveLive ? 'text-slate-900 dark:text-slate-100' : 'text-slate-500 line-through'
+                                    <h3 className={`font-semibold tracking-tight leading-snug ${isActiveLive ? 'text-foreground dark:text-slate-100' : 'text-slate-500 line-through'
                                         }`}>
                                         {poll.question}
                                     </h3>
@@ -129,7 +129,7 @@ export default async function DashboardList() {
 
                                     <Link href={`/dashboard/polls/${poll._id.toString()}/analytics`} className="text-right px-4 hidden md:block group hover:opacity-80 transition-opacity">
                                         <p className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground group-hover:text-indigo-400 transition-colors">Responses</p>
-                                        <p className="text-base font-bold font-mono text-slate-900 dark:text-slate-50">{poll.totalVotes}</p>
+                                        <p className="text-base font-bold font-mono text-foreground ">{poll.totalVotes}</p>
                                     </Link>
 
                                     {/* Copy Share Trigger Button */}
