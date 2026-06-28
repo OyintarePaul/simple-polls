@@ -7,8 +7,8 @@ import { requireAuth } from "@/lib/auth";
 export default async function GlobalAnalyticsPage() {
     await requireAuth();
     return (
-        <div className="space-y-8 max-w-5xl mx-auto py-6 px-4">
-            {/* Header Text */}
+        <div className="max-w-5xl mx-auto w-full px-4 py-10 space-y-8">
+            {/* Header Panel */}
             <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 border-b pb-6">
                 <div>
                     <h1 className="text-3xl font-bold tracking-tight">Overall Analytics</h1>

@@ -31,9 +31,9 @@ export function MainNav() {
             <item.icon className="h-4 w-4" />
             <span>{item.label}</span>
 
-            {/* Optional: Subtle accent line underneath the active item */}
+            
             {isActive && (
-              <div className="absolute bottom-0 left-0 right-0 h-0.5 bg-indigo-500 dark:bg-indigo-400 rounded-full" />
+              <div className="absolute bottom-0 left-0 right-0 h-0.5 bg-primary rounded-full" />
             )}
           </Link>
         );

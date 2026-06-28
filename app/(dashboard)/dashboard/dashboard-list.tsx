@@ -1,5 +1,5 @@
-import { Layers3, Plus } from 'lucide-react';
 import Link from 'next/link';
+import { Layers3, Plus } from 'lucide-react';
 
 import { TogglePollStatus } from "@/components/toggle-poll-status";
 import { CreatePollModal } from '@/components/create-poll-modal';
@@ -36,8 +36,8 @@ export default async function DashboardList() {
                 <div className="pt-2 flex justify-center">
                     <CreatePollModal
                         trigger={
-                            <Button className="bg-primary hover:bg-indigo-700 text-white font-medium text-xs h-9 px-4 shadow-md shadow-indigo-600/10 gap-2">
-                                <Plus className="w-3.5 h-3.5" />
+                            <Button>
+                                <Plus className="w-4 h-4" />
                                 <span>Create Your First Poll</span>
                             </Button>
                         }
@@ -118,7 +118,7 @@ export default async function DashboardList() {
                                         </span>
                                     </div>
 
-                                    <h3 className={`font-semibold tracking-tight leading-snug ${isActiveLive ? 'text-foreground dark:text-slate-100' : 'text-slate-500 line-through'
+                                    <h3 className={`font-semibold tracking-tight leading-snug ${isActiveLive ? 'text-foreground dark:text-slate-100' : 'text-muted-foreground line-through'
                                         }`}>
                                         {poll.question}
                                     </h3>

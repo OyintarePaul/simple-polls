@@ -1,9 +1,10 @@
 import { Suspense } from 'react';
+import Link from "next/link";
 import { BarChart3, CheckCircle2, Layers3, Lock, Zap } from 'lucide-react';
 
 import { AuthControls } from '@/components/auth-controls';
 import { HeroActions } from '@/components/hero-actions';
-import { FooterYear } from '@/components/footer-year';
+import { Copyright } from '@/components/copyright';
 import { Skeleton } from '@/components/ui/skeleton';
 
 export default async function LandingPage() {
@@ -12,13 +13,13 @@ export default async function LandingPage() {
       {/* Marketing Header */}
       <header className="sticky top-0 z-50 border-b border-border/60 bg-background/80 backdrop-blur-md">
         <div className="mx-auto flex h-16 max-w-7xl items-center justify-between px-4 sm:px-6">
-          <div className="flex items-center space-x-2">
+          <Link href="/" className="flex items-center space-x-2" >
             <Layers3 className="h-5 w-5 text-primary" />
-            <span className="font-bold tracking-tight text-base">SimplePolls</span>
-          </div>
+            <span className="font-bold tracking-tight text-sm sm:text-base">SimplePolls</span>
+          </Link>
 
           <Suspense fallback={
-            <div className="flex items-center gap-3">
+            <div className="flex items-center gap-4">
               <Skeleton className="h-9 w-20 rounded-md" />
               <Skeleton className="h-9 w-24 rounded-md" />
             </div>
@@ -115,7 +116,7 @@ export default async function LandingPage() {
       <footer className="border-t border-border/60 py-6 bg-background">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 flex flex-col sm:flex-row items-center justify-center gap-4 text-xs text-muted-foreground font-mono">
           <Suspense fallback={<div className="w-8 h-8 rounded-full bg-muted animate-pulse" />}>
-            <FooterYear />
+            <Copyright />
           </Suspense>
         </div>
       </footer>

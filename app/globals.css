@@ -75,8 +75,8 @@
   --accent: oklch(0.93 0.025 275);
   --accent-foreground: oklch(0.30 0.18 276.966);
   
-  /* Destructive Operations (Vibrant Red) */
-  --destructive: oklch(0.577 0.245 27.325);
+  /* Destructive Operations (Softer, Sophisticated Rose) */
+  --destructive: oklch(0.58 0.16 15);
   --destructive-foreground: oklch(0.99 0.005 275);
   
   /* Lines & Board Focus rules */
@@ -126,8 +126,8 @@
   --accent: oklch(0.22 0.025 275);
   --accent-foreground: oklch(0.95 0.02 275);
   
-  /* Dark Mode Destructive */
-  --destructive: oklch(0.505 0.213 27.518);
+/* Dark Mode Destructive (Subdued Rose Glow) */
+  --destructive: oklch(0.52 0.14 15);
   --destructive-foreground: oklch(0.99 0.005 275);
   
   /* Dark Mode Layout Lines */

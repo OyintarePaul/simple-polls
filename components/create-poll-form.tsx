@@ -1,13 +1,14 @@
 "use client";
+import { useTransition } from "react";
 import { useForm, useFieldArray } from "react-hook-form";
+import { Plus, Trash2, Layers3 } from "lucide-react";
+import { toast } from "sonner";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Plus, Trash2, CalendarDays, Layers3 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { createPollSchema, type CreatePollData } from "@/lib/validations/poll";
-import { toast } from "sonner";
 import { createPollAction } from "@/actions/poll";
-import { useTransition } from "react";
+import { Label } from "./ui/label";
 
 interface CreatePollFormProps {
   onSuccess?: () => void;
@@ -33,7 +34,6 @@ export function CreatePollForm({ onSuccess }: CreatePollFormProps) {
   });
 
   function onSubmit(data: CreatePollData) {
-    console.log(data)
     startTransition(async () => {
       try {
         const result = await createPollAction(data);
@@ -60,26 +60,26 @@ export function CreatePollForm({ onSuccess }: CreatePollFormProps) {
   }
 
   return (
-    <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6 p-6 max-w-2xl mx-auto bg-slate-900/50 rounded-xl border border-slate-800">
+    <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6 p-6 max-w-2xl mx-auto bg-muted/40 rounded-xl border border-border">
       {/* Question Input */}
       <div className="space-y-2">
-        <label className="block text-sm font-medium text-slate-300">Poll Question</label>
+        <Label>Poll Question</Label>
         <Input
           {...form.register("question")}
           placeholder="What do you want to ask your community?"
-          className="bg-slate-950 border-slate-800 focus-visible:ring-indigo-500"
+          className="bg-muted/50 border-input focus-visible:ring-ring"
         />
         {form.formState.errors.question && (
-          <p className="text-xs text-rose-500">{form.formState.errors.question.message}</p>
+          <p className="text-xs text-destructive">{form.formState.errors.question.message}</p>
         )}
       </div>
 
       {/* Dynamic Options Fields */}
       <div className="space-y-3">
-        <label className="text-sm font-medium text-slate-300 flex justify-between items-center">
+        <Label className="flex justify-between items-center">
           <span>Answer Options</span>
-          <span className="text-xs text-slate-500 font-mono">{fields.length}/10</span>
-        </label>
+          <span className="text-xs text-muted-foreground font-mono">{fields.length}/10</span>
+        </Label>
 
         {fields.map((field, index) => (
           <div key={field.id} className="space-y-1">
@@ -87,7 +87,7 @@ export function CreatePollForm({ onSuccess }: CreatePollFormProps) {
               <Input
                 {...form.register(`options.${index}.text` as const)}
                 placeholder={`Option ${index + 1}`}
-                className="bg-slate-950 border-slate-800 focus-visible:ring-indigo-500 flex-1"
+                className="bg-muted/50 border-input focus-visible:ring-ring flex-1"
               />
               {fields.length > 2 && (
                 <Button
@@ -95,14 +95,14 @@ export function CreatePollForm({ onSuccess }: CreatePollFormProps) {
                   variant="ghost"
                   size="icon"
                   onClick={() => remove(index)}
-                  className="text-slate-500 hover:text-rose-400 hover:bg-rose-500/10"
+                  className="text-muted-foreground hover:text-destructive hover:bg-destructive/10"
                 >
                   <Trash2 className="w-4 h-4" />
                 </Button>
               )}
             </div>
             {form.formState.errors.options?.[index] && (
-              <p className="text-xs text-rose-500">{form.formState.errors.options[index]?.message}</p>
+              <p className="text-xs text-destructive">{form.formState.errors.options[index]?.message}</p>
             )}
           </div>
         ))}
@@ -113,7 +113,7 @@ export function CreatePollForm({ onSuccess }: CreatePollFormProps) {
             variant="outline"
             size="sm"
             onClick={() => append({ text: "" })}
-            className="mt-2 border-dashed border-slate-800 hover:border-indigo-500 text-muted-foreground hover:text-slate-200 bg-transparent gap-1.5"
+            className="mt-2 border-dashed border-border hover:border-primary text-muted-foreground hover:text-foreground bg-transparent gap-1.5"
           >
             <Plus className="w-4 h-4" /> Add Option
           </Button>
@@ -122,27 +122,26 @@ export function CreatePollForm({ onSuccess }: CreatePollFormProps) {
 
       {/* Expiry At Date Time Input block */}
       <div className="space-y-2">
-        <label className="text-sm font-medium text-slate-300 flex items-center gap-1.5">
-          <CalendarDays className="w-4 h-4 text-muted-foreground" />
+        <Label>
           <span>Poll Expiration Date</span>
-        </label>
+        </Label>
         <Input
           type="datetime-local"
           {...form.register("expiresAt")}
-          className="bg-slate-950 border-slate-800 focus-visible:ring-indigo-500 text-slate-300 w-full [color-scheme:dark]"
+          className="bg-muted/50 border-input focus-visible:ring-ring"
         />
         {form.formState.errors.expiresAt && (
-          <p className="text-xs text-rose-500">{form.formState.errors.expiresAt.message}</p>
+          <p className="text-xs text-destructive">{form.formState.errors.expiresAt.message}</p>
         )}
       </div>
 
-      <hr className="border-slate-800" />
+      <hr className="border-border" />
 
       {/* Submit Button */}
       <Button
         type="submit"
         disabled={form.formState.isSubmitting || pending}
-        className="w-full bg-primary hover:bg-indigo-700 text-white shadow-md gap-2"
+        className="w-full"
       >
         <Layers3 className="w-4 h-4" />
         {pending ? "Deploying Pipeline..." : "Launch Live Poll"}

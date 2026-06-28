@@ -42,7 +42,7 @@ export default function DashboardSkeleton() {
 
       {/* Backup Text Sync Indicator */}
       <div className="flex items-center justify-center gap-2 text-xs text-muted-foreground pt-4">
-        <Loader2 className="w-3.5 h-3.5 animate-spin text-indigo-500" />
+        <Loader2 className="w-3.5 h-3.5 animate-spin text-primary" />
         <span>Syncing dashboard data...</span>
       </div>
     </div>
