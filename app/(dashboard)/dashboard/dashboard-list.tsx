@@ -7,6 +7,8 @@ import CopyButton from '@/components/copy-button';
 import { DeletePoll } from '@/components/delete-poll';
 import { LaunchPoll } from '@/components/launch-poll';
 import { Button } from '@/components/ui/button';
+import { Card } from "@/components/ui/card"
+import { Badge } from "@/components/ui/badge"
 import { getCreatorPollsWithVoteCounts } from '@/data/poll';
 import { requireAuth } from '@/lib/auth';
 
@@ -22,13 +24,14 @@ export default async function DashboardList() {
     // Graceful blank slate layout check
     if (polls.length === 0) {
         return (
-            <div className="rounded-xl border border-dashed border-slate-200 dark:border-slate-800 p-12 text-center max-w-md mx-auto space-y-5 my-8 bg-slate-50/30 dark:bg-slate-900/10">
-                <div className="w-12 h-12 bg-slate-50 dark:bg-slate-900 rounded-full flex items-center justify-center mx-auto text-muted-foreground border border-slate-100 dark:border-slate-800 shadow-inner">
+            <Card className="max-w-md mx-auto my-8 p-12 text-center space-y-5 border-dashed bg-muted/20">
+                <div className="w-12 h-12 mx-auto flex items-center justify-center rounded-full border bg-background text-muted-foreground shadow-inner">
                     <Layers3 className="w-5 h-5" />
                 </div>
+
                 <div className="space-y-1">
-                    <h3 className="font-semibold text-sm text-foreground ">No polls deployed</h3>
-                    <p className="text-xs text-muted-foreground max-w-[280px] mx-auto leading-relaxed">
+                    <h3 className="text-sm font-semibold">No polls deployed</h3>
+                    <p className="max-w-[280px] mx-auto text-xs text-muted-foreground leading-relaxed">
                         Create your first public or private poll structure to open data intake links.
                     </p>
                 </div>
@@ -43,7 +46,7 @@ export default async function DashboardList() {
                         }
                     />
                 </div>
-            </div>
+            </Card>
         );
     }
 
@@ -56,21 +59,21 @@ export default async function DashboardList() {
                     { label: 'Active Live Polls', val: globalMetrics.activePolls },
                     { label: 'Cumulative Votes', val: globalMetrics.cumulativeVotes },
                 ].map((m, i) => (
-                    <div key={i} className="rounded-xl border bg-card p-5 shadow-sm">
+                    <Card key={i} className="rounded-xl p-5">
                         <p className="text-xs font-medium text-muted-foreground uppercase tracking-wider">{m.label}</p>
-                        <p className="text-2xl font-bold mt-2 font-mono tracking-tight">{m.val}</p>
-                    </div>
+                        <p className="text-2xl font-bold font-mono tracking-tight">{m.val}</p>
+                    </Card>
                 ))}
             </div>
 
             <div className="space-y-4">
                 <div className="flex items-center justify-between px-1">
-                    <h2 className="text-lg font-semibold tracking-tight text-foreground ">
+                    <h2 className="text-lg font-semibold tracking-tight">
                         All Poll Records
                     </h2>
-                    <span className="text-xs font-mono text-muted-foreground bg-slate-100 dark:bg-slate-800/60 px-2 py-0.5 rounded-md">
-                        {polls.length} Registered
-                    </span>
+                    <Badge className="text-xs font-mono text-muted-foreground bg-muted px-2 py-0.5">
+                        {polls.length} Created
+                    </Badge>
                 </div>
 
                 <div className="grid grid-cols-1 gap-3">
@@ -81,9 +84,9 @@ export default async function DashboardList() {
                         const isActiveLive = poll.isActive && !isExpired;
 
                         return (
-                            <div
+                            <Card
                                 key={poll._id.toString()}
-                                className={`group rounded-xl border bg-card p-5 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 hover:border-slate-300 dark:hover:border-slate-700 transition-all shadow-sm ${
+                                className={`group rounded-xl p-5 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 hover:border-border/80 transition-all shadow-sm ${
                                     // If the poll is paused or expired, soften its visual container weight
                                     !isActiveLive ? 'opacity-75 bg-muted/30' : ''
                                     }`}
@@ -93,24 +96,24 @@ export default async function DashboardList() {
                                     <div className="flex flex-wrap items-center gap-2">
                                         {/* Dynamic Status Badges rendering based on state */}
                                         {isExpired && (
-                                            <span className="inline-flex items-center gap-1 text-[10px] font-bold bg-slate-500/10 text-muted-foreground px-2 py-0.5 rounded-md uppercase tracking-wider border border-slate-500/10">
-                                                <span className="h-1.5 w-1.5 rounded-full bg-slate-400 mr-0.5" />
+                                            <Badge variant="outline" className="text-[10px] uppercase tracking-wider text-muted-foreground gap-1.5">
+                                                <span className="h-1.5 w-1.5 rounded-full bg-muted-foreground/50" />
                                                 Ended
-                                            </span>
+                                            </Badge>
                                         )}
 
                                         {isActiveLive && (
-                                            <span className="inline-flex items-center gap-1 text-[10px] font-bold bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 px-2 py-0.5 rounded-md uppercase tracking-wider border border-emerald-500/10">
-                                                <span className="h-1.5 w-1.5 rounded-full bg-emerald-500 animate-pulse mr-0.5" />
+                                            <Badge variant="outline" className="text-[10px] uppercase tracking-wider border-emerald-500/20 bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 gap-1.5">
+                                                <span className="h-1.5 w-1.5 rounded-full bg-emerald-500 animate-pulse" />
                                                 Accepting Responses
-                                            </span>
+                                            </Badge>
                                         )}
 
                                         {isPaused && (
-                                            <span className="inline-flex items-center gap-1 text-[10px] font-bold bg-amber-500/10 text-amber-600 dark:text-amber-400 px-2 py-0.5 rounded-md uppercase tracking-wider border border-amber-500/10">
-                                                <span className="h-1.5 w-1.5 rounded-full bg-amber-500 mr-0.5" />
+                                            <Badge variant="outline" className="text-[10px] uppercase tracking-wider border-amber-500/20 bg-amber-500/10 text-amber-600 dark:text-amber-400 gap-1.5">
+                                                <span className="h-1.5 w-1.5 rounded-full bg-amber-500" />
                                                 Paused
-                                            </span>
+                                            </Badge>
                                         )}
 
                                         <span className="text-xs text-muted-foreground font-mono">
@@ -118,18 +121,17 @@ export default async function DashboardList() {
                                         </span>
                                     </div>
 
-                                    <h3 className={`font-semibold tracking-tight leading-snug ${isActiveLive ? 'text-foreground dark:text-slate-100' : 'text-muted-foreground line-through'
+                                    <h3 className={`font-semibold tracking-tight leading-snug ${isActiveLive ? 'text-foreground' : 'text-muted-foreground line-through'
                                         }`}>
                                         {poll.question}
                                     </h3>
                                 </div>
 
                                 {/* Action Interaction Controls */}
-                                <div className="flex items-center gap-2 sm:self-center self-end border-t pt-3 sm:border-t-0 sm:pt-0 w-full sm:w-auto justify-end border-slate-100 dark:border-slate-900">
-
+                                <div className="flex items-center gap-2 self-end sm:self-center border-t border-border/40 pt-3 sm:border-t-0 sm:pt-0 w-full sm:w-auto justify-end">
                                     <Link href={`/dashboard/polls/${poll._id.toString()}/analytics`} className="text-right px-4 hidden md:block group hover:opacity-80 transition-opacity">
-                                        <p className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground group-hover:text-indigo-400 transition-colors">Responses</p>
-                                        <p className="text-base font-bold font-mono text-foreground ">{poll.totalVotes}</p>
+                                        <p className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground group-hover:text-primary transition-colors">Responses</p>
+                                        <p className="text-base font-bold font-mono">{poll.totalVotes}</p>
                                     </Link>
 
                                     {/* Copy Share Trigger Button */}
@@ -148,7 +150,7 @@ export default async function DashboardList() {
                                     {/* New Delete Button */}
                                     <DeletePoll pollId={poll._id.toString()} />
                                 </div>
-                            </div>
+                            </Card>
                         );
                     })}
                 </div>

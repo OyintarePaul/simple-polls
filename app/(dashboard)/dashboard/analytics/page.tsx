@@ -1,8 +1,35 @@
 import { Suspense } from "react";
+import { Metadata } from "next";
 
 import AnalyticsSkeleton from "./analytics-skeleton";
 import AnalyticsData from "./analytics-data";
 import { requireAuth } from "@/lib/auth";
+
+
+export const metadata: Metadata = {
+    title: "Global Analytics", // Automatically renders as "Global Analytics | SimplePoll"
+    description: "Explore workspace-wide metrics, review cumulative engagement velocities, and monitor comprehensive community participation pipelines.",
+    robots: {
+        index: false,
+        follow: false,
+        nocache: true,
+        googleBot: {
+            index: false,
+            follow: false,
+        },
+    },
+    openGraph: {
+        title: "Global Workspace Analytics | SimplePoll",
+        description: "Explore workspace-wide metrics and review cumulative community engagement pipelines.",
+        url: "https://yourdomain.com/analytics",
+        type: "website",
+    },
+    twitter: {
+        card: "summary",
+        title: "Global Workspace Analytics | SimplePoll",
+        description: "Explore workspace-wide metrics and review cumulative community engagement pipelines.",
+    },
+};
 
 export default async function GlobalAnalyticsPage() {
     await requireAuth();

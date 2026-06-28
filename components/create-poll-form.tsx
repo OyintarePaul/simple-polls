@@ -75,7 +75,7 @@ export function CreatePollForm({ onSuccess }: CreatePollFormProps) {
       </div>
 
       {/* Dynamic Options Fields */}
-      <div className="space-y-3">
+      <div className="space-y-2">
         <Label className="flex justify-between items-center">
           <span>Answer Options</span>
           <span className="text-xs text-muted-foreground font-mono">{fields.length}/10</span>

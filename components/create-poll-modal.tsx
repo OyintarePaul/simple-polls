@@ -3,6 +3,7 @@ import React, { useState } from "react";
 import { Plus } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
+import { ScrollArea } from "@/components/ui/scroll-area";
 import {
   Dialog,
   DialogContent,
@@ -30,8 +31,8 @@ export function CreatePollModal({ trigger }: CreatePollModalProps) {
         )}
       </DialogTrigger>
 
-      <DialogContent className="sm:max-w-[600px] shadow-2xl backdrop-blur-md max-h-[90vh] overflow-y-auto">
-        <DialogHeader>
+      <DialogContent className="sm:max-w-xl shadow-2xl backdrop-blur-md max-h-[95vh] flex flex-col p-6 overflow-hidden">
+        <DialogHeader className="pb-2">
           <DialogTitle className="text-xl font-semibold tracking-tight">
             Launch a New Poll
           </DialogTitle>
@@ -40,7 +41,7 @@ export function CreatePollModal({ trigger }: CreatePollModalProps) {
           </DialogDescription>
         </DialogHeader>
 
-        <div className="py-4">
+        <div className="flex-1 overflow-y-auto pr-2 scrollbar-thin scrollbar-thumb-muted-foreground/20 scrollbar-track-transparent">
           <CreatePollForm onSuccess={() => setOpen(false)} />
         </div>
       </DialogContent>

@@ -3,7 +3,7 @@ import { Loader2 } from 'lucide-react';
 import { Skeleton } from '@/components/ui/skeleton';
 export default function AnalyticsSkeleton() {
     return (
-        <div className="space-y-8 max-w-5xl mx-auto py-6 px-4">
+        <div className="space-y-8 max-w-5xl mx-auto py-10 px-4">
             {/* Core Summary Cards (Across all polls) */}
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
                 {[...Array(3)].map((_, i) => (
@@ -57,7 +57,7 @@ export default function AnalyticsSkeleton() {
 
             {/* Loading Indicator */}
             <div className="flex items-center justify-center gap-2 text-xs text-muted-foreground pt-2">
-                <Loader2 className="w-3.5 h-3.5 animate-spin text-indigo-500" />
+                <Loader2 className="w-3.5 h-3.5 animate-spin text-primary" />
                 <span>Aggregating system analytics...</span>
             </div>
         </div>

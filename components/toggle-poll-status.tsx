@@ -34,7 +34,7 @@ export function TogglePollStatus({ pollId, isActive, disabled }: ToggleButtonPro
             size="sm"
             disabled={isPending || disabled}
             onClick={handleToggle}
-            className={`h-9 w-9 p-0 border-slate-200 dark:border-slate-800 ${isActive
+            className={`h-9 w-9 p-0 border-border ${isActive
                     ? "text-amber-500 hover:bg-amber-500/10 hover:text-amber-600"
                     : "text-emerald-500 hover:bg-emerald-500/10 hover:text-emerald-600"
                 }`}

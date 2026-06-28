@@ -34,7 +34,7 @@ export function DeletePoll({ pollId }: DeleteButtonProps) {
             size="sm"
             disabled={isPending}
             onClick={handleDelete}
-            className="h-9 w-9 p-0 border-slate-200 text-rose-500 hover:bg-rose-500/10 hover:text-rose-600 dark:border-slate-800"
+            className="h-9 w-9 p-0 border-border text-destructive hover:text-destructive hover:bg-destructive/10"
             title="Delete Poll Permanently"
         >
             {isPending ? (

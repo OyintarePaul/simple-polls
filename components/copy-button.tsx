@@ -11,10 +11,6 @@ interface CopyButtonProps extends Omit<React.ComponentProps<typeof Button>, 'onC
 
 export default function CopyButton({
   pollId,
-  className,
-  variant = 'outline',
-  size = 'sm',
-  ...props
 }: CopyButtonProps) {
   const [hasCopied, setHasCopied] = useState(false);
 
@@ -50,15 +46,13 @@ export default function CopyButton({
   return (
     <Button
       type="button"
-      variant={variant}
-      size={size}
+      variant="outline"
+      size="sm"
       onClick={handleCopyExecution}
-      // 💡 Made this h-9 w-9 p-0 baseline to match your clean, square icon button rows on mobile layout
       className={`h-9 w-9 p-0 sm:w-auto sm:px-3 font-medium select-none gap-1.5 transition-all duration-200 ${hasCopied
-        ? 'border-emerald-500/30 bg-emerald-50/50 text-emerald-700 dark:bg-emerald-950/20 dark:text-emerald-400 dark:border-emerald-500/20'
-        : 'border-slate-200 text-slate-700 hover:text-foreground dark:border-slate-800 dark:text-slate-300'
-        } ${className}`}
-      {...props}
+        ? "border-emerald-500/30 bg-emerald-500/10 text-emerald-600 dark:text-emerald-400"
+        : ""
+        }`}
     >
       {hasCopied ? (
         <>
