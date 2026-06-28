@@ -1,18 +1,65 @@
 import { notFound } from "next/navigation";
+import { Metadata } from "next";
 
 import { getVoterFingerprint } from "@/lib/fingerprint";
 import VotingForm from "./voting-form";
-import { getPollDetailsWithVoteCounts, getVoteByPollAndFingerprint } from "@/data/poll";
+import { getPollById, getPollDetailsWithVoteCounts, getVoteByPollAndFingerprint } from "@/data/poll";
 import { Badge } from "@/components/ui/badge"
 
 interface PageProps {
   params: Promise<{ pollId: string }>;
 }
 
+export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
+  const { pollId } = await params;
+
+  // High-performance lean query with targeted field projection
+  const poll = await getPollById(pollId)
+
+  if (!poll) return {};
+
+  const isExpired = new Date().getTime() > new Date(poll.expiresAt).getTime();
+  const isActiveLive = poll.isActive && !isExpired;
+
+  const title = `${poll.question} | SimplePoll`;
+  const description = isActiveLive
+    ? "Make your voice heard. Cast an encrypted, anonymous vote on this community poll and see real-time distribution graphs."
+    : "Voting has ended for this community question. View the final verified, real-time analytics breakdown."
+
+
+  return {
+    title,
+    description,
+    // Explicit public crawler visibility overrides dashboard protection
+    robots: {
+      index: true,
+      follow: true,
+      googleBot: {
+        index: true,
+        follow: true,
+        "max-video-preview": -1,
+        "max-image-preview": "large",
+        "max-snippet": -1,
+      },
+    },
+    openGraph: {
+      title,
+      description,
+      type: "website",
+      url: `https://simplepoll.com/p/${pollId}`,
+      siteName: "SimplePoll",
+    },
+    twitter: {
+      card: "summary_large_image",
+      title,
+      description,
+    },
+  };
+}
+
 export default async function PublicPollPage({ params }: PageProps) {
   const { pollId } = await params;
   const poll = await getPollDetailsWithVoteCounts(pollId);
-  console.log(poll)
 
   if (!poll) return notFound();
 

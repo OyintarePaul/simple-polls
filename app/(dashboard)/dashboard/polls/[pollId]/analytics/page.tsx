@@ -5,7 +5,7 @@ import { ArrowLeft, BarChart3, Calendar, Users } from 'lucide-react';
 
 import { Badge } from "@/components/ui/badge"
 import { Card } from "@/components/ui/card"
-import { getPollDetailsWithVoteCounts, getPollQuestion } from "@/data/poll";
+import { getPollDetailsWithVoteCounts, getPollById } from "@/data/poll";
 import { requireAuth } from "@/lib/auth";
 
 interface PageProps {
@@ -14,10 +14,12 @@ interface PageProps {
 
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
   const { pollId } = await params;
-  const question = await getPollQuestion(pollId)
-  const pollTitle = question
-    ? `"${question}" Analytics`
-    : "Poll Analytics Intelligence";
+  const poll = await getPollById(pollId)
+  
+  if (!poll) return {};
+
+  const pollTitle = `"${poll.question}" Analytics`
+
 
   return {
     title: pollTitle,

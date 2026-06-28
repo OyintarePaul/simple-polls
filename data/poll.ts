@@ -2,9 +2,9 @@ import connectToDb from "@/database/connection";
 import { Poll, PollDocument } from "@/models/poll";
 import { Vote, VoteDocument } from "@/models/vote";
 
-export async function getPollQuestion(pollId: string) {
-  const poll = await Poll.findById(pollId, "question").lean<Pick<PollDocument, "question">>()
-  return poll?.question;
+export async function getPollById(pollId: string) {
+  const poll = await Poll.findById(pollId).lean<PollDocument>();
+  return poll;
 }
 
 export async function getVoteByPollAndFingerprint(pollId: string, fingerprint: string): Promise<VoteDocument | null> {
