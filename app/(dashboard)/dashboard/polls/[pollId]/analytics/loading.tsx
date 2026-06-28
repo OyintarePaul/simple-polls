@@ -43,7 +43,7 @@ export default function AnalyticsSkeleton() {
                 </div>
 
                 {/* Option Distribution List Skeleton Container */}
-                <Card className="p-6 sm:p-8 space-y-4 !rounded-2xl">
+                <Card className="p-6 sm:p-8 space-y-4 rounded-2xl">
                     {[...Array(3)].map((_, i) => (
                         <div key={i} className="border bg-card p-4 rounded-xl flex items-center justify-between gap-4">
                             <div className="space-y-2">

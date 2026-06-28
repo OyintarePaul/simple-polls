@@ -15,7 +15,7 @@ interface PageProps {
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
   const { pollId } = await params;
   const poll = await getPollById(pollId)
-  
+
   if (!poll) return {};
 
   const pollTitle = `"${poll.question}" Analytics`
@@ -153,7 +153,7 @@ export default async function PollAnalyticsPage({ params }: PageProps) {
 
                   {/* Accent indicator line on the left side of the row */}
                   <div
-                    className="absolute left-0 top-0 bottom-0 w-[3px] bg-primary scale-y-0 transition-transform duration-300 group-hover:scale-y-100"
+                    className="absolute left-0 top-0 bottom-0 w-0.75 bg-primary scale-y-0 transition-transform duration-300 group-hover:scale-y-100"
                   />
 
                   {/* Content Layer sitting safely over the visual progress background */}
