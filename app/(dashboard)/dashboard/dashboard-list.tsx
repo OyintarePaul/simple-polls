@@ -13,7 +13,6 @@ import { getCreatorPollsWithVoteCounts } from '@/data/poll';
 import { requireAuth } from '@/lib/auth';
 
 export default async function DashboardList() {
-    throw new Error("Testing error")
     const userId = await requireAuth() // Ensure the user is authenticated before fetching polls
     const polls = await getCreatorPollsWithVoteCounts(userId);
     const globalMetrics = {
@@ -32,7 +31,7 @@ export default async function DashboardList() {
 
                 <div className="space-y-1">
                     <h3 className="text-sm font-semibold">No polls deployed</h3>
-                    <p className="max-w-[280px] mx-auto text-xs text-muted-foreground leading-relaxed">
+                    <p className="max-w-70 mx-auto text-xs text-muted-foreground leading-relaxed">
                         Create your first public or private poll structure to open data intake links.
                     </p>
                 </div>

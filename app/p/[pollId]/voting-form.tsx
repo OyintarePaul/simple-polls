@@ -96,7 +96,7 @@ export default function VotingForm({
 
                   {/* Sleek Hover-Triggered Left Accent Slider */}
                   <div
-                    className={`absolute left-0 top-0 bottom-0 w-[3px] transition-all duration-300 ${isUserChoice
+                    className={`absolute left-0 top-0 bottom-0 w-0.75 transition-all duration-300 ${isUserChoice
                       ? 'bg-primary scale-y-100'
                       : 'bg-primary/40 scale-y-0 group-hover:scale-y-100'
                       }`}
