@@ -2,7 +2,6 @@
 import { castVote } from '@/actions/vote';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
-import { Progress } from '@/components/ui/progress';
 import { PollWithVoteCounts } from '@/data/poll';
 import { CheckCircle2, Loader2, Lock } from 'lucide-react';
 import { useState, useTransition } from 'react';

@@ -1,5 +1,3 @@
-import { Types } from "mongoose";
-
 import connectToDb from "@/database/connection";
 import { Poll, PollDocument } from "@/models/poll";
 import { Vote, VoteDocument } from "@/models/vote";
