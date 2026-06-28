@@ -51,7 +51,7 @@ export default function CopyButton({
       onClick={handleCopyExecution}
       className={`h-9 w-9 p-0 sm:w-auto sm:px-3 font-medium select-none gap-1.5 transition-all duration-200 ${hasCopied
         ? "border-emerald-500/30 bg-emerald-500/10 text-emerald-600 dark:text-emerald-400"
-        : ""
+        : "text-foreground/90 hover:text-foreground"
         }`}
     >
       {hasCopied ? (

@@ -13,6 +13,7 @@ import { getCreatorPollsWithVoteCounts } from '@/data/poll';
 import { requireAuth } from '@/lib/auth';
 
 export default async function DashboardList() {
+    throw new Error("Testing error")
     const userId = await requireAuth() // Ensure the user is authenticated before fetching polls
     const polls = await getCreatorPollsWithVoteCounts(userId);
     const globalMetrics = {

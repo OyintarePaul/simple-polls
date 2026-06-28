@@ -13,7 +13,7 @@ export function LaunchPoll({ pollId }: LaunchPollButtonProps) {
       <Button
         variant="outline"
         size="sm"
-        className="h-9 w-9 p-0 sm:w-auto sm:px-3 gap-1.5 font-medium select-none"
+        className="h-9 w-9 p-0 sm:w-auto sm:px-3 gap-1.5 font-medium select-none text-foreground/90 hover:text-foreground"
         title="Open Public Poll Page"
       >
         <Eye className="w-3.5 h-3.5" />

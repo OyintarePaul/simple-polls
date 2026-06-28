@@ -3,6 +3,7 @@ import { notFound } from "next/navigation";
 import { getVoterFingerprint } from "@/lib/fingerprint";
 import VotingForm from "./voting-form";
 import { getPollDetailsWithVoteCounts, getVoteByPollAndFingerprint } from "@/data/poll";
+import { Badge } from "@/components/ui/badge"
 
 interface PageProps {
   params: Promise<{ pollId: string }>;
@@ -11,6 +12,7 @@ interface PageProps {
 export default async function PublicPollPage({ params }: PageProps) {
   const { pollId } = await params;
   const poll = await getPollDetailsWithVoteCounts(pollId);
+  console.log(poll)
 
   if (!poll) return notFound();
 
@@ -29,20 +31,26 @@ export default async function PublicPollPage({ params }: PageProps) {
       <div className="text-center space-y-3">
         {/* Dynamic Micro status badge */}
         {isClosed ? (
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-slate-500/20 bg-slate-50 dark:bg-slate-500/10 text-xs font-semibold text-slate-600 dark:text-muted-foreground shadow-sm">
+          <Badge
+            variant="outline"
+            className="inline-flex items-center gap-2 px-3 py-1 font-semibold border-border/80 text-muted-foreground shadow-sm"
+          >
             <span className="relative flex h-2 w-2">
-              <span className="relative inline-flex rounded-full h-2 w-2 bg-slate-400 dark:bg-slate-500"></span>
+              <span className="relative inline-flex rounded-full h-2 w-2 bg-muted-foreground/50"></span>
             </span>
             Concluded Poll
-          </div>
+          </Badge>
         ) : (
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-indigo-500/20 bg-indigo-50/60 dark:bg-primary/10 text-xs font-semibold text-indigo-600 dark:text-indigo-400 shadow-sm shadow-indigo-500/5">
+          <Badge
+            variant="outline"
+            className="inline-flex items-center gap-2 px-3 py-2 font-semibold border-primary/20 bg-primary/5 text-primary shadow-sm"
+          >
             <span className="relative flex h-2 w-2">
-              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-500/70 opacity-75"></span>
               <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
             </span>
             Live Community Poll
-          </div>
+          </Badge>
         )}
 
         <h1 className="text-3xl font-extrabold tracking-tight text-foreground sm:text-4xl">
@@ -61,7 +69,7 @@ export default async function PublicPollPage({ params }: PageProps) {
         hasVoted={!!userVoteRecord}
         votedOptionId={userVoteRecord?.optionId?.toString() || null}
         totalVotes={poll.totalVotes}
-        isClosed={isClosed} // 🌟 Passed down here
+        isClosed={isClosed}
       />
     </main>
   );

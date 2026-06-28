@@ -108,7 +108,7 @@ export default async function PollAnalyticsPage({ params }: PageProps) {
         {[
           { label: 'Total Votes', val: poll.totalVotes, icon: Users, sub: "Unique submissions" },
           { label: 'Available Options', val: poll.options.length, icon: BarChart3, sub: "Available segments" },
-          { label: 'Date Created', val: new Date(poll.createdAt).toLocaleDateString(undefined, { dateStyle: 'medium' }), icon: Calendar, isDate: true },
+          { label: 'Date Created', val: new Date(poll.createdAt || "").toLocaleDateString(undefined, { dateStyle: 'medium' }), icon: Calendar, isDate: true },
         ].map((m, i) => (
           <Card key={i} className="rounded-xl p-5">
             <div className="flex items-center justify-between text-muted-foreground">

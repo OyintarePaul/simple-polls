@@ -4,41 +4,46 @@ import { FileQuestion, MoveLeft } from 'lucide-react';
 
 export default function NotFound() {
   return (
-    <main className="min-h-screen bg-slate-950 flex flex-col items-center justify-center px-6">
-      {/* Visual Anchor */}
-      <div className="relative mb-8">
-        <div className="absolute inset-0 bg-indigo-500/20 blur-3xl rounded-full" />
-        <div className="relative w-20 h-20 bg-slate-900 border border-slate-800 rounded-2xl flex items-center justify-center shadow-2xl">
-          <FileQuestion className="w-10 h-10 text-indigo-400" />
+
+
+
+    <main className="min-h-screen bg-background flex flex-col items-center justify-center px-6 relative overflow-hidden">
+      {/* Visual Anchor Container */}
+      <div className="relative mb-8 group">
+        <div className="absolute inset-0 bg-primary/10 blur-3xl rounded-full transition-all duration-500 group-hover:bg-primary/20" />
+
+        {/* Flat native primitive shell replacing the custom slate box */}
+        <div className="relative w-20 h-20 bg-card border border-border/80 rounded-2xl flex items-center justify-center shadow-xl">
+          <FileQuestion className="w-10 h-10 text-primary" />
         </div>
       </div>
 
-      {/* Content */}
+      {/* Content Section */}
       <div className="text-center space-y-4 max-w-md">
-        <h1 className="text-4xl font-extrabold text-slate-50 tracking-tight">
+        <h1 className="text-4xl font-extrabold text-foreground tracking-tight sm:text-5xl">
           Page Not Found
         </h1>
-        <p className="text-muted-foreground leading-relaxed">
-          The page you are looking for might have been <span className="text-slate-200">removed</span>,
-          <span className="text-slate-200"> renamed</span>, or is temporarily unavailable.
+        <p className="text-sm text-muted-foreground leading-relaxed font-medium">
+          The page you are looking for might have been{" "}
+          <span className="text-foreground font-semibold">removed</span>,{" "}
+          <span className="text-foreground font-semibold">renamed</span>, or is
+          temporarily unavailable.
         </p>
       </div>
 
-      {/* Action */}
+      {/* Action Workspace */}
       <div className="mt-10">
-        <Link href="/" passHref>
-          <Button
-            variant="outline"
-            className="h-11 px-6 gap-2 border-slate-800 bg-slate-900/50 text-slate-300 hover:text-slate-100 hover:bg-slate-800 transition-all"
-          >
+        <Button
+          asChild
+          variant="outline"
+          className="h-11 px-6 gap-2 border-border/80 bg-background hover:bg-muted text-muted-foreground hover:text-foreground shadow-sm transition-all"
+        >
+          <Link href="/">
             <MoveLeft className="w-4 h-4" />
             Back to Home
-          </Button>
-        </Link>
+          </Link>
+        </Button>
       </div>
-
-      {/* Subtle Background Detail */}
-      <div className="fixed bottom-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-slate-800 to-transparent opacity-50" />
     </main>
   );
 }

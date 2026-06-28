@@ -62,22 +62,25 @@ export async function getCreatorPollsWithVoteCounts(userId: string): Promise<Pol
 }
 
 
-export type PollWithVoteCounts = Omit<PollDocument, 'options'> & {
+export type PollWithVoteCounts = Omit<PollDocument, 'options' | '_id' | 'createdAt' | 'updatedAt'> & {
+  _id: string; // Serialized string
+  createdAt?: string;
+  updatedAt?: string;
   totalVotes: number;
   options: Array<{
-    _id: Types.ObjectId;
+    _id: string; // Serialized string
     text: string;
-    voteCount: number; // The new field added by the aggregation
+    voteCount: number;
   }>;
 };
 
 export async function getPollDetailsWithVoteCounts(pollId: string): Promise<PollWithVoteCounts | null> {
   await connectToDb();
 
-  // 1. Run both queries in parallel
+  // 1. Run both optimized queries in parallel
   const [poll, votes] = await Promise.all([
     Poll.findById(pollId).lean(),
-    Vote.find({ pollId }).lean()
+    Vote.find({ pollId }).select('optionId').lean() // Projections optimize memory overhead
   ]);
 
   if (!poll) return null;
@@ -89,12 +92,14 @@ export async function getPollDetailsWithVoteCounts(pollId: string): Promise<Poll
     return acc;
   }, {} as Record<string, number>);
 
-  // 3. Reconstruct into the unified type structure
   return {
     ...poll,
+    _id: poll._id.toString(),
+    createdAt: poll.createdAt ? poll.createdAt.toISOString() : undefined,
+    updatedAt: poll.updatedAt ? poll.updatedAt.toISOString() : undefined,
     totalVotes: votes.length,
     options: poll.options.map(option => ({
-      _id: option._id,
+      _id: option._id.toString(), // Strict string conversion for Radix UI loops
       text: option.text,
       voteCount: voteCounts[option._id.toString()] || 0
     }))

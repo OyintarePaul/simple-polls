@@ -5,7 +5,6 @@ import AnalyticsSkeleton from "./analytics-skeleton";
 import AnalyticsData from "./analytics-data";
 import { requireAuth } from "@/lib/auth";
 
-
 export const metadata: Metadata = {
     title: "Global Analytics", // Automatically renders as "Global Analytics | SimplePoll"
     description: "Explore workspace-wide metrics, review cumulative engagement velocities, and monitor comprehensive community participation pipelines.",
