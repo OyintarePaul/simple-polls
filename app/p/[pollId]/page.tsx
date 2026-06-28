@@ -21,7 +21,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   const isExpired = new Date().getTime() > new Date(poll.expiresAt).getTime();
   const isActiveLive = poll.isActive && !isExpired;
 
-  const title = `${poll.question} | SimplePoll`;
+  const title = `${poll.question}`;
   const description = isActiveLive
     ? "Make your voice heard. Cast an encrypted, anonymous vote on this community poll and see real-time distribution graphs."
     : "Voting has ended for this community question. View the final verified, real-time analytics breakdown."
