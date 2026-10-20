@@ -54,7 +54,7 @@ export default function RootLayout({
 }>) {
   return (
     <ClerkProvider afterSignOutUrl="/" appearance={{ theme: shadcn, }}>
-      <html lang="en" className={cn("font-sans", geistSans.variable, geistMono.variable)}>
+      <html lang="en" className={cn("font-sans", geistSans.variable, geistMono.variable)} suppressHydrationWarning>
         <body className="antialiased">
           <ThemeProvider
             attribute="class"

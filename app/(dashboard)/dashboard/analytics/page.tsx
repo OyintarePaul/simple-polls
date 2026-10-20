@@ -3,7 +3,6 @@ import { Metadata } from "next";
 
 import AnalyticsSkeleton from "./analytics-skeleton";
 import AnalyticsData from "./analytics-data";
-import { requireAuth } from "@/lib/auth";
 
 export const metadata: Metadata = {
     title: "Global Analytics", // Automatically renders as "Global Analytics | SimplePoll"
@@ -31,7 +30,6 @@ export const metadata: Metadata = {
 };
 
 export default async function GlobalAnalyticsPage() {
-    await requireAuth();
     return (
         <div className="max-w-5xl mx-auto w-full px-4 py-10 space-y-8">
             {/* Header Panel */}

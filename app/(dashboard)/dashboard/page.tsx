@@ -4,7 +4,6 @@ import { Metadata } from "next";
 import { CreatePollModal } from '@/components/create-poll-modal';
 import DashboardSkeleton from './dashboard-skeleton';
 import DashboardList from './dashboard-list';
-import { requireAuth } from '@/lib/auth';
 
 
 export const metadata: Metadata = {
@@ -33,7 +32,6 @@ export const metadata: Metadata = {
 };
 
 export default async function DashboardPage() {
-  await requireAuth();
   return (
     <div className="max-w-5xl mx-auto w-full px-4 py-10 space-y-8">
       {/* Header Panel */}
