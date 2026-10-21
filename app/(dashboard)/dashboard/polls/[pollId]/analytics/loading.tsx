@@ -1,5 +1,5 @@
-import { Card } from "@/components/ui/card"
-import { Skeleton } from "@/components/ui/skeleton"
+import { Card } from "@/components/ui/card";
+import { Skeleton } from "@/components/ui/skeleton";
 
 export default function AnalyticsSkeleton() {
     return (
@@ -45,7 +45,10 @@ export default function AnalyticsSkeleton() {
                 {/* Option Distribution List Skeleton Container */}
                 <Card className="p-6 sm:p-8 space-y-4 rounded-2xl">
                     {[...Array(3)].map((_, i) => (
-                        <div key={i} className="border bg-card p-4 rounded-xl flex items-center justify-between gap-4">
+                        <div
+                            key={i}
+                            className="border bg-card p-4 rounded-xl flex items-center justify-between gap-4"
+                        >
                             <div className="space-y-2">
                                 <Skeleton className="h-3 w-10 opacity-70" />
                                 <Skeleton className="h-4 w-40 sm:w-64" />
@@ -60,5 +63,5 @@ export default function AnalyticsSkeleton() {
                 </Card>
             </div>
         </div>
-    )
+    );
 }

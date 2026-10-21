@@ -1,9 +1,10 @@
 "use server";
-import connectToDb from "@/database/connection"
+import { revalidatePath } from "next/cache";
+
+import connectToDb from "@/database/connection";
+import { getVoterFingerprint } from "@/lib/fingerprint";
 import { Poll } from "@/models/poll";
 import { Vote, VoteDocument } from "@/models/vote";
-import { getVoterFingerprint } from "@/lib/fingerprint";
-import { revalidatePath } from "next/cache";
 
 interface CastVotePayload {
     pollId: string;
@@ -27,11 +28,10 @@ export async function castVote({ pollId, optionId }: CastVotePayload) {
             return { success: false, error: "This poll has been closed or is expired." };
         }
 
-        const userVoteRecord =
-            await Vote.findOne({
-                pollId: poll._id,
-                voterFingerprint: fingerprint
-            }).lean() as VoteDocument | null;
+        const userVoteRecord = (await Vote.findOne({
+            pollId: poll._id,
+            voterFingerprint: fingerprint,
+        }).lean()) as VoteDocument | null;
 
         // 🛑 THE FRAUD STOPPER: If a database record already exists, kick them out!
         if (userVoteRecord) {
@@ -49,7 +49,6 @@ export async function castVote({ pollId, optionId }: CastVotePayload) {
         revalidatePath("/dashboard");
 
         return { success: true };
-
     } catch (error) {
         console.error("SERVER_VOTE_ACTION_CRASH:", error);
         return { success: false, error: "An error occurred while deploying your vote." };

@@ -1,11 +1,12 @@
 "use server";
+import { revalidatePath } from "next/cache";
+
 import connectToDb from "@/database/connection";
 import { verifyPollOwnership } from "@/lib/auth";
-import { createPollSchema, type CreatePollData } from "@/lib/validations/poll";
+import { type CreatePollData, createPollSchema } from "@/lib/validations/poll";
 import { Poll } from "@/models/poll";
 import { Vote } from "@/models/vote";
 import { auth } from "@clerk/nextjs/server";
-import { revalidatePath } from "next/cache";
 
 export async function createPollAction(values: CreatePollData) {
     try {
@@ -30,7 +31,7 @@ export async function createPollAction(values: CreatePollData) {
             creatorId: userId,
             question,
             options,
-            expiresAt
+            expiresAt,
         });
 
         // 6. Purge the Next.js layout cache so the dashboard immediately shows the new poll
@@ -42,7 +43,6 @@ export async function createPollAction(values: CreatePollData) {
         return { success: false, error: "Internal server error occurred." };
     }
 }
-
 
 export async function togglePollStatus(pollId: string, currentState: boolean) {
     try {
@@ -69,13 +69,14 @@ export async function deletePoll(pollId: string) {
             // Remove the main poll structure entry
             Poll.findByIdAndDelete(pollId),
             // Cascade delete: Purge all the voting receipts linked to this poll container
-            Vote.deleteMany({ pollId })
-        ])
+            Vote.deleteMany({ pollId }),
+        ]);
 
         revalidatePath("/dashboard");
         return { success: true };
     } catch (error) {
-        const errorMessage = error instanceof Error ? error.message : "Failed to delete poll records.";
+        const errorMessage =
+            error instanceof Error ? error.message : "Failed to delete poll records.";
         return { success: false, error: errorMessage };
     }
 }

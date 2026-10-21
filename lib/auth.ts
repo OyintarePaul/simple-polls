@@ -1,19 +1,20 @@
-import { auth } from '@clerk/nextjs/server';
-import { redirect } from 'next/navigation';
 import { cache } from "react";
 
-import connectToDb from '@/database/connection';
+import { redirect } from "next/navigation";
+
+import connectToDb from "@/database/connection";
 import { Poll } from "@/models/poll";
+import { auth } from "@clerk/nextjs/server";
 
 export const requireAuth = cache(async (): Promise<string> => {
     const { userId } = await auth();
 
     if (!userId) {
-        redirect('/sign-in');
+        redirect("/sign-in");
     }
 
     return userId;
-})
+});
 
 export async function verifyPollOwnership(pollId: string) {
     const { userId } = await auth();

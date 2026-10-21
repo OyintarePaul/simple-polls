@@ -1,13 +1,17 @@
-import { Loader2 } from 'lucide-react';
+import { Loader2 } from "lucide-react";
 
-import { Skeleton } from '@/components/ui/skeleton';
+import { Skeleton } from "@/components/ui/skeleton";
+
 export default function AnalyticsSkeleton() {
     return (
         <div className="space-y-8 max-w-5xl mx-auto py-10 px-4">
             {/* Core Summary Cards (Across all polls) */}
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
                 {[...Array(3)].map((_, i) => (
-                    <div key={i} className="bg-card border border-border/60 p-5 rounded-xl space-y-4 shadow-sm">
+                    <div
+                        key={i}
+                        className="bg-card border border-border/60 p-5 rounded-xl space-y-4 shadow-sm"
+                    >
                         <div className="flex items-center justify-between">
                             <Skeleton className="h-3 w-28" />
                             <Skeleton className="h-4 w-4 rounded-full" />
@@ -47,7 +51,10 @@ export default function AnalyticsSkeleton() {
 
                 <div className="space-y-3">
                     {[...Array(2)].map((_, i) => (
-                        <div key={i} className="h-12 w-full bg-background/50 rounded-xl border border-border flex items-center justify-between px-4 shadow-sm">
+                        <div
+                            key={i}
+                            className="h-12 w-full bg-background/50 rounded-xl border border-border flex items-center justify-between px-4 shadow-sm"
+                        >
                             <Skeleton className="h-3 w-1/3" />
                             <Skeleton className="h-3 w-16" />
                         </div>

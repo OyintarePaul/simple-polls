@@ -1,9 +1,12 @@
 "use client";
 import { useEffect } from "react";
-import Link from "next/link"
-import { AlertCircle, RefreshCw, Home } from "lucide-react";
-import { Button } from "@/components/ui/button";
+
+import Link from "next/link";
+
+import { AlertCircle, Home, RefreshCw } from "lucide-react";
+
 import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
 
 interface DashboardErrorProps {
     error: Error & { digest?: string };
@@ -49,19 +52,12 @@ export default function DashboardError({ error, reset }: DashboardErrorProps) {
 
             {/* Action Workspace Options */}
             <div className="mt-8 flex flex-col sm:flex-row items-center gap-3 z-10">
-                <Button
-                    onClick={() => reset()}
-                    className="px-5 w-full sm:w-auto"
-                >
+                <Button onClick={() => reset()} className="px-5 w-full sm:w-auto">
                     <RefreshCw className="w-4 h-4" />
                     Retry
                 </Button>
 
-                <Button
-                    asChild
-                    variant="outline"
-                    className="px-5 w-full sm:w-auto"
-                >
+                <Button asChild variant="outline" className="px-5 w-full sm:w-auto">
                     <Link href="/">
                         <Home className="w-4 h-4" />
                         Exit to Home

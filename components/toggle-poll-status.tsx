@@ -1,9 +1,11 @@
-"use client"
-import { togglePollStatus } from "@/actions/poll";
-import { Button } from "@/components/ui/button";
-import { Loader2, Power } from "lucide-react";
+"use client";
 import { useTransition } from "react";
+
+import { togglePollStatus } from "@/actions/poll";
+import { Loader2, Power } from "lucide-react";
 import { toast } from "sonner";
+
+import { Button } from "@/components/ui/button";
 
 interface ToggleButtonProps {
     pollId: string;
@@ -20,7 +22,9 @@ export function TogglePollStatus({ pollId, isActive, disabled }: ToggleButtonPro
 
             if (result.success) {
                 toast.success(isActive ? "Poll Paused" : "Poll Activated", {
-                    description: isActive ? "Responses are now blocked." : "Public links are open again.",
+                    description: isActive
+                        ? "Responses are now blocked."
+                        : "Public links are open again.",
                 });
             } else {
                 toast.error("Operation failed", { description: result.error });
@@ -34,10 +38,11 @@ export function TogglePollStatus({ pollId, isActive, disabled }: ToggleButtonPro
             size="sm"
             disabled={isPending || disabled}
             onClick={handleToggle}
-            className={`h-9 w-9 p-0 border-border ${isActive
+            className={`h-9 w-9 p-0 border-border ${
+                isActive
                     ? "text-amber-500 hover:bg-amber-500/10 hover:text-amber-600"
                     : "text-emerald-500 hover:bg-emerald-500/10 hover:text-emerald-600"
-                }`}
+            }`}
             title={isActive ? "Pause Registration" : "Resume Registration"}
         >
             {isPending ? (

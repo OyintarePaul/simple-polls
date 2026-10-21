@@ -1,9 +1,11 @@
 "use client";
 import { useTransition } from "react";
-import { Button } from "@/components/ui/button";
-import { Trash2, Loader2 } from "lucide-react";
-import { toast } from "sonner";
+
 import { deletePoll } from "@/actions/poll";
+import { Loader2, Trash2 } from "lucide-react";
+import { toast } from "sonner";
+
+import { Button } from "@/components/ui/button";
 
 interface DeleteButtonProps {
     pollId: string;
@@ -13,7 +15,12 @@ export function DeletePoll({ pollId }: DeleteButtonProps) {
     const [isPending, startTransition] = useTransition();
 
     const handleDelete = () => {
-        if (!confirm("Are you absolutely sure you want to permanently delete this poll and all its data history?")) return;
+        if (
+            !confirm(
+                "Are you absolutely sure you want to permanently delete this poll and all its data history?"
+            )
+        )
+            return;
 
         startTransition(async () => {
             const result = await deletePoll(pollId);

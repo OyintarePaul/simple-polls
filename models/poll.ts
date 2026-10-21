@@ -1,30 +1,27 @@
-import { Schema, models, model, Model, InferSchemaType, Types } from 'mongoose';
+import { InferSchemaType, Model, Schema, Types, model, models } from "mongoose";
 
 const OptionSchema = new Schema({
-  text: { type: String, required: true, trim: true }
+    text: { type: String, required: true, trim: true },
 });
 
 type OptionType = InferSchemaType<typeof OptionSchema>;
 
 const PollSchema = new Schema(
-  {
-    creatorId: { type: String, required: true, index: true },
-    question: { type: String, required: true, trim: true },
-    options: {
-      type: [OptionSchema],
-      validate: [
-        (v: OptionType[]) => v.length >= 2,
-        'Minimum 2 options required'
-      ]
+    {
+        creatorId: { type: String, required: true, index: true },
+        question: { type: String, required: true, trim: true },
+        options: {
+            type: [OptionSchema],
+            validate: [(v: OptionType[]) => v.length >= 2, "Minimum 2 options required"],
+        },
+        isActive: { type: Boolean, default: true },
+        expiresAt: { type: Date, required: true },
     },
-    isActive: { type: Boolean, default: true },
-    expiresAt: { type: Date, required: true },
-  },
-  { timestamps: true }
+    { timestamps: true }
 );
 
 export type PollDocument = InferSchemaType<typeof PollSchema> & {
-  _id: Types.ObjectId;
+    _id: Types.ObjectId;
 };
 
 export const Poll: Model<PollDocument> = models.Poll || model<PollDocument>("Poll", PollSchema);

@@ -1,12 +1,14 @@
 import { Suspense } from "react";
+
 import { Metadata } from "next";
 
-import AnalyticsSkeleton from "./analytics-skeleton";
 import AnalyticsData from "./analytics-data";
+import AnalyticsSkeleton from "./analytics-skeleton";
 
 export const metadata: Metadata = {
     title: "Global Analytics", // Automatically renders as "Global Analytics | SimplePoll"
-    description: "Explore workspace-wide metrics, review cumulative engagement velocities, and monitor comprehensive community participation pipelines.",
+    description:
+        "Explore workspace-wide metrics, review cumulative engagement velocities, and monitor comprehensive community participation pipelines.",
     robots: {
         index: false,
         follow: false,
@@ -18,14 +20,16 @@ export const metadata: Metadata = {
     },
     openGraph: {
         title: "Global Workspace Analytics | SimplePoll",
-        description: "Explore workspace-wide metrics and review cumulative community engagement pipelines.",
+        description:
+            "Explore workspace-wide metrics and review cumulative community engagement pipelines.",
         url: "https://yourdomain.com/analytics",
         type: "website",
     },
     twitter: {
         card: "summary",
         title: "Global Workspace Analytics | SimplePoll",
-        description: "Explore workspace-wide metrics and review cumulative community engagement pipelines.",
+        description:
+            "Explore workspace-wide metrics and review cumulative community engagement pipelines.",
     },
 };
 
