@@ -1,16 +1,19 @@
 import { notFound } from "next/navigation";
 import { Metadata } from "next";
-
 import { getVoterFingerprint } from "@/lib/fingerprint";
 import VotingForm from "./voting-form";
 import { getPollById, getPollDetailsWithVoteCounts, getVoteByPollAndFingerprint } from "@/data/poll";
 import { Badge } from "@/components/ui/badge"
+import { cacheLife } from "next/cache";
 
 interface PageProps {
   params: Promise<{ pollId: string }>;
 }
 
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
+  "use cache";
+  cacheLife("max")
+
   const { pollId } = await params;
 
   // High-performance lean query with targeted field projection
